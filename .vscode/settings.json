@@ -3,5 +3,10 @@
     // transpileOnly: skip typechecking
     // files: load files include, exclude from jsonconfig on startup. Avoid certain filecheck errors
     "typescript": "npx ts-node --files --transpileOnly"
+  },
+  // fix eslint errors when save files
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.fixAll.eslint": true
   }
 }
