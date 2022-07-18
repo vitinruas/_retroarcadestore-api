@@ -1,6 +1,6 @@
 {
   "name": "retroarcadestore",
-  "description": "This is an api for Retro Arcade Studios e-commerce development with Clean Architecture",
+  "description": "This is an REST API for Retro Arcade Studios e-commerce development with Clean Architecture",
   "version": "0.0.0",
   "main": "index.js",
   "repository": "https://github.com/vitinruas/retroarcadestore",
@@ -8,9 +8,11 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.ts",
+    "test": "jest"
   },
   "devDependencies": {
+    "@types/jest": "^28.1.6",
     "@types/node": "*",
     "@types/typescript": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
@@ -23,6 +25,8 @@
     "eslint-plugin-promise": "^6.0.0",
     "git-commit-msg-linter": "^4.1.3",
     "husky": "^8.0.1",
+    "jest": "^28.1.3",
+    "ts-jest": "^28.0.7",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   },
