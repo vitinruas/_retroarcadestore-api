@@ -1,0 +1,7 @@
+{
+  "code-runner.executorMap": {
+    // transpileOnly: skip typechecking
+    // files: load files include, exclude from jsonconfig on startup. Avoid certain filecheck errors
+    "typescript": "npx ts-node --files --transpileOnly"
+  }
+}

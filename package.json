@@ -1,11 +1,15 @@
 {
   "name": "retroarcadestore",
-  "version": "1.0.0",
+  "description": "This is an api for Retro Arcade Studios e-commerce development with Clean Architecture",
+  "version": "0.0.0",
   "main": "index.js",
   "repository": "https://github.com/vitinruas/retroarcadestore",
   "author": "João Vitor S. Rabelo <joao_vitor.personal@outlook.com>",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
+    "@types/typescript": "^2.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4",
     "git-commit-msg-linter": "^4.1.3"
   }
 }
