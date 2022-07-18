@@ -1,0 +1,8 @@
+{
+  "name": "retroarcadestore",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/vitinruas/retroarcadestore",
+  "author": "João Vitor S. Rabelo <joao_vitor.personal@outlook.com>",
+  "license": "MIT"
+}
