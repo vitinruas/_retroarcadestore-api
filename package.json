@@ -6,19 +6,24 @@
   "repository": "https://github.com/vitinruas/retroarcadestore",
   "author": "João Vitor S. Rabelo <joao_vitor.personal@outlook.com>",
   "license": "MIT",
+  "scripts": {
+    "prepare": "husky install",
+    "lint": "eslint src/**/*.ts"
+  },
   "devDependencies": {
+    "@types/node": "*",
     "@types/typescript": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
     "@typescript-eslint/parser": "^5.30.7",
-    "@types/node": "*",
+    "eslint": "^8.0.1",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0",
-    "eslint": "^8.0.1",
     "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.7.1",
     "eslint-plugin-promise": "^6.0.0",
     "git-commit-msg-linter": "^4.1.3",
+    "husky": "^8.0.1",
+    "prettier": "^2.7.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   },
