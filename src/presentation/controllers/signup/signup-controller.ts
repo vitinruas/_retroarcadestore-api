@@ -13,6 +13,13 @@ export class SignUpController {
         body: 'Missing param: email'
       }
     }
+
+    if (!httpRequest.body.password) {
+      return {
+        code: 400,
+        body: 'Missing param: password'
+      }
+    }
     return null
   }
 }
