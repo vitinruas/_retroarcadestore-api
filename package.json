@@ -9,7 +9,10 @@
   "scripts": {
     "prepare": "husky install",
     "lint": "eslint src/**/*.ts",
-    "test": "jest"
+    "test": "jest --passWithNoTests --runInBand",
+    "test:verbose": "jest --verbose",
+    "test:staged": "npm test -- --coverage",
+    "test:unit": "npm test --  --watch"
   },
   "devDependencies": {
     "@types/jest": "^28.1.6",
