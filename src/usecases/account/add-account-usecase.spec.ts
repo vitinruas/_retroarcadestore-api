@@ -1,6 +1,7 @@
 import { IAccountEntitie } from 'src/domain/entities/account'
 import { IAddAccountModel } from 'src/domain/usecases/account/add-account-usecase'
 import { IAddAccountRepository } from '../protocols/account/add-account-repository'
+import { IEncrypter } from '../protocols/account/encrypter-protocol'
 import { IGetAccountByEmailRepository } from '../protocols/account/get-account-by-email-repository'
 import { IHasher } from '../protocols/account/hasher-protocol'
 import { AddAccountUseCase } from './add-account-usecase'
@@ -45,11 +46,21 @@ const makeAddAccountRepositoryStub = () => {
   return new AddAccountRepositoryStub()
 }
 
+const makeTokenGeneratorStub = () => {
+  class TokenGeneratorStub implements IEncrypter {
+    async encrypt(id: string): Promise<string> {
+      return Promise.resolve('any_token')
+    }
+  }
+  return new TokenGeneratorStub()
+}
+
 interface ISut {
   sut: AddAccountUseCase
   passwordHasherStub: IHasher
   getAccountByEmailRepositoryStub: IGetAccountByEmailRepository
   addAccountRepositoryStub: IAddAccountRepository
+  tokenGeneratorStub: IEncrypter
 }
 
 const makeSut = (): ISut => {
@@ -58,16 +69,19 @@ const makeSut = (): ISut => {
   const passwordHasherStub: IHasher = makePasswordHasherStub()
   const addAccountRepositoryStub: IAddAccountRepository =
     makeAddAccountRepositoryStub()
+  const tokenGeneratorStub = makeTokenGeneratorStub()
   const sut = new AddAccountUseCase(
     getAccountByEmailRepositoryStub,
     passwordHasherStub,
-    addAccountRepositoryStub
+    addAccountRepositoryStub,
+    tokenGeneratorStub
   )
   return {
     sut,
     passwordHasherStub,
     getAccountByEmailRepositoryStub,
-    addAccountRepositoryStub
+    addAccountRepositoryStub,
+    tokenGeneratorStub
   }
 }
 
@@ -129,7 +143,7 @@ describe('AddAccountUseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('should calls AddAccountRepository with a password', async () => {
+  test('should calls AddAccountRepository with correct values', async () => {
     const { sut, addAccountRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
 
@@ -151,5 +165,14 @@ describe('AddAccountUseCase', () => {
     const promise = sut.add(makeValidNewAccountData())
 
     await expect(promise).rejects.toThrow()
+  })
+
+  test('should calls TokenGenerator with an user id', async () => {
+    const { sut, tokenGeneratorStub } = makeSut()
+    const encryptSpy = jest.spyOn(tokenGeneratorStub, 'encrypt')
+
+    await sut.add(makeValidNewAccountData())
+
+    expect(encryptSpy).toHaveBeenCalledWith('any_id')
   })
 })
