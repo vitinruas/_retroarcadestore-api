@@ -1,4 +1,6 @@
-import { IController } from 'src/presentation/protocols/controller-protocol'
+import { MissingParamError } from '../../errors/missing-param-error'
+import { badRequest, ok } from '../../helpers/http-response-helper'
+import { IController } from '../../protocols/controller-protocol'
 import {
   IHttpRequest,
   IHttpResponse
@@ -9,15 +11,9 @@ export class SignUpController implements IController {
     const requiredFields = ['name', 'email', 'password', 'passwordConfirmation']
     for (const requiredField of requiredFields) {
       if (!httpRequest.body[requiredField]) {
-        return {
-          statusCode: 400,
-          body: `Missing param: ${requiredField}`
-        }
+        return badRequest(new MissingParamError(requiredField))
       }
     }
-    return {
-      statusCode: 200,
-      body: null
-    }
+    return ok()
   }
 }
