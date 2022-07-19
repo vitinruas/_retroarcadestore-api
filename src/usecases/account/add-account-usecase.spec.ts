@@ -141,4 +141,15 @@ describe('AddAccountUseCase', () => {
       password: 'hashed_password'
     })
   })
+
+  test('should return throw if AddAccountRepository throws', async () => {
+    const { sut, addAccountRepositoryStub } = makeSut()
+    jest
+      .spyOn(addAccountRepositoryStub, 'add')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const promise = sut.add(makeValidNewAccountData())
+
+    await expect(promise).rejects.toThrow()
+  })
 })
