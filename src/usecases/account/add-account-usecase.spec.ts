@@ -175,4 +175,15 @@ describe('AddAccountUseCase', () => {
 
     expect(encryptSpy).toHaveBeenCalledWith('any_id')
   })
+
+  test('should return throw if TokenGenerator throws', async () => {
+    const { sut, tokenGeneratorStub } = makeSut()
+    jest
+      .spyOn(tokenGeneratorStub, 'encrypt')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const promise = sut.add(makeValidNewAccountData())
+
+    await expect(promise).rejects.toThrow()
+  })
 })
