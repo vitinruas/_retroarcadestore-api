@@ -3,6 +3,7 @@ import {
   IAccountEntitie,
   IGetAccountByEmailRepository
 } from 'src/usecases/account/add-account-protocols'
+import mongoHelper from '../../helpers/mongo-helper'
 
 export class GetAccountByEmailMongoRepository
   implements IGetAccountByEmailRepository
@@ -10,9 +11,7 @@ export class GetAccountByEmailMongoRepository
   async get(email: string): Promise<IAccountEntitie | null> {
     const collectionRef = mongoose.connection.collection('accounts')
     const document = await collectionRef.findOne({ email })
-    const { _id, ...data }: any = document
-    const account = Object.assign({}, data, { id: _id })
 
-    return account || null
+    return (document && mongoHelper.replaceMongoID(document)) || null
   }
 }

@@ -1,5 +1,6 @@
 import { MongoMemoryServer } from 'mongodb-memory-server'
-import mongoose, { Collection } from 'mongoose'
+import { Collection } from 'mongoose'
+import mongoHelper from '../../../helpers/mongo-helper'
 import { GetAccountByEmailMongoRepository } from '../get-account-by-email-repository'
 
 let mongod: MongoMemoryServer
@@ -8,16 +9,16 @@ let collectionRef: Collection
 beforeAll(async () => {
   mongod = await MongoMemoryServer.create()
   const uri = mongod.getUri()
-  await mongoose.connect(uri)
+  await mongoHelper.connect(uri)
 })
 
 afterAll(async () => {
-  await mongoose.disconnect()
+  await mongoHelper.disconnect()
   await mongod.stop()
 })
 
 beforeEach(async () => {
-  collectionRef = mongoose.connection.collection('accounts')
+  collectionRef = mongoHelper.getCollection('accounts')
   await collectionRef.deleteMany({})
 })
 
