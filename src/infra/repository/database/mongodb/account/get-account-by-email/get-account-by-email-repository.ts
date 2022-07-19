@@ -1,8 +1,8 @@
-import mongoose from 'mongoose'
 import {
-  IAccountEntitie,
-  IGetAccountByEmailRepository
-} from 'src/usecases/account/add-account-protocols'
+  IGetAccountByEmailRepository,
+  IAccountEntitie
+} from './get-account-by-email-repository-protocols'
+import mongoose from 'mongoose'
 import mongoHelper from '../../helpers/mongo-helper'
 
 export class GetAccountByEmailMongoRepository

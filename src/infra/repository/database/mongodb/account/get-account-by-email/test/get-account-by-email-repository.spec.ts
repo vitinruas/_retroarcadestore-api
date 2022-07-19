@@ -1,7 +1,7 @@
+import { GetAccountByEmailMongoRepository } from '../get-account-by-email-repository'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { Collection } from 'mongoose'
 import mongoHelper from '../../../helpers/mongo-helper'
-import { GetAccountByEmailMongoRepository } from '../get-account-by-email-repository'
 
 let mongod: MongoMemoryServer
 let collectionRef: Collection
