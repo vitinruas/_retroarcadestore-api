@@ -22,6 +22,10 @@ beforeEach(async () => {
   await collectionRef.deleteMany({})
 })
 
+const makeSut = (): GetAccountByEmailMongoRepository => {
+  return new GetAccountByEmailMongoRepository()
+}
+
 describe('GetAccountByEmail', () => {
   test('should return an account if using the provided email', async () => {
     const fakeValidAccount = {
@@ -31,11 +35,19 @@ describe('GetAccountByEmail', () => {
     }
     await collectionRef.insertOne(fakeValidAccount)
 
-    const sut = new GetAccountByEmailMongoRepository()
+    const sut = makeSut()
     const account = await sut.get('any_email@mail.com')
     expect(account!.id).toBeTruthy()
     expect(account!.name).toBe('any_name')
     expect(account!.email).toBe('any_email@mail.com')
     expect(account!.password).toBe('hashed_password')
+  })
+
+  test('should return null if there is no account exists', async () => {
+    const sut = makeSut()
+
+    const account = await sut.get('any_email@mail.com')
+
+    expect(account).toBeNull()
   })
 })
