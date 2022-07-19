@@ -1,5 +1,6 @@
 import { IAccountEntitie } from 'src/domain/entities/account'
 import { IAddAccountModel } from 'src/domain/usecases/account/add-account-usecase'
+import { IAddAccountRepository } from '../protocols/account/add-account-repository'
 import { IGetAccountByEmailRepository } from '../protocols/account/get-account-by-email-repository'
 import { IHasher } from '../protocols/account/hasher-protocol'
 import { AddAccountUseCase } from './add-account-usecase'
@@ -30,23 +31,43 @@ const makeGetAccountByEmailRepositoryStub = () => {
   return new GetAccountByEmailRepositoryStub()
 }
 
+const makeAddAccountRepositoryStub = () => {
+  class AddAccountRepositoryStub implements IAddAccountRepository {
+    async add(newAccountData: IAddAccountModel): Promise<IAccountEntitie> {
+      return Promise.resolve({
+        id: 'any_id',
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'hashed_password'
+      })
+    }
+  }
+  return new AddAccountRepositoryStub()
+}
+
 interface ISut {
   sut: AddAccountUseCase
   passwordHasherStub: IHasher
   getAccountByEmailRepositoryStub: IGetAccountByEmailRepository
+  addAccountRepositoryStub: IAddAccountRepository
 }
 
 const makeSut = (): ISut => {
-  const getAccountByEmailRepositoryStub = makeGetAccountByEmailRepositoryStub()
-  const passwordHasherStub = makePasswordHasherStub()
+  const getAccountByEmailRepositoryStub: IGetAccountByEmailRepository =
+    makeGetAccountByEmailRepositoryStub()
+  const passwordHasherStub: IHasher = makePasswordHasherStub()
+  const addAccountRepositoryStub: IAddAccountRepository =
+    makeAddAccountRepositoryStub()
   const sut = new AddAccountUseCase(
     getAccountByEmailRepositoryStub,
-    passwordHasherStub
+    passwordHasherStub,
+    addAccountRepositoryStub
   )
   return {
     sut,
     passwordHasherStub,
-    getAccountByEmailRepositoryStub
+    getAccountByEmailRepositoryStub,
+    addAccountRepositoryStub
   }
 }
 
@@ -106,5 +127,18 @@ describe('AddAccountUseCase', () => {
     const promise = sut.add(makeValidNewAccountData())
 
     await expect(promise).rejects.toThrow()
+  })
+
+  test('should calls AddAccountRepository with a password', async () => {
+    const { sut, addAccountRepositoryStub } = makeSut()
+    const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
+
+    await sut.add(makeValidNewAccountData())
+
+    expect(addSpy).toHaveBeenCalledWith({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'hashed_password'
+    })
   })
 })
