@@ -177,4 +177,15 @@ describe('SignUpController', () => {
       password: 'any_password'
     })
   })
+
+  test('should return 500 if AddAccountUseCase throws', async () => {
+    const { sut, addAccountUseCase }: ISut = makeSut()
+    jest
+      .spyOn(addAccountUseCase, 'add')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const response: IHttpResponse = await sut.perform(makeValidRequest())
+
+    expect(response).toEqual(serverError())
+  })
 })
