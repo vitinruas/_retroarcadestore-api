@@ -29,7 +29,10 @@ export class AddAccountUseCase implements IAddAccountUseCase {
           Object.assign({}, newAccountData, { password: hashedPassword })
         )
 
-      await this.tokenGenerator.encrypt(createdAccount.id)
+      const accessToken: string = await this.tokenGenerator.encrypt(
+        createdAccount.id
+      )
+      return accessToken
     }
     return null
   }
