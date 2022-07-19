@@ -1,18 +1,18 @@
-import { InvalidFieldError } from '../../errors/invalid-field-error'
-import { MissingFieldError } from '../../errors/missing-field-error'
-import { IEmailValidator } from '../../protocols/email-validator-protocol'
-import { IHttpRequest, IHttpResponse } from '../../protocols/http-protocol'
-import { SignUpController } from './signup-controller'
+import { MissingFieldError, InvalidFieldError } from '../../../errors/'
+import { SignUpController } from '../signup-controller'
 import {
   badRequest,
   forbidden,
   ok,
   serverError
-} from '../../helpers/http-response-helper'
+} from '../../../helpers/http-response-helper'
 import {
   IAddAccountModel,
-  IAddAccountUseCase
-} from 'src/domain/usecases/account/add-account-usecase'
+  IAddAccountUseCase,
+  IEmailValidator,
+  IHttpRequest,
+  IHttpResponse
+} from '../signup-controller-protocols'
 
 const makeValidRequest = (): IHttpRequest => ({
   body: {
