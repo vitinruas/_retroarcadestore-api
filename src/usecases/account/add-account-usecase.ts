@@ -12,8 +12,12 @@ export class AddAccountUseCase implements IAddAccountUseCase {
   ) {}
 
   async add(newAccountData: IAddAccountModel): Promise<string | null> {
-    await this.getAccountByEmailRepository.get(newAccountData.email)
-    await this.passwordHasher.hash(newAccountData.password)
+    const account = await this.getAccountByEmailRepository.get(
+      newAccountData.email
+    )
+    if (!account) {
+      await this.passwordHasher.hash(newAccountData.password)
+    }
     return null
   }
 }
