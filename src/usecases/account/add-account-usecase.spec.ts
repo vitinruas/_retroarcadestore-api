@@ -32,11 +32,21 @@ const makeSut = (): ISut => {
 }
 
 describe('AddAccountUseCase', () => {
-  test('should calls PasswordHasher with a password', () => {
+  test('should calls PasswordHasher with a password', async () => {
     const { sut, passwordHasherStub } = makeSut()
     const hashSpy = jest.spyOn(passwordHasherStub, 'hash')
-    sut.add(makeValidNewAccountData())
+    await sut.add(makeValidNewAccountData())
 
     expect(hashSpy).toHaveBeenCalledWith('any_password')
+  })
+
+  test('should return throw if PasswordHasher throws', async () => {
+    const { sut, passwordHasherStub } = makeSut()
+    jest
+      .spyOn(passwordHasherStub, 'hash')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+    const promise = sut.add(makeValidNewAccountData())
+
+    await expect(promise).rejects.toThrow()
   })
 })
