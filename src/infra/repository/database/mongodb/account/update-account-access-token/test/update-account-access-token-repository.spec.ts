@@ -1,4 +1,4 @@
-import { UpdateAccountAccessToken } from '../update-account-access-token'
+import { UpdateAccountAccessTokenMongoRepository } from '../update-account-access-token-repository'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import mongoose, { Collection } from 'mongoose'
 import mongoHelper from '../../../helpers/mongo-helper'
@@ -44,9 +44,9 @@ const getAccount = async (id: string) => {
   return createdAccount
 }
 
-describe('UpdateAccountAccessToken', () => {
+describe('UpdateAccountAccessTokenMongoRepository', () => {
   test('should update a token to a new generated token', async () => {
-    const sut = new UpdateAccountAccessToken()
+    const sut = new UpdateAccountAccessTokenMongoRepository()
     const fakeValidAccount = {
       name: 'any_name',
       email: 'any_email@mail.com',
