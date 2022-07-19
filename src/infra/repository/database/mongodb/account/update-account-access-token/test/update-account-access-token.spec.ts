@@ -1,7 +1,7 @@
+import { UpdateAccountAccessToken } from '../update-account-access-token'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import mongoose, { Collection } from 'mongoose'
 import mongoHelper from '../../../helpers/mongo-helper'
-import { UpdateAccountAccessToken } from '../update-account-access-token'
 
 let mongod: MongoMemoryServer
 let collectionRef: Collection
