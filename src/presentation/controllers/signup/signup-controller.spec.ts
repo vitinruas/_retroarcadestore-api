@@ -1,24 +1,35 @@
 import { InvalidFieldError } from '../../errors/invalid-field-error'
 import { MissingFieldError } from '../../errors/missing-field-error'
-import { ServerError } from '../../errors/server-error'
 import { IEmailValidator } from '../../protocols/email-validator-protocol'
-import {
-  IHttpRequest,
-  IHttpResponse
-} from 'src/presentation/protocols/http-protocol'
+import { IHttpRequest, IHttpResponse } from '../../protocols/http-protocol'
 import { SignUpController } from './signup-controller'
+import { badRequest, serverError } from '../../helpers/http-response-helper'
 
-interface ISut {
-  sut: SignUpController
-  emailValidatorStub: IEmailValidator
-}
-const makeSut = (): ISut => {
+const makeValidRequest = (): IHttpRequest => ({
+  body: {
+    name: 'any_name',
+    email: 'any_email@mail.com',
+    password: 'any_password',
+    passwordConfirmation: 'any_password'
+  }
+})
+
+const makeEmailValidatorStub = (): IEmailValidator => {
   class EmailValidatorStub implements IEmailValidator {
     validate(email: string): boolean {
       return true
     }
   }
-  const emailValidatorStub: IEmailValidator = new EmailValidatorStub()
+  return new EmailValidatorStub()
+}
+
+interface ISut {
+  sut: SignUpController
+  emailValidatorStub: IEmailValidator
+}
+
+const makeSut = (): ISut => {
+  const emailValidatorStub: IEmailValidator = makeEmailValidatorStub()
   const sut: SignUpController = new SignUpController(emailValidatorStub)
   return {
     sut,
@@ -36,9 +47,10 @@ describe('SignUpController', () => {
         passwordConfirmation: 'any_password'
       }
     }
+
     const response: IHttpResponse = sut.perform(request)
-    expect(response.statusCode).toBe(400)
-    expect(response.body).toEqual(new MissingFieldError('name'))
+
+    expect(response).toEqual(badRequest(new MissingFieldError('name')))
   })
 
   test('should return 400 if no email is provided', () => {
@@ -50,9 +62,10 @@ describe('SignUpController', () => {
         passwordConfirmation: 'any_password'
       }
     }
+
     const response: IHttpResponse = sut.perform(request)
-    expect(response.statusCode).toBe(400)
-    expect(response.body).toEqual(new MissingFieldError('email'))
+
+    expect(response).toEqual(badRequest(new MissingFieldError('email')))
   })
 
   test('should return 400 if no password is provided', () => {
@@ -64,9 +77,10 @@ describe('SignUpController', () => {
         passwordConfirmation: 'any_password'
       }
     }
+
     const response: IHttpResponse = sut.perform(request)
-    expect(response.statusCode).toBe(400)
-    expect(response.body).toEqual(new MissingFieldError('password'))
+
+    expect(response).toEqual(badRequest(new MissingFieldError('password')))
   })
 
   test('should return 400 if no passwordConfirmation is provided', () => {
@@ -78,9 +92,12 @@ describe('SignUpController', () => {
         password: 'any_password'
       }
     }
+
     const response: IHttpResponse = sut.perform(request)
-    expect(response.statusCode).toBe(400)
-    expect(response.body).toEqual(new MissingFieldError('passwordConfirmation'))
+
+    expect(response).toEqual(
+      badRequest(new MissingFieldError('passwordConfirmation'))
+    )
   })
 
   test('should return 400 if passwords do not match', () => {
@@ -93,41 +110,31 @@ describe('SignUpController', () => {
         passwordConfirmation: 'invalid_password'
       }
     }
+
     const response: IHttpResponse = sut.perform(request)
-    expect(response.statusCode).toBe(400)
-    expect(response.body).toEqual(new InvalidFieldError('passwordConfirmation'))
+
+    expect(response).toEqual(
+      badRequest(new InvalidFieldError('passwordConfirmation'))
+    )
   })
 
   test('should call EmailValidator with an email', () => {
     const { sut, emailValidatorStub }: ISut = makeSut()
+
     const validateSpy = jest.spyOn(emailValidatorStub, 'validate')
-    const request: IHttpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-      }
-    }
-    sut.perform(request)
+    sut.perform(makeValidRequest())
+
     expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
   test('should return 500 if EmailValidator throws', () => {
     const { sut, emailValidatorStub }: ISut = makeSut()
+
     jest.spyOn(emailValidatorStub, 'validate').mockImplementationOnce(() => {
       throw new Error()
     })
-    const request: IHttpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-      }
-    }
-    const httpResponse: IHttpResponse = sut.perform(request)
-    expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    const httpResponse: IHttpResponse = sut.perform(makeValidRequest())
+
+    expect(httpResponse).toEqual(serverError())
   })
 })
