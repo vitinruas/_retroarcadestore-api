@@ -1,4 +1,4 @@
-import { IController } from 'src/presentation/protocols/controller'
+import { IController } from 'src/presentation/protocols/controller-protocol'
 
 export class SignUpController implements IController {
   perform(httpRequest: any): any {
