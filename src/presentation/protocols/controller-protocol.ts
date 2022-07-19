@@ -1,3 +1,5 @@
+import { IHttpRequest, IHttpResponse } from './http-protocol'
+
 export interface IController {
-  perform(httpRequest: any): any
+  perform(httpRequest: IHttpRequest): IHttpResponse
 }
