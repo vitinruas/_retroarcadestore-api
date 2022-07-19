@@ -120,7 +120,6 @@ describe('SignUpController', () => {
 
   test('should call EmailValidator with an email', () => {
     const { sut, emailValidatorStub }: ISut = makeSut()
-
     const validateSpy = jest.spyOn(emailValidatorStub, 'validate')
     sut.perform(makeValidRequest())
 
@@ -129,12 +128,21 @@ describe('SignUpController', () => {
 
   test('should return 500 if EmailValidator throws', () => {
     const { sut, emailValidatorStub }: ISut = makeSut()
-
     jest.spyOn(emailValidatorStub, 'validate').mockImplementationOnce(() => {
       throw new Error()
     })
+
     const httpResponse: IHttpResponse = sut.perform(makeValidRequest())
 
     expect(httpResponse).toEqual(serverError())
+  })
+
+  test('should return 400 if an invalid email is provided', () => {
+    const { sut, emailValidatorStub }: ISut = makeSut()
+    jest.spyOn(emailValidatorStub, 'validate').mockReturnValueOnce(false)
+
+    const httpResponse: IHttpResponse = sut.perform(makeValidRequest())
+
+    expect(httpResponse).toEqual(badRequest(new InvalidFieldError('email')))
   })
 })
