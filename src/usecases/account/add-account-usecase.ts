@@ -1,12 +1,12 @@
-import { IAccountEntitie } from 'src/domain/entities/account'
 import {
+  IAccountEntitie,
   IAddAccountModel,
+  IGetAccountByEmailRepository,
+  IHasher,
+  IEncrypter,
+  IAddAccountRepository,
   IAddAccountUseCase
-} from 'src/domain/usecases/account/add-account-usecase'
-import { IAddAccountRepository } from '../protocols/account/add-account-repository'
-import { IEncrypter } from '../protocols/account/encrypter-protocol'
-import { IGetAccountByEmailRepository } from '../protocols/account/get-account-by-email-repository'
-import { IHasher } from '../protocols/account/hasher-protocol'
+} from './add-account-protocols'
 
 export class AddAccountUseCase implements IAddAccountUseCase {
   constructor(

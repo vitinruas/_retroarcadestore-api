@@ -1,10 +1,12 @@
-import { IAccountEntitie } from 'src/domain/entities/account'
-import { IAddAccountModel } from 'src/domain/usecases/account/add-account-usecase'
-import { IAddAccountRepository } from '../protocols/account/add-account-repository'
-import { IEncrypter } from '../protocols/account/encrypter-protocol'
-import { IGetAccountByEmailRepository } from '../protocols/account/get-account-by-email-repository'
-import { IHasher } from '../protocols/account/hasher-protocol'
-import { AddAccountUseCase } from './add-account-usecase'
+import { AddAccountUseCase } from '../add-account-usecase'
+import {
+  IAccountEntitie,
+  IAddAccountModel,
+  IGetAccountByEmailRepository,
+  IHasher,
+  IEncrypter,
+  IAddAccountRepository
+} from '../add-account-protocols'
 
 const makeValidNewAccountData = (): IAddAccountModel => ({
   name: 'any_name',
@@ -185,5 +187,13 @@ describe('AddAccountUseCase', () => {
     const promise = sut.add(makeValidNewAccountData())
 
     await expect(promise).rejects.toThrow()
+  })
+
+  test('should returns an access token', async () => {
+    const { sut } = makeSut()
+
+    const accessToken = await sut.add(makeValidNewAccountData())
+
+    expect(accessToken).toBe('any_token')
   })
 })

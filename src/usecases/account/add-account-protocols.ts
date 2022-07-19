@@ -1,0 +1,7 @@
+export * from '../../domain/entities/account'
+export * from '../../domain/usecases/account/add-account-usecase'
+export * from '../protocols/account/add-account-repository'
+export * from '../protocols/account/encrypter-protocol'
+export * from '../protocols/account/get-account-by-email-repository'
+export * from '../protocols/account/hasher-protocol'
+export * from '../../domain/usecases/account/add-account-usecase'
