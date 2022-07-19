@@ -5,7 +5,8 @@ import {
   IHasher,
   IEncrypter,
   IAddAccountRepository,
-  IAddAccountUseCase
+  IAddAccountUseCase,
+  IUpdateAccountAccessToken
 } from './add-account-protocols'
 
 export class AddAccountUseCase implements IAddAccountUseCase {
@@ -13,7 +14,8 @@ export class AddAccountUseCase implements IAddAccountUseCase {
     private readonly getAccountByEmailRepository: IGetAccountByEmailRepository,
     private readonly passwordHasher: IHasher,
     private readonly addAccountRepository: IAddAccountRepository,
-    private readonly tokenGenerator: IEncrypter
+    private readonly tokenGenerator: IEncrypter,
+    private readonly updateAccountAccessTokenStub: IUpdateAccountAccessToken
   ) {}
 
   async add(newAccountData: IAddAccountModel): Promise<string | null> {
@@ -31,6 +33,10 @@ export class AddAccountUseCase implements IAddAccountUseCase {
 
       const accessToken: string = await this.tokenGenerator.encrypt(
         createdAccount.id
+      )
+      await this.updateAccountAccessTokenStub.updateToken(
+        createdAccount.id,
+        accessToken
       )
       return accessToken
     }
