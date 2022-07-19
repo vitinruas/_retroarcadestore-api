@@ -1,6 +1,11 @@
 import { MissingFieldError } from '../../errors/missing-field-error'
 import { InvalidFieldError } from '../../errors/invalid-field-error'
-import { badRequest, ok, serverError } from '../../helpers/http-response-helper'
+import {
+  badRequest,
+  forbidden,
+  ok,
+  serverError
+} from '../../helpers/http-response-helper'
 import { IController } from '../../protocols/controller-protocol'
 import {
   IHttpRequest,
@@ -43,11 +48,15 @@ export class SignUpController implements IController {
         return badRequest(new InvalidFieldError('email'))
       }
 
-      await this.addAccountUseCase.add({
+      const accessToken = await this.addAccountUseCase.add({
         name,
         email,
         password
       })
+
+      if (!accessToken) {
+        return forbidden('Email already in use')
+      }
 
       return ok()
     } catch (error) {

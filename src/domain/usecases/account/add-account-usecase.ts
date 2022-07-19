@@ -5,5 +5,5 @@ export interface IAddAccountModel {
 }
 
 export interface IAddAccountUseCase {
-  add(newAccountData: IAddAccountModel): Promise<string>
+  add(newAccountData: IAddAccountModel): Promise<string | null>
 }
