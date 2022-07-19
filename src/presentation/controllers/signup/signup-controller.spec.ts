@@ -6,6 +6,7 @@ import { SignUpController } from './signup-controller'
 import {
   badRequest,
   forbidden,
+  ok,
   serverError
 } from '../../helpers/http-response-helper'
 import {
@@ -202,5 +203,13 @@ describe('SignUpController', () => {
     const response: IHttpResponse = await sut.perform(makeValidRequest())
 
     expect(response).toEqual(forbidden('Email already in use'))
+  })
+
+  test('should return access token if AddAccountUseCase succeeds', async () => {
+    const { sut }: ISut = makeSut()
+
+    const response: IHttpResponse = await sut.perform(makeValidRequest())
+
+    expect(response).toEqual(ok({ accessToken: 'any_token' }))
   })
 })
