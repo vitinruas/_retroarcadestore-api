@@ -58,7 +58,7 @@ export class SignUpController implements IController {
         return forbidden('Email already in use')
       }
 
-      return ok()
+      return ok({ accessToken })
     } catch (error) {
       return serverError()
     }
