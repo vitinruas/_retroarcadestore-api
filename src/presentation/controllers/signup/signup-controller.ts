@@ -1,18 +1,17 @@
-import { MissingFieldError } from '../../errors/missing-field-error'
-import { InvalidFieldError } from '../../errors/invalid-field-error'
+import {
+  IController,
+  IHttpRequest,
+  IHttpResponse,
+  IEmailValidator,
+  IAddAccountUseCase
+} from './signup-controller-protocols'
 import {
   badRequest,
   forbidden,
   ok,
   serverError
 } from '../../helpers/http-response-helper'
-import { IController } from '../../protocols/controller-protocol'
-import {
-  IHttpRequest,
-  IHttpResponse
-} from 'src/presentation/protocols/http-protocol'
-import { IEmailValidator } from '../../protocols/email-validator-protocol'
-import { IAddAccountUseCase } from '../../../domain/usecases/account/add-account-usecase'
+import { MissingFieldError, InvalidFieldError } from '../../errors'
 
 export class SignUpController implements IController {
   constructor(
@@ -35,19 +34,21 @@ export class SignUpController implements IController {
         }
       }
 
-      const { name, email, password } = httpRequest.body
+      const { name, email, password, passwordConfirmation } = httpRequest.body
 
       // check if passwords match
-      if (httpRequest.body.password !== httpRequest.body.passwordConfirmation) {
+      if (password !== passwordConfirmation) {
         return badRequest(new InvalidFieldError('passwordConfirmation'))
       }
 
+      // check if provided email is valid
       const isValid = this.emailValidatorStub.validate(httpRequest.body.email)
 
       if (!isValid) {
         return badRequest(new InvalidFieldError('email'))
       }
 
+      // add a new account with the credentials and it should returns an access token
       const accessToken = await this.addAccountUseCase.add({
         name,
         email,
