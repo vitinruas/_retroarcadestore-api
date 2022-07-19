@@ -5,7 +5,8 @@ import {
   IGetAccountByEmailRepository,
   IHasher,
   IEncrypter,
-  IAddAccountRepository
+  IAddAccountRepository,
+  IUpdateAccountAccessToken
 } from '../add-account-protocols'
 
 const makeValidNewAccountData = (): IAddAccountModel => ({
@@ -57,12 +58,22 @@ const makeTokenGeneratorStub = () => {
   return new TokenGeneratorStub()
 }
 
+const makeUpdateAccountAccessTokenStub = () => {
+  class UpdateAccountAccessTokenStub implements IUpdateAccountAccessToken {
+    async updateToken(id: string, accessToken: string): Promise<void> {
+      return Promise.resolve()
+    }
+  }
+  return new UpdateAccountAccessTokenStub()
+}
+
 interface ISut {
   sut: AddAccountUseCase
   passwordHasherStub: IHasher
   getAccountByEmailRepositoryStub: IGetAccountByEmailRepository
   addAccountRepositoryStub: IAddAccountRepository
   tokenGeneratorStub: IEncrypter
+  updateAccountAccessTokenStub: IUpdateAccountAccessToken
 }
 
 const makeSut = (): ISut => {
@@ -72,18 +83,21 @@ const makeSut = (): ISut => {
   const addAccountRepositoryStub: IAddAccountRepository =
     makeAddAccountRepositoryStub()
   const tokenGeneratorStub = makeTokenGeneratorStub()
+  const updateAccountAccessTokenStub = makeUpdateAccountAccessTokenStub()
   const sut = new AddAccountUseCase(
     getAccountByEmailRepositoryStub,
     passwordHasherStub,
     addAccountRepositoryStub,
-    tokenGeneratorStub
+    tokenGeneratorStub,
+    updateAccountAccessTokenStub
   )
   return {
     sut,
     passwordHasherStub,
     getAccountByEmailRepositoryStub,
     addAccountRepositoryStub,
-    tokenGeneratorStub
+    tokenGeneratorStub,
+    updateAccountAccessTokenStub
   }
 }
 
@@ -187,6 +201,18 @@ describe('AddAccountUseCase', () => {
     const promise = sut.add(makeValidNewAccountData())
 
     await expect(promise).rejects.toThrow()
+  })
+
+  test('should calls UpdateAccountAccessToken with correct values', async () => {
+    const { sut, updateAccountAccessTokenStub } = makeSut()
+    const updateTokenSpy = jest.spyOn(
+      updateAccountAccessTokenStub,
+      'updateToken'
+    )
+
+    await sut.add(makeValidNewAccountData())
+
+    expect(updateTokenSpy).toHaveBeenCalledWith('any_id', 'any_token')
   })
 
   test('should returns an access token', async () => {
