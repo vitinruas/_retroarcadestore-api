@@ -1,4 +1,6 @@
-export class SignUpController {
+import { IController } from 'src/presentation/protocols/controller'
+
+export class SignUpController implements IController {
   perform(httpRequest: any): any {
     if (!httpRequest.body.name) {
       return {
