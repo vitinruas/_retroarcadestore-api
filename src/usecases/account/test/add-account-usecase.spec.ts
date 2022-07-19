@@ -215,6 +215,17 @@ describe('AddAccountUseCase', () => {
     expect(updateTokenSpy).toHaveBeenCalledWith('any_id', 'any_token')
   })
 
+  test('should return throw if UpdateAccountAccessToken throws', async () => {
+    const { sut, updateAccountAccessTokenStub } = makeSut()
+    jest
+      .spyOn(updateAccountAccessTokenStub, 'updateToken')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const promise = sut.add(makeValidNewAccountData())
+
+    await expect(promise).rejects.toThrow()
+  })
+
   test('should returns an access token', async () => {
     const { sut } = makeSut()
 
