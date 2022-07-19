@@ -8,16 +8,33 @@ const makeValidNewAccountData = (): IAddAccountModel => ({
   password: 'any_password'
 })
 
-describe('AddAccountUseCase', () => {
-  test('should calls Bcrypt with a password', () => {
-    class BcryptAdapterStub implements IHasher {
-      async hash(password: string): Promise<string> {
-        return Promise.resolve('hashed_password')
-      }
+const makePasswordHasherStub = () => {
+  class PasswordHasherStub implements IHasher {
+    async hash(password: string): Promise<string> {
+      return Promise.resolve('hashed_password')
     }
-    const bcryptAdapterStub = new BcryptAdapterStub()
-    const sut = new AddAccountUseCase(bcryptAdapterStub)
-    const hashSpy = jest.spyOn(bcryptAdapterStub, 'hash')
+  }
+  return new PasswordHasherStub()
+}
+
+interface ISut {
+  sut: AddAccountUseCase
+  passwordHasherStub: IHasher
+}
+
+const makeSut = (): ISut => {
+  const passwordHasherStub = makePasswordHasherStub()
+  const sut = new AddAccountUseCase(passwordHasherStub)
+  return {
+    sut,
+    passwordHasherStub
+  }
+}
+
+describe('AddAccountUseCase', () => {
+  test('should calls PasswordHasher with a password', () => {
+    const { sut, passwordHasherStub } = makeSut()
+    const hashSpy = jest.spyOn(passwordHasherStub, 'hash')
     sut.add(makeValidNewAccountData())
 
     expect(hashSpy).toHaveBeenCalledWith('any_password')
