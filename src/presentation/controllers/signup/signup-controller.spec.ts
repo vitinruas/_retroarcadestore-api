@@ -3,7 +3,11 @@ import { MissingFieldError } from '../../errors/missing-field-error'
 import { IEmailValidator } from '../../protocols/email-validator-protocol'
 import { IHttpRequest, IHttpResponse } from '../../protocols/http-protocol'
 import { SignUpController } from './signup-controller'
-import { badRequest, serverError } from '../../helpers/http-response-helper'
+import {
+  badRequest,
+  forbidden,
+  serverError
+} from '../../helpers/http-response-helper'
 import {
   IAddAccountModel,
   IAddAccountUseCase
@@ -29,7 +33,7 @@ const makeEmailValidatorStub = (): IEmailValidator => {
 
 const makeAddAccountUseCaseStub = (): IAddAccountUseCase => {
   class AddAccountUseCaseStub implements IAddAccountUseCase {
-    add(newAccountData: IAddAccountModel): Promise<string> {
+    add(newAccountData: IAddAccountModel): Promise<string | null> {
       return Promise.resolve('any_token')
     }
   }
@@ -187,5 +191,16 @@ describe('SignUpController', () => {
     const response: IHttpResponse = await sut.perform(makeValidRequest())
 
     expect(response).toEqual(serverError())
+  })
+
+  test('should return 403 if AddAccountUseCase fails', async () => {
+    const { sut, addAccountUseCase }: ISut = makeSut()
+    jest
+      .spyOn(addAccountUseCase, 'add')
+      .mockReturnValueOnce(Promise.resolve(null))
+
+    const response: IHttpResponse = await sut.perform(makeValidRequest())
+
+    expect(response).toEqual(forbidden('Email already in use'))
   })
 })
