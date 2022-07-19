@@ -6,31 +6,13 @@ import {
 
 export class SignUpController implements IController {
   perform(httpRequest: IHttpRequest): IHttpResponse {
-    if (!httpRequest.body.name) {
-      return {
-        statusCode: 400,
-        body: 'Missing param: name'
-      }
-    }
-
-    if (!httpRequest.body.email) {
-      return {
-        statusCode: 400,
-        body: 'Missing param: email'
-      }
-    }
-
-    if (!httpRequest.body.password) {
-      return {
-        statusCode: 400,
-        body: 'Missing param: password'
-      }
-    }
-
-    if (!httpRequest.body.passwordConfirmation) {
-      return {
-        statusCode: 400,
-        body: 'Missing param: passwordConfirmation'
+    const requiredFields = ['name', 'email', 'password', 'passwordConfirmation']
+    for (const requiredField of requiredFields) {
+      if (!httpRequest.body[requiredField]) {
+        return {
+          statusCode: 400,
+          body: `Missing param: ${requiredField}`
+        }
       }
     }
     return {
