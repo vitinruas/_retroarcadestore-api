@@ -11,7 +11,7 @@ export class UpdateAccountAccessToken implements IUpdateAccountAccessToken {
       {
         $set: {
           accessToken,
-          authenticatedAt: accountHelper.getDate()
+          authenticatedAt: accountHelper.getCurrentTime()
         }
       }
     )
