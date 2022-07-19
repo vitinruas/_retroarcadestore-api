@@ -16,7 +16,7 @@ describe('SignUpController', () => {
     }
     const response: IHttpResponse = sut.perform(request)
     expect(response.statusCode).toBe(400)
-    expect(response.body).toBe('Missing param: name')
+    expect(response.body).toBe('Missing field: name')
   })
 
   test('should return 400 if no email is provided', () => {
@@ -30,7 +30,7 @@ describe('SignUpController', () => {
     }
     const response: IHttpResponse = sut.perform(request)
     expect(response.statusCode).toBe(400)
-    expect(response.body).toBe('Missing param: email')
+    expect(response.body).toBe('Missing field: email')
   })
 
   test('should return 400 if no password is provided', () => {
@@ -44,7 +44,7 @@ describe('SignUpController', () => {
     }
     const response: IHttpResponse = sut.perform(request)
     expect(response.statusCode).toBe(400)
-    expect(response.body).toBe('Missing param: password')
+    expect(response.body).toBe('Missing field: password')
   })
 
   test('should return 400 if no passwordConfirmation is provided', () => {
@@ -58,6 +58,21 @@ describe('SignUpController', () => {
     }
     const response: IHttpResponse = sut.perform(request)
     expect(response.statusCode).toBe(400)
-    expect(response.body).toBe('Missing param: passwordConfirmation')
+    expect(response.body).toBe('Missing field: passwordConfirmation')
+  })
+
+  test('should return 400 if passwords do not match', () => {
+    const sut: SignUpController = new SignUpController()
+    const request: IHttpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'invalid_password'
+      }
+    }
+    const response: IHttpResponse = sut.perform(request)
+    expect(response.statusCode).toBe(400)
+    expect(response.body).toBe('Invalid field: passwordConfirmation')
   })
 })
