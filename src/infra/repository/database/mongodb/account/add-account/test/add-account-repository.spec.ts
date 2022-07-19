@@ -1,8 +1,8 @@
+import { IAddAccountModel } from '../add-account-repository.protocols'
 import { AddAccountMongoRepository } from '../add-account-mongo-repository'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { Collection } from 'mongoose'
 import mongoHelper from '../../../helpers/mongo-helper'
-import { IAddAccountModel } from 'src/usecases/account/add-account-protocols'
 
 let mongod: MongoMemoryServer
 let collectionRef: Collection

@@ -2,7 +2,7 @@ import {
   IAccountEntitie,
   IAddAccountModel,
   IAddAccountRepository
-} from 'src/usecases/account/add-account-protocols'
+} from './add-account-repository.protocols'
 import accountHelper from '../../helpers/account-helper'
 import mongoHelper from '../../helpers/mongo-helper'
 
