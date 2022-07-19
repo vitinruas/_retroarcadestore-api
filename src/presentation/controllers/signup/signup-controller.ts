@@ -7,11 +7,15 @@ import {
   IHttpResponse
 } from 'src/presentation/protocols/http-protocol'
 import { IEmailValidator } from '../../protocols/email-validator-protocol'
+import { IAddAccountUseCase } from '../../../domain/usecases/account/add-account-usecase'
 
 export class SignUpController implements IController {
-  constructor(private readonly emailValidatorStub: IEmailValidator) {}
+  constructor(
+    private readonly emailValidatorStub: IEmailValidator,
+    private readonly addAccountUseCase: IAddAccountUseCase
+  ) {}
 
-  perform(httpRequest: IHttpRequest): IHttpResponse {
+  async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
       // check if all required fields has been provided
       const requiredFields = [
@@ -26,6 +30,8 @@ export class SignUpController implements IController {
         }
       }
 
+      const { name, email, password } = httpRequest.body
+
       // check if passwords match
       if (httpRequest.body.password !== httpRequest.body.passwordConfirmation) {
         return badRequest(new InvalidFieldError('passwordConfirmation'))
@@ -36,6 +42,13 @@ export class SignUpController implements IController {
       if (!isValid) {
         return badRequest(new InvalidFieldError('email'))
       }
+
+      await this.addAccountUseCase.add({
+        name,
+        email,
+        password
+      })
+
       return ok()
     } catch (error) {
       return serverError()
