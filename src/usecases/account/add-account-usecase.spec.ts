@@ -24,13 +24,7 @@ const makeGetAccountByEmailRepositoryStub = () => {
     implements IGetAccountByEmailRepository
   {
     async get(email: string): Promise<IAccountEntitie | null> {
-      return Promise.resolve({
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email',
-        password: 'any_password',
-        isAdmin: false
-      })
+      return Promise.resolve(null)
     }
   }
   return new GetAccountByEmailRepositoryStub()
@@ -57,26 +51,6 @@ const makeSut = (): ISut => {
 }
 
 describe('AddAccountUseCase', () => {
-  test('should calls PasswordHasher with a password', async () => {
-    const { sut, passwordHasherStub } = makeSut()
-    const hashSpy = jest.spyOn(passwordHasherStub, 'hash')
-
-    await sut.add(makeValidNewAccountData())
-
-    expect(hashSpy).toHaveBeenCalledWith('any_password')
-  })
-
-  test('should return throw if PasswordHasher throws', async () => {
-    const { sut, passwordHasherStub } = makeSut()
-    jest
-      .spyOn(passwordHasherStub, 'hash')
-      .mockImplementationOnce(async () => Promise.reject(new Error()))
-
-    const promise = sut.add(makeValidNewAccountData())
-
-    await expect(promise).rejects.toThrow()
-  })
-
   test('should call GetAccountByEmailRepository with correct values', async () => {
     const { sut, getAccountByEmailRepositoryStub } = makeSut()
     const getSpy = jest.spyOn(getAccountByEmailRepositoryStub, 'get')
@@ -90,6 +64,43 @@ describe('AddAccountUseCase', () => {
     const { sut, getAccountByEmailRepositoryStub } = makeSut()
     jest
       .spyOn(getAccountByEmailRepositoryStub, 'get')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const promise = sut.add(makeValidNewAccountData())
+
+    await expect(promise).rejects.toThrow()
+  })
+
+  test('should return null if GetAccountByEmailRepository returns an account', async () => {
+    const { sut, getAccountByEmailRepositoryStub } = makeSut()
+    jest.spyOn(getAccountByEmailRepositoryStub, 'get').mockReturnValueOnce(
+      Promise.resolve({
+        id: 'any_id',
+        name: 'any_name',
+        email: 'any_email',
+        password: 'any_password',
+        isAdmin: false
+      })
+    )
+
+    const accessToken = await sut.add(makeValidNewAccountData())
+
+    expect(accessToken).toBe(null)
+  })
+
+  test('should calls PasswordHasher with a password', async () => {
+    const { sut, passwordHasherStub } = makeSut()
+    const hashSpy = jest.spyOn(passwordHasherStub, 'hash')
+
+    await sut.add(makeValidNewAccountData())
+
+    expect(hashSpy).toHaveBeenCalledWith('any_password')
+  })
+
+  test('should return throw if PasswordHasher throws', async () => {
+    const { sut, passwordHasherStub } = makeSut()
+    jest
+      .spyOn(passwordHasherStub, 'hash')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
     const promise = sut.add(makeValidNewAccountData())
