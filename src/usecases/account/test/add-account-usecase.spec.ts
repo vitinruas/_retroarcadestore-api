@@ -60,7 +60,7 @@ const makeTokenGeneratorStub = () => {
 
 const makeUpdateAccountAccessTokenStub = () => {
   class UpdateAccountAccessTokenStub implements IUpdateAccountAccessToken {
-    async updateToken(id: string, accessToken: string): Promise<void> {
+    async update(id: string, accessToken: string): Promise<void> {
       return Promise.resolve()
     }
   }
@@ -205,20 +205,17 @@ describe('AddAccountUseCase', () => {
 
   test('should calls UpdateAccountAccessToken with correct values', async () => {
     const { sut, updateAccountAccessTokenStub } = makeSut()
-    const updateTokenSpy = jest.spyOn(
-      updateAccountAccessTokenStub,
-      'updateToken'
-    )
+    const updateSpy = jest.spyOn(updateAccountAccessTokenStub, 'update')
 
     await sut.add(makeValidNewAccountData())
 
-    expect(updateTokenSpy).toHaveBeenCalledWith('any_id', 'any_token')
+    expect(updateSpy).toHaveBeenCalledWith('any_id', 'any_token')
   })
 
   test('should return throw if UpdateAccountAccessToken throws', async () => {
     const { sut, updateAccountAccessTokenStub } = makeSut()
     jest
-      .spyOn(updateAccountAccessTokenStub, 'updateToken')
+      .spyOn(updateAccountAccessTokenStub, 'update')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
     const promise = sut.add(makeValidNewAccountData())

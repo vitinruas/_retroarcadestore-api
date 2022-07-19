@@ -14,7 +14,7 @@ export class UpdateAccountAccessToken implements IUpdateAccountAccessToken {
     })
   }
 
-  async updateToken(id: string, accessToken: string): Promise<void> {
+  async update(id: string, accessToken: string): Promise<void> {
     const collectionRef = mongoHelper.getCollection('accounts')
     await collectionRef.findOneAndUpdate(
       { _id: new mongoose.Types.ObjectId(id) },

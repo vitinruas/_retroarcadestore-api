@@ -58,7 +58,7 @@ describe('UpdateAccountAccessToken', () => {
 
     expect(createdAccount!.accessToken).toBe('any_token')
 
-    await sut.updateToken(createdAccountID._id.toString(), 'new_token')
+    await sut.update(createdAccountID._id.toString(), 'new_token')
     const updatedAccount = await getAccount(createdAccountID.toString())
 
     expect(updatedAccount!.accessToken).toBe('new_token')
