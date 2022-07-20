@@ -1,5 +1,8 @@
 import { InvalidFieldError, MissingFieldError } from '../../../../errors'
-import { badRequest } from '../../../../helpers/http-response-helper'
+import {
+  badRequest,
+  serverError
+} from '../../../../helpers/http-response-helper'
 import {
   IHttpRequest,
   IHttpResponse
@@ -65,13 +68,28 @@ describe('LoginController', () => {
     expect(httpResponse).toEqual(badRequest(new MissingFieldError('password')))
   })
 
-  test('should call EmailValidator with an email', async () => {
+  test('should call EmailValidatorAdapter with an email', async () => {
     const { sut, emailValidatorAdapterStub } = makeSut()
     const validateSpy = jest.spyOn(emailValidatorAdapterStub, 'validate')
 
     await sut.perform(makeFakeValidRequest())
 
     expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
+  })
+
+  test('should return 500 if EmailValidatorAdapter throws', async () => {
+    const { sut, emailValidatorAdapterStub } = makeSut()
+    jest
+      .spyOn(emailValidatorAdapterStub, 'validate')
+      .mockImplementationOnce(() => {
+        throw new Error()
+      })
+
+    const httpResponse: IHttpResponse = await sut.perform(
+      makeFakeValidRequest()
+    )
+
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   test('should return 400 if an invalid email is provided', async () => {
