@@ -12,7 +12,8 @@
     "test": "jest --passWithNoTests --runInBand",
     "test:verbose": "jest --verbose",
     "test:staged": "npm test -- --coverage",
-    "test:unit": "npm test --  --watch"
+    "test:unit": "npm test --  --watch",
+    "start": "sucrase-node ./src/main/server.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
