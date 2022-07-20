@@ -1,3 +1,7 @@
+import {
+  IAuthenticationModel,
+  IAuthenticationUseCase
+} from '../../../../../domain/usecases/account/authentication-usecase'
 import { InvalidFieldError, MissingFieldError } from '../../../../errors'
 import {
   badRequest,
@@ -26,18 +30,36 @@ const makeEmailValidatorAdapterStub = (): IEmailValidatorAdapter => {
   return new EmailValidatorAdapterStub()
 }
 
+const makeAuthenticationUseCaseStub = (): IAuthenticationUseCase => {
+  class AuthenticationUseCaseStub implements IAuthenticationUseCase {
+    async authenticate(
+      authenticateData: IAuthenticationModel
+    ): Promise<string> {
+      return 'any_token'
+    }
+  }
+  return new AuthenticationUseCaseStub()
+}
+
 interface ISut {
   sut: LoginController
   emailValidatorAdapterStub: IEmailValidatorAdapter
+  authenticationUseCaseStub: IAuthenticationUseCase
 }
 
 const makeSut = (): ISut => {
   const emailValidatorAdapterStub: IEmailValidatorAdapter =
     makeEmailValidatorAdapterStub()
-  const sut: LoginController = new LoginController(emailValidatorAdapterStub)
+  const authenticationUseCaseStub: IAuthenticationUseCase =
+    makeAuthenticationUseCaseStub()
+  const sut: LoginController = new LoginController(
+    emailValidatorAdapterStub,
+    authenticationUseCaseStub
+  )
   return {
     sut,
-    emailValidatorAdapterStub
+    emailValidatorAdapterStub,
+    authenticationUseCaseStub
   }
 }
 
@@ -101,5 +123,20 @@ describe('LoginController', () => {
     )
 
     expect(httpResponse).toEqual(badRequest(new InvalidFieldError('email')))
+  })
+
+  test('should call AuthenticationUseCase with correct values', async () => {
+    const { sut, authenticationUseCaseStub } = makeSut()
+    const authenticateSpy = jest.spyOn(
+      authenticationUseCaseStub,
+      'authenticate'
+    )
+
+    await sut.perform(makeFakeValidRequest())
+
+    expect(authenticateSpy).toHaveBeenCalledWith({
+      email: 'any_email@mail.com',
+      password: 'any_password'
+    })
   })
 })
