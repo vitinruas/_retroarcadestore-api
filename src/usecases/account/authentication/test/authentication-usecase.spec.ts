@@ -3,7 +3,8 @@ import { IHashComparer } from '../../../protocols/cryptography/hash-comparer-pro
 import {
   IAccountEntitie,
   IEncrypter,
-  IGetAccountByEmailRepository
+  IGetAccountByEmailRepository,
+  IUpdateAccountAccessToken
 } from '../../add-account/add-account-usecase-protocols'
 import { AuthenticationUseCase } from '../authentication-usecase'
 
@@ -46,29 +47,43 @@ const makeTokenGeneratorAdapterStub = () => {
   return new TokenGeneratorAdapter()
 }
 
+const makeUpdateAccountAccessTokenStub = () => {
+  class UpdateAccountAccessTokenStub implements IUpdateAccountAccessToken {
+    async update(id: string, accessToken: string): Promise<void> {
+      return Promise.resolve()
+    }
+  }
+  return new UpdateAccountAccessTokenStub()
+}
+
 interface ISut {
   sut: AuthenticationUseCase
   getAccountByEmailRepositoryStub: IGetAccountByEmailRepository
-  passwordHashComparer: IHashComparer
-  tokenGeneratorAdapter: IEncrypter
+  passwordHashComparerStub: IHashComparer
+  tokenGeneratorAdapterStub: IEncrypter
+  updateAccountAccessTokenRepositoryStub: IUpdateAccountAccessToken
 }
 
 const makeSut = (): ISut => {
   const getAccountByEmailRepositoryStub: IGetAccountByEmailRepository =
     makeGetAccountByEmailRepositoryStub()
-  const passwordHashComparer: IHashComparer =
+  const passwordHashComparerStub: IHashComparer =
     makePasswordHashComparerAdapterStub()
-  const tokenGeneratorAdapter: IEncrypter = makeTokenGeneratorAdapterStub()
+  const tokenGeneratorAdapterStub: IEncrypter = makeTokenGeneratorAdapterStub()
+  const updateAccountAccessTokenRepositoryStub: IUpdateAccountAccessToken =
+    makeUpdateAccountAccessTokenStub()
   const sut: AuthenticationUseCase = new AuthenticationUseCase(
     getAccountByEmailRepositoryStub,
-    passwordHashComparer,
-    tokenGeneratorAdapter
+    passwordHashComparerStub,
+    tokenGeneratorAdapterStub,
+    updateAccountAccessTokenRepositoryStub
   )
   return {
     sut,
     getAccountByEmailRepositoryStub,
-    passwordHashComparer,
-    tokenGeneratorAdapter
+    passwordHashComparerStub,
+    tokenGeneratorAdapterStub,
+    updateAccountAccessTokenRepositoryStub
   }
 }
 
@@ -111,8 +126,8 @@ describe('AuthenticationUseCase', () => {
   })
 
   test('should call PasswordHashComparer with correct values', async () => {
-    const { sut, passwordHashComparer } = makeSut()
-    const compareSpy = jest.spyOn(passwordHashComparer, 'compare')
+    const { sut, passwordHashComparerStub } = makeSut()
+    const compareSpy = jest.spyOn(passwordHashComparerStub, 'compare')
 
     await sut.authenticate(makeFakeValidAuthenticationData())
 
@@ -120,9 +135,9 @@ describe('AuthenticationUseCase', () => {
   })
 
   test('should return throw if PasswordHashComparer throws', async () => {
-    const { sut, passwordHashComparer } = makeSut()
+    const { sut, passwordHashComparerStub } = makeSut()
     jest
-      .spyOn(passwordHashComparer, 'compare')
+      .spyOn(passwordHashComparerStub, 'compare')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
     const promise: Promise<string | null> = sut.authenticate(
@@ -133,9 +148,9 @@ describe('AuthenticationUseCase', () => {
   })
 
   test('should return null if PasswordHashComparer fails', async () => {
-    const { sut, passwordHashComparer } = makeSut()
+    const { sut, passwordHashComparerStub } = makeSut()
     jest
-      .spyOn(passwordHashComparer, 'compare')
+      .spyOn(passwordHashComparerStub, 'compare')
       .mockReturnValueOnce(Promise.resolve(false))
 
     const accessToken = await sut.authenticate(
@@ -146,17 +161,17 @@ describe('AuthenticationUseCase', () => {
   })
 
   test('should call PasswordHashComparer with correct values', async () => {
-    const { sut, passwordHashComparer } = makeSut()
-    const compareSpy = jest.spyOn(passwordHashComparer, 'compare')
+    const { sut, passwordHashComparerStub } = makeSut()
+    const compareSpy = jest.spyOn(passwordHashComparerStub, 'compare')
 
     await sut.authenticate(makeFakeValidAuthenticationData())
 
     expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
   })
 
-  test('should call TokenGeneratorAdapter with an email', async () => {
-    const { sut, tokenGeneratorAdapter } = makeSut()
-    const getSpy = jest.spyOn(tokenGeneratorAdapter, 'encrypt')
+  test('should call TokenGeneratorAdapter with an user id', async () => {
+    const { sut, tokenGeneratorAdapterStub } = makeSut()
+    const getSpy = jest.spyOn(tokenGeneratorAdapterStub, 'encrypt')
 
     await sut.authenticate(makeFakeValidAuthenticationData())
 
@@ -164,9 +179,9 @@ describe('AuthenticationUseCase', () => {
   })
 
   test('should return throw if TokenGeneratorAdapter throws', async () => {
-    const { sut, tokenGeneratorAdapter } = makeSut()
+    const { sut, tokenGeneratorAdapterStub } = makeSut()
     jest
-      .spyOn(tokenGeneratorAdapter, 'encrypt')
+      .spyOn(tokenGeneratorAdapterStub, 'encrypt')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
     const promise: Promise<string | null> = sut.authenticate(
@@ -174,5 +189,17 @@ describe('AuthenticationUseCase', () => {
     )
 
     await expect(promise).rejects.toThrow()
+  })
+
+  test('should call UpdateAccountAccessTokenRepository with correct values', async () => {
+    const { sut, updateAccountAccessTokenRepositoryStub } = makeSut()
+    const updateSpy = jest.spyOn(
+      updateAccountAccessTokenRepositoryStub,
+      'update'
+    )
+
+    await sut.authenticate(makeFakeValidAuthenticationData())
+
+    expect(updateSpy).toHaveBeenCalledWith('any_id', 'any_token')
   })
 })
