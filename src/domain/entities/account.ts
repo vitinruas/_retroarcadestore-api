@@ -4,4 +4,9 @@ export interface IAccountEntitie {
   email: string
   password: string
   isAdmin?: boolean
+  createdAt?: string
+  updatedAt?: string
+  authenticatedAt?: string
+  isClosed?: boolean
+  closedAt?: string
 }
