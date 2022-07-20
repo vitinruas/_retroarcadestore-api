@@ -1,4 +1,4 @@
-import { MissingFieldError } from '../../../errors'
+import { InvalidFieldError, MissingFieldError } from '../../../errors'
 import { badRequest } from '../../../helpers/http-response-helper'
 import {
   IController,
@@ -19,7 +19,10 @@ export class LoginController implements IController {
     }
 
     try {
-      this.emailValidator.validate(httpRequest.body.email)
+      const isValid = this.emailValidator.validate(httpRequest.body.email)
+      if (!isValid) {
+        return badRequest(new InvalidFieldError('email'))
+      }
     } catch (error) {}
     return Promise.resolve({
       statusCode: 200,
