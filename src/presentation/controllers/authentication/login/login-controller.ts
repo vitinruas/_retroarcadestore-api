@@ -1,4 +1,3 @@
-import { IAuthenticationUseCase } from '../../../../domain/usecases/account/authentication-usecase'
 import { InvalidFieldError, MissingFieldError } from '../../../errors'
 import { UnauthenticatedLoginError } from '../../../errors/unauthenticated-error'
 import {
@@ -11,8 +10,9 @@ import {
   IController,
   IEmailValidatorAdapter,
   IHttpRequest,
-  IHttpResponse
-} from '../signup/signup-controller-protocols'
+  IHttpResponse,
+  IAuthenticationUseCase
+} from './login-controller-protocol'
 
 export class LoginController implements IController {
   constructor(

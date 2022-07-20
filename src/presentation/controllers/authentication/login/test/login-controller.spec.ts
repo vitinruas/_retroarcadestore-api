@@ -1,7 +1,4 @@
-import {
-  IAuthenticationModel,
-  IAuthenticationUseCase
-} from '../../../../../domain/usecases/account/authentication-usecase'
+import { LoginController } from '../login-controller'
 import { InvalidFieldError, MissingFieldError } from '../../../../errors'
 import { UnauthenticatedLoginError } from '../../../../errors/unauthenticated-error'
 import {
@@ -11,11 +8,12 @@ import {
   unauthorized
 } from '../../../../helpers/http-response-helper'
 import {
+  IEmailValidatorAdapter,
   IHttpRequest,
-  IHttpResponse
-} from '../../../../protocols/http-protocol'
-import { IEmailValidatorAdapter } from '../../signup/signup-controller-protocols'
-import { LoginController } from '../login-controller'
+  IHttpResponse,
+  IAuthenticationUseCase,
+  IAuthenticationModel
+} from '../login-controller-protocol'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
   body: {
