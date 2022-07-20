@@ -11,15 +11,19 @@ export class LoginController implements IController {
   constructor(private readonly emailValidator: IEmailValidatorAdapter) {}
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
-    if (!httpRequest.body.email) {
-      return badRequest(new MissingFieldError('email'))
-    }
-    if (!httpRequest.body.password) {
-      return badRequest(new MissingFieldError('password'))
-    }
-
     try {
-      const isValid = this.emailValidator.validate(httpRequest.body.email)
+      // check if all required fields has been provided
+      const requiredFields = ['email', 'password']
+      for (const requiredField of requiredFields) {
+        if (!httpRequest.body[requiredField]) {
+          return badRequest(new MissingFieldError(requiredField))
+        }
+      }
+
+      const { email } = httpRequest.body
+
+      // check if the provided email is valid
+      const isValid = this.emailValidator.validate(email)
       if (!isValid) {
         return badRequest(new InvalidFieldError('email'))
       }
