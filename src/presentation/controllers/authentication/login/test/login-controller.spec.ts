@@ -139,4 +139,19 @@ describe('LoginController', () => {
       password: 'any_password'
     })
   })
+
+  test('should return 500 if AuthenticationUseCase throws', async () => {
+    const { sut, authenticationUseCaseStub } = makeSut()
+    jest
+      .spyOn(authenticationUseCaseStub, 'authenticate')
+      .mockImplementationOnce(async () => {
+        return Promise.reject(new Error())
+      })
+
+    const httpResponse: IHttpResponse = await sut.perform(
+      makeFakeValidRequest()
+    )
+
+    expect(httpResponse).toEqual(serverError(new Error()))
+  })
 })
