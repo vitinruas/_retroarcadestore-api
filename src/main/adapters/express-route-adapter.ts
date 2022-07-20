@@ -11,7 +11,6 @@ export const expressRouteAdapter = (controller: IController) => {
       body: request.body
     }
 
-    console.log(httpRequest)
     const httpResponse: IHttpResponse = await controller.perform(httpRequest)
     if (httpResponse.statusCode >= 400) {
       return response
