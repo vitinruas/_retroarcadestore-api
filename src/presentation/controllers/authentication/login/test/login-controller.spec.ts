@@ -3,10 +3,12 @@ import {
   IAuthenticationUseCase
 } from '../../../../../domain/usecases/account/authentication-usecase'
 import { InvalidFieldError, MissingFieldError } from '../../../../errors'
+import { UnauthenticatedLoginError } from '../../../../errors/unauthenticated-error'
 import {
   badRequest,
   ok,
-  serverError
+  serverError,
+  unauthorized
 } from '../../../../helpers/http-response-helper'
 import {
   IHttpRequest,
@@ -35,7 +37,7 @@ const makeAuthenticationUseCaseStub = (): IAuthenticationUseCase => {
   class AuthenticationUseCaseStub implements IAuthenticationUseCase {
     async authenticate(
       authenticateData: IAuthenticationModel
-    ): Promise<string> {
+    ): Promise<string | null> {
       return 'any_token'
     }
   }
@@ -154,6 +156,19 @@ describe('LoginController', () => {
     )
 
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('should return 401 if AuthenticationUseCase returns null', async () => {
+    const { sut, authenticationUseCaseStub } = makeSut()
+
+    jest
+      .spyOn(authenticationUseCaseStub, 'authenticate')
+      .mockReturnValueOnce(Promise.resolve(null))
+    const httpResponse: IHttpResponse = await sut.perform(
+      makeFakeValidRequest()
+    )
+
+    expect(httpResponse).toEqual(unauthorized(new UnauthenticatedLoginError()))
   })
 
   test('should return an access token if AuthenticationUseCase succeeds', async () => {
