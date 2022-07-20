@@ -12,6 +12,11 @@ export const forbidden = (message: string): IHttpResponse => ({
   body: new ForbiddenError(message)
 })
 
+export const unauthorized = (error: Error): IHttpResponse => ({
+  statusCode: 401,
+  body: error
+})
+
 export const ok = (data?: any): IHttpResponse => ({
   statusCode: 200,
   body: data

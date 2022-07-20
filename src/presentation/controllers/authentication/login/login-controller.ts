@@ -1,5 +1,6 @@
 import { IAuthenticationUseCase } from '../../../../domain/usecases/account/authentication-usecase'
 import { InvalidFieldError, MissingFieldError } from '../../../errors'
+import { UnauthenticatedLoginError } from '../../../errors/unauthenticated-error'
 import {
   badRequest,
   ok,
@@ -41,6 +42,9 @@ export class LoginController implements IController {
         email,
         password
       })
+      if (!accessToken) {
+        return unauthorized(new UnauthenticatedLoginError())
+      }
       return ok({ accessToken })
     } catch (error: any) {
       return serverError(error)
