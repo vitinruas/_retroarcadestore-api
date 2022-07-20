@@ -13,6 +13,15 @@ jest.mock('bcrypt', () => ({
 
 describe('BcryptAdapter', () => {
   describe('hash', () => {
+    test('should call Bcrypt.hash with correct values', async () => {
+      const sut = new BcryptAdapter(12)
+      const hashSpy = jest.spyOn(bcrypt, 'hash')
+
+      await sut.hash('any_value')
+
+      expect(hashSpy).toHaveBeenCalledWith('any_value', 12)
+    })
+
     test('should return a hashed password', async () => {
       const sut = new BcryptAdapter(12)
 
