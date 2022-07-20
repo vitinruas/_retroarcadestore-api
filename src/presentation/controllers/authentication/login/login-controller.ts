@@ -1,5 +1,9 @@
 import { InvalidFieldError, MissingFieldError } from '../../../errors'
-import { badRequest } from '../../../helpers/http-response-helper'
+import {
+  badRequest,
+  ok,
+  serverError
+} from '../../../helpers/http-response-helper'
 import {
   IController,
   IEmailValidatorAdapter,
@@ -27,10 +31,9 @@ export class LoginController implements IController {
       if (!isValid) {
         return badRequest(new InvalidFieldError('email'))
       }
-    } catch (error) {}
-    return Promise.resolve({
-      statusCode: 200,
-      body: null
-    })
+      return ok()
+    } catch (error: any) {
+      return serverError(error)
+    }
   }
 }
