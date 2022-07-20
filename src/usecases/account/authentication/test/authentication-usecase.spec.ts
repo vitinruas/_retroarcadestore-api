@@ -1,12 +1,12 @@
-import { IAuthenticationModel } from '../../../../domain/usecases/account/authentication-usecase'
-import { IHashComparer } from '../../../protocols/cryptography/hash-comparer-protocol'
+import { AuthenticationUseCase } from '../authentication-usecase'
 import {
+  IAuthenticationModel,
+  IHashComparer,
   IAccountEntitie,
   IEncrypter,
   IGetAccountByEmailRepository,
   IUpdateAccountAccessToken
-} from '../../add-account/add-account-usecase-protocols'
-import { AuthenticationUseCase } from '../authentication-usecase'
+} from '../authentication-usecase-protocols'
 
 const makeFakeValidAuthenticationData = (): IAuthenticationModel => ({
   email: 'any_email@mail.com',
