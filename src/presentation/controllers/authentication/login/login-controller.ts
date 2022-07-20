@@ -11,6 +11,9 @@ export class LoginController implements IController {
     if (!httpRequest.body.email) {
       return badRequest(new MissingFieldError('email'))
     }
+    if (!httpRequest.body.password) {
+      return badRequest(new MissingFieldError('password'))
+    }
     return Promise.resolve({
       statusCode: 200,
       body: null
