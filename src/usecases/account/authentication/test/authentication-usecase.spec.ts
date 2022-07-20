@@ -15,7 +15,12 @@ const makeGetAccountByEmailRepositoryStub = () => {
     implements IGetAccountByEmailRepository
   {
     async get(email: string): Promise<IAccountEntitie | null> {
-      return Promise.resolve(null)
+      return Promise.resolve({
+        id: 'any_id',
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      })
     }
   }
   return new GetAccountByEmailRepositoryStub()
@@ -48,7 +53,7 @@ describe('AuthenticationUseCase', () => {
     expect(getSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
-  test('should returns throw if GetAccountByEmailRepository throws', async () => {
+  test('should return throw if GetAccountByEmailRepository throws', async () => {
     const { sut, getAccountByEmailRepositoryStub } = makeSut()
     jest
       .spyOn(getAccountByEmailRepositoryStub, 'get')
@@ -61,5 +66,18 @@ describe('AuthenticationUseCase', () => {
     )
 
     await expect(promise).rejects.toThrow()
+  })
+
+  test('should returns null if GetAccountByEmailRepository fails', async () => {
+    const { sut, getAccountByEmailRepositoryStub } = makeSut()
+    jest
+      .spyOn(getAccountByEmailRepositoryStub, 'get')
+      .mockReturnValueOnce(Promise.resolve(null))
+
+    const accessToken = await sut.authenticate(
+      makeFakeValidAuthenticationData()
+    )
+
+    expect(accessToken).toBeNull()
   })
 })
