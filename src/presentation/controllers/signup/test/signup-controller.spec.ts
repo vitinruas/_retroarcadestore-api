@@ -9,7 +9,7 @@ import {
 import {
   IAddAccountModel,
   IAddAccountUseCase,
-  IEmailValidator,
+  IEmailValidatorAdapter,
   IHttpRequest,
   IHttpResponse
 } from '../signup-controller-protocols'
@@ -23,8 +23,8 @@ const makeValidRequest = (): IHttpRequest => ({
   }
 })
 
-const makeEmailValidatorStub = (): IEmailValidator => {
-  class EmailValidatorStub implements IEmailValidator {
+const makeEmailValidatorStub = (): IEmailValidatorAdapter => {
+  class EmailValidatorStub implements IEmailValidatorAdapter {
     validate(email: string): boolean {
       return true
     }
@@ -43,12 +43,12 @@ const makeAddAccountUseCaseStub = (): IAddAccountUseCase => {
 
 interface ISut {
   sut: SignUpController
-  emailValidatorStub: IEmailValidator
+  emailValidatorStub: IEmailValidatorAdapter
   addAccountUseCase: IAddAccountUseCase
 }
 
 const makeSut = (): ISut => {
-  const emailValidatorStub: IEmailValidator = makeEmailValidatorStub()
+  const emailValidatorStub: IEmailValidatorAdapter = makeEmailValidatorStub()
   const addAccountUseCase: IAddAccountUseCase = makeAddAccountUseCaseStub()
   const sut: SignUpController = new SignUpController(
     emailValidatorStub,

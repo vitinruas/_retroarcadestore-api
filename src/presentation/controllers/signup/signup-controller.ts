@@ -2,7 +2,7 @@ import {
   IController,
   IHttpRequest,
   IHttpResponse,
-  IEmailValidator,
+  IEmailValidatorAdapter,
   IAddAccountUseCase
 } from './signup-controller-protocols'
 import {
@@ -15,7 +15,7 @@ import { MissingFieldError, InvalidFieldError } from '../../errors'
 
 export class SignUpController implements IController {
   constructor(
-    private readonly emailValidatorStub: IEmailValidator,
+    private readonly emailValidatorStub: IEmailValidatorAdapter,
     private readonly addAccountUseCase: IAddAccountUseCase
   ) {}
 
