@@ -6,7 +6,7 @@ import {
   IEncrypter,
   IAddAccountRepository,
   IAddAccountUseCase,
-  IUpdateAccountAccessToken
+  IUpdateAccountAccessTokenRepository
 } from './add-account-usecase-protocols'
 
 export class AddAccountUseCase implements IAddAccountUseCase {
@@ -14,8 +14,8 @@ export class AddAccountUseCase implements IAddAccountUseCase {
     private readonly getAccountByEmailRepository: IGetAccountByEmailRepository,
     private readonly passwordHasher: IHasher,
     private readonly addAccountRepository: IAddAccountRepository,
-    private readonly tokenGenerator: IEncrypter,
-    private readonly updateAccountAccessTokenStub: IUpdateAccountAccessToken
+    private readonly tokenGeneratorAdapter: IEncrypter,
+    private readonly updateAccountAccessTokenStubRepository: IUpdateAccountAccessTokenRepository
   ) {}
 
   async add(newAccountData: IAddAccountModel): Promise<string | null> {
@@ -31,10 +31,10 @@ export class AddAccountUseCase implements IAddAccountUseCase {
           Object.assign({}, newAccountData, { password: hashedPassword })
         )
 
-      const accessToken: string = await this.tokenGenerator.encrypt(
+      const accessToken: string = await this.tokenGeneratorAdapter.encrypt(
         createdAccount.id
       )
-      await this.updateAccountAccessTokenStub.update(
+      await this.updateAccountAccessTokenStubRepository.update(
         createdAccount.id,
         accessToken
       )

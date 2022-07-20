@@ -4,4 +4,4 @@ export * from '../../protocols/repository/account/get-account-by-email-repositor
 export * from '../../protocols/cryptography/hasher-protocol'
 export * from '../../protocols/cryptography/encrypter-protocol'
 export * from '../../protocols/repository/account/add-account-repository'
-export * from '../../protocols/repository/account/update-account-access-token'
+export * from '../../protocols/repository/account/update-account-access-token-repository'

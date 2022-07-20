@@ -6,7 +6,7 @@ import {
   IHasher,
   IEncrypter,
   IAddAccountRepository,
-  IUpdateAccountAccessToken
+  IUpdateAccountAccessTokenRepository
 } from '../add-account-usecase-protocols'
 
 const makeValidNewAccountData = (): IAddAccountModel => ({
@@ -59,7 +59,9 @@ const makeTokenGeneratorStub = () => {
 }
 
 const makeUpdateAccountAccessTokenStub = () => {
-  class UpdateAccountAccessTokenStub implements IUpdateAccountAccessToken {
+  class UpdateAccountAccessTokenStub
+    implements IUpdateAccountAccessTokenRepository
+  {
     async update(id: string, accessToken: string): Promise<void> {
       return Promise.resolve()
     }
@@ -73,7 +75,7 @@ interface ISut {
   getAccountByEmailRepositoryStub: IGetAccountByEmailRepository
   addAccountRepositoryStub: IAddAccountRepository
   tokenGeneratorStub: IEncrypter
-  updateAccountAccessTokenStub: IUpdateAccountAccessToken
+  updateAccountAccessTokenStub: IUpdateAccountAccessTokenRepository
 }
 
 const makeSut = (): ISut => {

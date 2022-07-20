@@ -5,7 +5,7 @@ import {
   IAccountEntitie,
   IEncrypter,
   IGetAccountByEmailRepository,
-  IUpdateAccountAccessToken
+  IUpdateAccountAccessTokenRepository
 } from '../authentication-usecase-protocols'
 
 const makeFakeValidAuthenticationData = (): IAuthenticationModel => ({
@@ -48,7 +48,9 @@ const makeTokenGeneratorAdapterStub = () => {
 }
 
 const makeUpdateAccountAccessTokenStub = () => {
-  class UpdateAccountAccessTokenStub implements IUpdateAccountAccessToken {
+  class UpdateAccountAccessTokenStub
+    implements IUpdateAccountAccessTokenRepository
+  {
     async update(id: string, accessToken: string): Promise<void> {
       return Promise.resolve()
     }
@@ -61,7 +63,7 @@ interface ISut {
   getAccountByEmailRepositoryStub: IGetAccountByEmailRepository
   passwordHashComparerStub: IHashComparer
   tokenGeneratorAdapterStub: IEncrypter
-  updateAccountAccessTokenRepositoryStub: IUpdateAccountAccessToken
+  updateAccountAccessTokenRepositoryStub: IUpdateAccountAccessTokenRepository
 }
 
 const makeSut = (): ISut => {
@@ -70,7 +72,7 @@ const makeSut = (): ISut => {
   const passwordHashComparerStub: IHashComparer =
     makePasswordHashComparerAdapterStub()
   const tokenGeneratorAdapterStub: IEncrypter = makeTokenGeneratorAdapterStub()
-  const updateAccountAccessTokenRepositoryStub: IUpdateAccountAccessToken =
+  const updateAccountAccessTokenRepositoryStub: IUpdateAccountAccessTokenRepository =
     makeUpdateAccountAccessTokenStub()
   const sut: AuthenticationUseCase = new AuthenticationUseCase(
     getAccountByEmailRepositoryStub,

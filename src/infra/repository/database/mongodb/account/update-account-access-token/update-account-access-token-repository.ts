@@ -1,10 +1,10 @@
-import { IUpdateAccountAccessToken } from './update-account-access-token-repository-protocols'
+import { IUpdateAccountAccessTokenRepository } from './update-account-access-token-repository-protocols'
 import mongoose from 'mongoose'
 import accountHelper from '../../helpers/account-helper'
 import mongoHelper from '../../helpers/mongo-helper'
 
 export class UpdateAccountAccessTokenMongoRepository
-  implements IUpdateAccountAccessToken
+  implements IUpdateAccountAccessTokenRepository
 {
   async update(id: string, accessToken: string): Promise<void> {
     const collectionRef = mongoHelper.getCollection('accounts')

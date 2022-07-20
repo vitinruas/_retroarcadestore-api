@@ -5,7 +5,7 @@ import {
   IAccountEntitie,
   IEncrypter,
   IGetAccountByEmailRepository,
-  IUpdateAccountAccessToken
+  IUpdateAccountAccessTokenRepository
 } from './authentication-usecase-protocols'
 
 export class AuthenticationUseCase implements IAuthenticationUseCase {
@@ -13,7 +13,7 @@ export class AuthenticationUseCase implements IAuthenticationUseCase {
     private readonly getAccountByEmailRepository: IGetAccountByEmailRepository,
     private readonly passwordHashComparerAdapter: IHashComparer,
     private readonly tokenGeneratorAdapter: IEncrypter,
-    private readonly updateAccountAccessTokenRepository: IUpdateAccountAccessToken
+    private readonly updateAccountAccessTokenRepository: IUpdateAccountAccessTokenRepository
   ) {}
 
   async authenticate(
