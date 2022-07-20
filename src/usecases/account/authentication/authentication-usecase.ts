@@ -12,7 +12,11 @@ export class AuthenticationUseCase implements IAuthenticationUseCase {
   async authenticate(
     authenticationData: IAuthenticationModel
   ): Promise<string | null> {
-    await this.getAccountByEmailRepository.get(authenticationData.email)
-    return Promise.resolve('any_token')
+    const account = await this.getAccountByEmailRepository.get(
+      authenticationData.email
+    )
+    if (account) {
+    }
+    return null
   }
 }
