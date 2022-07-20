@@ -1,4 +1,4 @@
-import { IEncrypter } from 'src/usecases/account/add-account-protocols'
+import { IEncrypter } from '../../../usecases/account/add-account-protocols'
 import jwt from 'jsonwebtoken'
 
 export class JwtAdapter implements IEncrypter {

@@ -1,5 +1,5 @@
+import { IHasher } from '../../../usecases/account/add-account-protocols'
 import bcrypt from 'bcrypt'
-import { IHasher } from 'src/usecases/account/add-account-protocols'
 
 export class BcryptAdapter implements IHasher {
   constructor(private readonly salt: number) {}
