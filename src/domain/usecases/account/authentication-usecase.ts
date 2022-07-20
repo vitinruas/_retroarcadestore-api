@@ -3,5 +3,5 @@ export interface IAuthenticationModel {
   password: string
 }
 export interface IAuthenticationUseCase {
-  authenticate(authenticateData: IAuthenticationModel): Promise<string | null>
+  authenticate(authenticationData: IAuthenticationModel): Promise<string | null>
 }
