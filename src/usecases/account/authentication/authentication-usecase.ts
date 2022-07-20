@@ -6,14 +6,16 @@ import { IHashComparer } from '../../protocols/cryptography/hash-comparer-protoc
 import {
   IAccountEntitie,
   IEncrypter,
-  IGetAccountByEmailRepository
+  IGetAccountByEmailRepository,
+  IUpdateAccountAccessToken
 } from '../add-account/add-account-usecase-protocols'
 
 export class AuthenticationUseCase implements IAuthenticationUseCase {
   constructor(
     private readonly getAccountByEmailRepository: IGetAccountByEmailRepository,
     private readonly passwordHashComparerAdapter: IHashComparer,
-    private readonly tokenGeneratorAdapter: IEncrypter
+    private readonly tokenGeneratorAdapter: IEncrypter,
+    private readonly updateAccountAccessTokenRepository: IUpdateAccountAccessToken
   ) {}
 
   async authenticate(
@@ -28,7 +30,11 @@ export class AuthenticationUseCase implements IAuthenticationUseCase {
         account.password
       )
       if (isValid) {
-        await this.tokenGeneratorAdapter.encrypt(account.id)
+        const accessToken = await this.tokenGeneratorAdapter.encrypt(account.id)
+        await this.updateAccountAccessTokenRepository.update(
+          account.id,
+          accessToken
+        )
       }
     }
     return null
