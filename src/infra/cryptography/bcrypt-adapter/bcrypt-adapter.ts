@@ -1,4 +1,5 @@
-import { IHasher } from '../../../usecases/account/add-account-protocols'
+import { IHasher } from '../../../usecases/protocols/cryptography/hasher-protocol'
+
 import bcrypt from 'bcrypt'
 
 export class BcryptAdapter implements IHasher {

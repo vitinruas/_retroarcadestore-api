@@ -7,7 +7,7 @@ import {
   IAddAccountRepository,
   IAddAccountUseCase,
   IUpdateAccountAccessToken
-} from './add-account-protocols'
+} from './add-account-usecase-protocols'
 
 export class AddAccountUseCase implements IAddAccountUseCase {
   constructor(

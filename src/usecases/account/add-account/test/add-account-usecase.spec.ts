@@ -7,7 +7,7 @@ import {
   IEncrypter,
   IAddAccountRepository,
   IUpdateAccountAccessToken
-} from '../add-account-protocols'
+} from '../add-account-usecase-protocols'
 
 const makeValidNewAccountData = (): IAddAccountModel => ({
   name: 'any_name',
