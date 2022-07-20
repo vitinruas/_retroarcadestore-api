@@ -3,7 +3,6 @@ import mongoose, { Collection, ConnectOptions } from 'mongoose'
 class MongoHelper {
   async connect(uri: string, options?: ConnectOptions) {
     await mongoose.connect(uri, options)
-    console.log('-> Connected to DataBase')
   }
 
   async disconnect() {

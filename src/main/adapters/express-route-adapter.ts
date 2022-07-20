@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { IController } from 'src/presentation/protocols/controller-protocol'
+import { IController } from '../../presentation/protocols/controller-protocol'
 import {
   IHttpRequest,
   IHttpResponse
