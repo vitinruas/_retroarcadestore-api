@@ -2,6 +2,7 @@ import { IAuthenticationModel } from '../../../../domain/usecases/account/authen
 import { IHashComparer } from '../../../protocols/cryptography/hash-comparer-protocol'
 import {
   IAccountEntitie,
+  IEncrypter,
   IGetAccountByEmailRepository
 } from '../../add-account/add-account-usecase-protocols'
 import { AuthenticationUseCase } from '../authentication-usecase'
@@ -27,7 +28,7 @@ const makeGetAccountByEmailRepositoryStub = () => {
   return new GetAccountByEmailRepositoryStub()
 }
 
-const makePasswordHashComparerStub = () => {
+const makePasswordHashComparerAdapterStub = () => {
   class PasswordHashComparerStub implements IHashComparer {
     compare(value: string, hash: string): Promise<boolean> {
       return Promise.resolve(true)
@@ -36,24 +37,38 @@ const makePasswordHashComparerStub = () => {
   return new PasswordHashComparerStub()
 }
 
+const makeTokenGeneratorAdapterStub = () => {
+  class TokenGeneratorAdapter implements IEncrypter {
+    async encrypt(id: string): Promise<string> {
+      return Promise.resolve('any_token')
+    }
+  }
+  return new TokenGeneratorAdapter()
+}
+
 interface ISut {
   sut: AuthenticationUseCase
   getAccountByEmailRepositoryStub: IGetAccountByEmailRepository
   passwordHashComparer: IHashComparer
+  tokenGeneratorAdapter: IEncrypter
 }
 
 const makeSut = (): ISut => {
   const getAccountByEmailRepositoryStub: IGetAccountByEmailRepository =
     makeGetAccountByEmailRepositoryStub()
-  const passwordHashComparer: IHashComparer = makePasswordHashComparerStub()
+  const passwordHashComparer: IHashComparer =
+    makePasswordHashComparerAdapterStub()
+  const tokenGeneratorAdapter: IEncrypter = makeTokenGeneratorAdapterStub()
   const sut: AuthenticationUseCase = new AuthenticationUseCase(
     getAccountByEmailRepositoryStub,
-    passwordHashComparer
+    passwordHashComparer,
+    tokenGeneratorAdapter
   )
   return {
     sut,
     getAccountByEmailRepositoryStub,
-    passwordHashComparer
+    passwordHashComparer,
+    tokenGeneratorAdapter
   }
 }
 
@@ -128,5 +143,23 @@ describe('AuthenticationUseCase', () => {
     )
 
     expect(accessToken).toBeNull()
+  })
+
+  test('should call PasswordHashComparer with correct values', async () => {
+    const { sut, passwordHashComparer } = makeSut()
+    const compareSpy = jest.spyOn(passwordHashComparer, 'compare')
+
+    await sut.authenticate(makeFakeValidAuthenticationData())
+
+    expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
+  })
+
+  test('should call TokenGeneratorAdapter with an email', async () => {
+    const { sut, tokenGeneratorAdapter } = makeSut()
+    const getSpy = jest.spyOn(tokenGeneratorAdapter, 'encrypt')
+
+    await sut.authenticate(makeFakeValidAuthenticationData())
+
+    expect(getSpy).toHaveBeenCalledWith('any_id')
   })
 })
