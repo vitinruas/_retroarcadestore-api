@@ -47,4 +47,19 @@ describe('AuthenticationUseCase', () => {
 
     expect(getSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
+
+  test('should returns throw if GetAccountByEmailRepository throws', async () => {
+    const { sut, getAccountByEmailRepositoryStub } = makeSut()
+    jest
+      .spyOn(getAccountByEmailRepositoryStub, 'get')
+      .mockImplementationOnce(async () => {
+        return Promise.reject(new Error())
+      })
+
+    const promise: Promise<string | null> = sut.authenticate(
+      makeFakeValidAuthenticationData()
+    )
+
+    await expect(promise).rejects.toThrow()
+  })
 })
