@@ -21,10 +21,12 @@ export class AuthenticationUseCase implements IAuthenticationUseCase {
       authenticationData.email
     )
     if (account) {
-      await this.passwordHashComparer.compare(
+      const isValid = await this.passwordHashComparer.compare(
         authenticationData.password,
         account.password
       )
+      if (isValid) {
+      }
     }
     return null
   }
