@@ -5,7 +5,7 @@ import { GetAccountByEmailMongoRepository } from '../../../../../infra/repositor
 import { UpdateAccountAccessTokenMongoRepository } from '../../../../../infra/repository/database/mongodb/account/update-account-access-token/update-account-access-token-repository'
 import { AddAccountUseCase } from '../../../../../usecases/account/add-account-usecase'
 import { IAddAccountUseCase } from '../../../../../usecases/account/add-account-protocols'
-import env from 'src/main/config/env'
+import env from '../../../../config/env'
 
 export const makeAddAccountUseCaseFactory = (): IAddAccountUseCase => {
   const getAccountByEmailMongoRepository =
