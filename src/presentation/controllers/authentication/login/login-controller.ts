@@ -1,3 +1,4 @@
+import { IAuthenticationUseCase } from '../../../../domain/usecases/account/authentication-usecase'
 import { InvalidFieldError, MissingFieldError } from '../../../errors'
 import {
   badRequest,
@@ -12,7 +13,10 @@ import {
 } from '../signup/signup-controller-protocols'
 
 export class LoginController implements IController {
-  constructor(private readonly emailValidator: IEmailValidatorAdapter) {}
+  constructor(
+    private readonly emailValidator: IEmailValidatorAdapter,
+    private readonly authentication: IAuthenticationUseCase
+  ) {}
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
@@ -24,13 +28,15 @@ export class LoginController implements IController {
         }
       }
 
-      const { email } = httpRequest.body
+      const { email, password } = httpRequest.body
 
       // check if the provided email is valid
       const isValid = this.emailValidator.validate(email)
       if (!isValid) {
         return badRequest(new InvalidFieldError('email'))
       }
+
+      await this.authentication.authenticate({ email, password })
       return ok()
     } catch (error: any) {
       return serverError(error)
