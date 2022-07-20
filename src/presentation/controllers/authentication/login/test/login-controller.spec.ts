@@ -71,11 +71,17 @@ describe('LoginController', () => {
         password: 'any_password'
       }
     }
-    const validateSpy = jest
-      .spyOn(emailValidatorAdapterStub, 'validate')
-      .mockReturnValueOnce(false)
+    const validateSpy = jest.spyOn(emailValidatorAdapterStub, 'validate')
     await sut.perform(httpRequest)
 
     expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
+  })
+
+  test('should return 400 if an invalid email is provided', async () => {
+    const { sut, emailValidatorAdapterStub } = makeSut()
+    jest.spyOn(emailValidatorAdapterStub, 'validate').mockReturnValueOnce(false)
+    const httpResponse: IHttpResponse = await sut.perform(makeValidRequest())
+
+    expect(httpResponse).toEqual(badRequest(new InvalidFieldError('email')))
   })
 })
