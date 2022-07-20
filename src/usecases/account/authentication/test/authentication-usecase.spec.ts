@@ -215,4 +215,14 @@ describe('AuthenticationUseCase', () => {
 
     await expect(promise).rejects.toThrow()
   })
+
+  test('should call UpdateAccountAccessTokenRepository with correct values', async () => {
+    const { sut } = makeSut()
+
+    const accessToken = await sut.authenticate(
+      makeFakeValidAuthenticationData()
+    )
+
+    expect(accessToken).toBe('any_token')
+  })
 })
