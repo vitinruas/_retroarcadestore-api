@@ -103,4 +103,17 @@ describe('AuthenticationUseCase', () => {
 
     expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
   })
+
+  test('should return throw if PasswordHashComparer throws', async () => {
+    const { sut, passwordHashComparer } = makeSut()
+    jest
+      .spyOn(passwordHashComparer, 'compare')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const promise: Promise<string | null> = sut.authenticate(
+      makeFakeValidAuthenticationData()
+    )
+
+    await expect(promise).rejects.toThrow()
+  })
 })
