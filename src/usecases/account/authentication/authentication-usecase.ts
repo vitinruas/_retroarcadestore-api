@@ -1,14 +1,12 @@
 import {
+  IAuthenticationUseCase,
   IAuthenticationModel,
-  IAuthenticationUseCase
-} from '../../../domain/usecases/account/authentication-usecase'
-import { IHashComparer } from '../../protocols/cryptography/hash-comparer-protocol'
-import {
+  IHashComparer,
   IAccountEntitie,
   IEncrypter,
   IGetAccountByEmailRepository,
   IUpdateAccountAccessToken
-} from '../add-account/add-account-usecase-protocols'
+} from './authentication-usecase-protocols'
 
 export class AuthenticationUseCase implements IAuthenticationUseCase {
   constructor(
