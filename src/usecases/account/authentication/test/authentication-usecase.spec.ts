@@ -116,4 +116,17 @@ describe('AuthenticationUseCase', () => {
 
     await expect(promise).rejects.toThrow()
   })
+
+  test('should return null if PasswordHashComparer fails', async () => {
+    const { sut, passwordHashComparer } = makeSut()
+    jest
+      .spyOn(passwordHashComparer, 'compare')
+      .mockReturnValueOnce(Promise.resolve(false))
+
+    const accessToken = await sut.authenticate(
+      makeFakeValidAuthenticationData()
+    )
+
+    expect(accessToken).toBeNull()
+  })
 })
