@@ -1,6 +1,9 @@
-import { Express, Request, Response } from 'express'
+import { Express, Router } from 'express'
+import FastGlob from 'fast-glob'
 export default (app: Express) => {
-  app.post('/test', (request: Request, response: Response) => {
-    return response.send(request.body)
-  })
+  const router = Router()
+  app.use('/api', router)
+  FastGlob.sync('**/*route.ts').map(async (file) =>
+    (await import('../../../' + file)).default(router)
+  )
 }
