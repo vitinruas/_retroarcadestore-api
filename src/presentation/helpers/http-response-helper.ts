@@ -17,7 +17,7 @@ export const ok = (data?: any): IHttpResponse => ({
   body: data
 })
 
-export const serverError = (statusCode?: number): IHttpResponse => ({
-  statusCode: statusCode || 500,
-  body: new ServerError()
+export const serverError = (error: Error): IHttpResponse => ({
+  statusCode: 500,
+  body: new ServerError(error.stack)
 })

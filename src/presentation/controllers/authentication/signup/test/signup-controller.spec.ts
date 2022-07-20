@@ -158,7 +158,7 @@ describe('SignUpController', () => {
 
     const httpResponse: IHttpResponse = await sut.perform(makeValidRequest())
 
-    expect(httpResponse).toEqual(serverError())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   test('should return 400 if an invalid email is provided', async () => {
@@ -191,7 +191,7 @@ describe('SignUpController', () => {
 
     const response: IHttpResponse = await sut.perform(makeValidRequest())
 
-    expect(response).toEqual(serverError())
+    expect(response).toEqual(serverError(new Error()))
   })
 
   test('should return 403 if AddAccountUseCase fails', async () => {

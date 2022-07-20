@@ -60,8 +60,8 @@ export class SignUpController implements IController {
       }
 
       return ok({ accessToken })
-    } catch (error) {
-      return serverError()
+    } catch (error: any) {
+      return serverError(error)
     }
   }
 }
