@@ -162,4 +162,17 @@ describe('AuthenticationUseCase', () => {
 
     expect(getSpy).toHaveBeenCalledWith('any_id')
   })
+
+  test('should return throw if TokenGeneratorAdapter throws', async () => {
+    const { sut, tokenGeneratorAdapter } = makeSut()
+    jest
+      .spyOn(tokenGeneratorAdapter, 'encrypt')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const promise: Promise<string | null> = sut.authenticate(
+      makeFakeValidAuthenticationData()
+    )
+
+    await expect(promise).rejects.toThrow()
+  })
 })
