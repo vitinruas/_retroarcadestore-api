@@ -5,6 +5,7 @@ import {
 import { InvalidFieldError, MissingFieldError } from '../../../../errors'
 import {
   badRequest,
+  ok,
   serverError
 } from '../../../../helpers/http-response-helper'
 import {
@@ -153,5 +154,15 @@ describe('LoginController', () => {
     )
 
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('should return an access token if AuthenticationUseCase succeeds', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse: IHttpResponse = await sut.perform(
+      makeFakeValidRequest()
+    )
+
+    expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
   })
 })
