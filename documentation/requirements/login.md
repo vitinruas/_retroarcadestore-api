@@ -5,7 +5,7 @@
 1. ❌ Recebe uma requisição do tipo **POST** na rota **/api/login**
 2. ✅ Valida dados obrigatórios **email**, **password**
 3. ✅ Valida que o campo **email** é um e-mail válido
-4. ❌ Verifique se existe um usuário com o **email** fornecido
+4. ✅ Verifique se existe um usuário com o **email** fornecido
 5. ❌ Comparar a senha **criptografada** da conta recuperada com a senha fornecida pelo usuário
 6. ❌ Gera um **token** de acesso a partir do ID do usuário
 7. ❌ **Atualiza** os dados do usuário com o novo token de acesso gerado
