@@ -35,6 +35,7 @@ export class AuthenticationUseCase implements IAuthenticationUseCase {
           account.id,
           accessToken
         )
+        return accessToken
       }
     }
     return null
