@@ -3,7 +3,8 @@ import { InvalidFieldError, MissingFieldError } from '../../../errors'
 import {
   badRequest,
   ok,
-  serverError
+  serverError,
+  unauthorized
 } from '../../../helpers/http-response-helper'
 import {
   IController,
@@ -36,8 +37,11 @@ export class LoginController implements IController {
         return badRequest(new InvalidFieldError('email'))
       }
 
-      await this.authentication.authenticate({ email, password })
-      return ok()
+      const accessToken = await this.authentication.authenticate({
+        email,
+        password
+      })
+      return ok({ accessToken })
     } catch (error: any) {
       return serverError(error)
     }
