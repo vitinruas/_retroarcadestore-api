@@ -10,8 +10,8 @@ import {
   forbidden,
   ok,
   serverError
-} from '../../helpers/http-response-helper'
-import { MissingFieldError, InvalidFieldError } from '../../errors'
+} from '../../../helpers/http-response-helper'
+import { MissingFieldError, InvalidFieldError } from '../../../errors'
 
 export class SignUpController implements IController {
   constructor(
