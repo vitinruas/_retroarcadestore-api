@@ -62,4 +62,15 @@ describe('AuthMiddleware', () => {
 
     expect(httpResponse).toEqual(serverError(new Error()))
   })
+
+  test('should return 403 if CheckAccessTokenUseCase fails', async () => {
+    const { sut, checkAccessTokenUseCaseStub }: ISut = makeSut()
+    jest
+      .spyOn(checkAccessTokenUseCaseStub, 'check')
+      .mockReturnValueOnce(Promise.resolve(null))
+
+    const httpResponse: IHttpResponse = await sut.handle(makeFakeValidRequest())
+
+    expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
+  })
 })
