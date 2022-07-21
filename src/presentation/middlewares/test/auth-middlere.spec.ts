@@ -1,3 +1,4 @@
+import { IAccountEntitie } from '../../../domain/entities/account'
 import { ICheckAccessTokenUseCase } from '../../../domain/usecases/account/check-access-token-usecase'
 import { AccessDeniedError } from '../../errors'
 import { forbidden, serverError } from '../../helpers/http-response-helper'
@@ -12,8 +13,16 @@ const makeFakeValidRequest = (): IHttpRequest => ({
 
 const makeCheckAccessTokenUseCaseStub = (): ICheckAccessTokenUseCase => {
   class CheckAccessTokenUseCaseStub implements ICheckAccessTokenUseCase {
-    async check(accessToken: string, admin?: boolean): Promise<string> {
-      return Promise.resolve('any_id')
+    async check(
+      accessToken: string,
+      admin?: boolean
+    ): Promise<IAccountEntitie | null> {
+      return Promise.resolve({
+        id: 'any_id',
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'hashed_password'
+      })
     }
   }
   return new CheckAccessTokenUseCaseStub()
@@ -72,5 +81,13 @@ describe('AuthMiddleware', () => {
     const httpResponse: IHttpResponse = await sut.handle(makeFakeValidRequest())
 
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
+  })
+
+  test('should return 200 with account id if CheckAccessTokenUseCase succeeds', async () => {
+    const { sut }: ISut = makeSut()
+
+    const httpResponse: IHttpResponse = await sut.handle(makeFakeValidRequest())
+
+    expect(httpResponse.body).toEqual({ id: 'any_id' })
   })
 })
