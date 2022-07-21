@@ -3,6 +3,13 @@ import { IAccountEntitie } from '../../../../domain/entities/account'
 import { CheckAccessTokenUseCase } from '../check-access-token-usecase'
 import { IGetAccountByAccessTokenRepository } from '../../../protocols/repository/account/get-account-by-access-token-repository'
 
+const makeFakeValidAccount = (): IAccountEntitie => ({
+  id: 'any_id',
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password'
+})
+
 const makeTokenDecrypterAdapterStub = (): IDecrypter => {
   class TokenDecrypterAdapterStub implements IDecrypter {
     async decrypt(token: string): Promise<string> {
@@ -22,12 +29,7 @@ const makeGetAccountByAccessTokenRepositoryStub =
         token: string,
         admin?: boolean
       ): Promise<IAccountEntitie | null> {
-        return Promise.resolve({
-          id: 'any_id',
-          name: 'any_name',
-          email: 'any_email@mail.com',
-          password: 'hashed_password'
-        })
+        return Promise.resolve(makeFakeValidAccount())
       }
     }
 
@@ -117,5 +119,12 @@ describe('CheckAccessTokenUseCase', () => {
     const account: IAccountEntitie | null = await sut.check('any_token')
 
     expect(account).toBeNull()
+  })
+  test('should return an account if GetAccountByAccessTokenRepository succeds', async () => {
+    const { sut } = makeSut()
+
+    const account: IAccountEntitie | null = await sut.check('any_token')
+
+    expect(account).toEqual(makeFakeValidAccount())
   })
 })
