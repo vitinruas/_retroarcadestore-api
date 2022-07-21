@@ -19,9 +19,8 @@ export class AuthenticationUseCase implements IAuthenticationUseCase {
   async authenticate(
     authenticationData: IAuthenticationModel
   ): Promise<string | null> {
-    const account: IAccountEntitie = await this.getAccountByEmailRepository.get(
-      authenticationData.email
-    )
+    const account: IAccountEntitie | null =
+      await this.getAccountByEmailRepository.get(authenticationData.email)
     if (account) {
       const isValid = await this.passwordHashComparerAdapter.compare(
         authenticationData.password,

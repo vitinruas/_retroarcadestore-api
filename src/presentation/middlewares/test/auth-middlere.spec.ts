@@ -16,10 +16,7 @@ const makeFakeValidRequest = (): IHttpRequest => ({
 
 const makeCheckAccessTokenUseCaseStub = (): ICheckAccessTokenUseCase => {
   class CheckAccessTokenUseCaseStub implements ICheckAccessTokenUseCase {
-    async check(
-      accessToken: string,
-      admin?: boolean
-    ): Promise<IAccountEntitie | null> {
+    async check(accessToken: string): Promise<IAccountEntitie | null> {
       return Promise.resolve({
         id: 'any_id',
         name: 'any_name',

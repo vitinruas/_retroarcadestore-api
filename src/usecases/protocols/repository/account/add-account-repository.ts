@@ -1,6 +1,8 @@
-import { IAccountEntitie } from 'src/domain/entities/account'
-import { IAddAccountModel } from 'src/domain/usecases/account/add-account-usecase'
+import {
+    IAccountEntitie,
+    IAddAccountModel,
+} from "../../../account/add-account/add-account-usecase-protocols";
 
 export interface IAddAccountRepository {
-  add(newAccountData: IAddAccountModel): Promise<IAccountEntitie>
+    add(newAccountData: IAddAccountModel): Promise<IAccountEntitie>;
 }
