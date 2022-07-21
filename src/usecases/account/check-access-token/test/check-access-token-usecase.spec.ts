@@ -107,4 +107,15 @@ describe('CheckAccessTokenUseCase', () => {
 
     await expect(account).rejects.toThrow()
   })
+
+  test('should return null if GetAccountByAccessTokenRepository fails', async () => {
+    const { sut, getAccountByAccessTokenRepositoryStub } = makeSut()
+    jest
+      .spyOn(getAccountByAccessTokenRepositoryStub, 'get')
+      .mockReturnValueOnce(Promise.resolve(null))
+
+    const account: IAccountEntitie | null = await sut.check('any_token')
+
+    expect(account).toBeNull()
+  })
 })
