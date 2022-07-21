@@ -1,7 +1,9 @@
-import { IDecrypter } from '../../../protocols/cryptography/decrypter-protocol'
-import { IAccountEntitie } from '../../../../domain/entities/account'
+import {
+  IAccountEntitie,
+  IGetAccountByAccessTokenRepository,
+  IDecrypter
+} from '../check-access-token-usecase-protocols'
 import { CheckAccessTokenUseCase } from '../check-access-token-usecase'
-import { IGetAccountByAccessTokenRepository } from '../../../protocols/repository/account/get-account-by-access-token-repository'
 
 const makeFakeValidAccount = (): IAccountEntitie => ({
   id: 'any_id',

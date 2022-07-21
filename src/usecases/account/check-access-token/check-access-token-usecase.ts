@@ -1,7 +1,9 @@
-import { IAccountEntitie } from '../../../domain/entities/account'
 import { ICheckAccessTokenUseCase } from '../../../domain/usecases/account/check-access-token-usecase'
-import { IDecrypter } from '../../protocols/cryptography/decrypter-protocol'
-import { IGetAccountByAccessTokenRepository } from '../../protocols/repository/account/get-account-by-access-token-repository'
+import {
+  IGetAccountByAccessTokenRepository,
+  IDecrypter,
+  IAccountEntitie
+} from './check-access-token-usecase-protocols'
 
 export class CheckAccessTokenUseCase implements ICheckAccessTokenUseCase {
   constructor(
