@@ -1,9 +1,12 @@
-import { IAccountEntitie } from '../../../domain/entities/account'
-import { ICheckAccessTokenUseCase } from '../../../domain/usecases/account/check-access-token-usecase'
-import { AccessDeniedError } from '../../errors'
-import { forbidden, serverError } from '../../helpers/http-response-helper'
-import { IHttpRequest, IHttpResponse } from '../../protocols/http-protocol'
 import { AuthMiddleware } from '../auth-middleware'
+import { forbidden, serverError } from '../../helpers/http-response-helper'
+import { AccessDeniedError } from '../../errors'
+import {
+  IAccountEntitie,
+  IHttpRequest,
+  IHttpResponse,
+  ICheckAccessTokenUseCase
+} from '../auth-middleware-protocols'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
   headers: {
