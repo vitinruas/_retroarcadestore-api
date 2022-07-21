@@ -1,6 +1,6 @@
 import { ICheckAccessTokenUseCase } from '../../domain/usecases/account/check-access-token-usecase'
 import { AccessDeniedError } from '../errors'
-import { forbidden, ok } from '../helpers/http-response-helper'
+import { forbidden, ok, serverError } from '../helpers/http-response-helper'
 import { IHttpRequest, IHttpResponse } from '../protocols/http-protocol'
 import { IMiddleware } from '../protocols/middleware-protocol'
 
@@ -11,11 +11,15 @@ export class AuthMiddleware implements IMiddleware {
   ) {}
 
   async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
-    const accessToken = httpRequest.headers?.['x-access-token']
-    if (accessToken) {
-      await this.checkAccessTokenUseCase.check(accessToken)
-      return ok()
+    try {
+      const accessToken = httpRequest.headers?.['x-access-token']
+      if (accessToken) {
+        await this.checkAccessTokenUseCase.check(accessToken)
+        return ok()
+      }
+      return forbidden(new AccessDeniedError())
+    } catch (error: any) {
+      return serverError(error)
     }
-    return forbidden(new AccessDeniedError())
   }
 }
