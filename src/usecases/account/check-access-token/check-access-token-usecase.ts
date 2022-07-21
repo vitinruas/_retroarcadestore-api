@@ -20,6 +20,7 @@ export class CheckAccessTokenUseCase implements ICheckAccessTokenUseCase {
         this.isAdmin
       )
       if (account) {
+        return account
       }
     }
     return Promise.resolve(null)
