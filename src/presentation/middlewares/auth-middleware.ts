@@ -14,8 +14,10 @@ export class AuthMiddleware implements IMiddleware {
     try {
       const accessToken = httpRequest.headers?.['x-access-token']
       if (accessToken) {
-        await this.checkAccessTokenUseCase.check(accessToken)
-        return ok()
+        const account = await this.checkAccessTokenUseCase.check(accessToken)
+        if (account) {
+          return ok()
+        }
       }
       return forbidden(new AccessDeniedError())
     } catch (error: any) {
