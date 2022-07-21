@@ -1,3 +1,4 @@
+import { IAccountEntitie } from '../../domain/entities/account'
 import { ICheckAccessTokenUseCase } from '../../domain/usecases/account/check-access-token-usecase'
 import { AccessDeniedError } from '../errors'
 import { forbidden, ok, serverError } from '../helpers/http-response-helper'
@@ -14,9 +15,10 @@ export class AuthMiddleware implements IMiddleware {
     try {
       const accessToken = httpRequest.headers?.['x-access-token']
       if (accessToken) {
-        const account = await this.checkAccessTokenUseCase.check(accessToken)
+        const account: IAccountEntitie | null =
+          await this.checkAccessTokenUseCase.check(accessToken)
         if (account) {
-          return ok()
+          return ok({ id: account.id })
         }
       }
       return forbidden(new AccessDeniedError())
