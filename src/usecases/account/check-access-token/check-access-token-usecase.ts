@@ -15,10 +15,12 @@ export class CheckAccessTokenUseCase implements ICheckAccessTokenUseCase {
       accessToken
     )
     if (isValid) {
-      await this.getAccountByAccessTokenRepository.get(
+      const account = await this.getAccountByAccessTokenRepository.get(
         accessToken,
         this.isAdmin
       )
+      if (account) {
+      }
     }
     return Promise.resolve(null)
   }
