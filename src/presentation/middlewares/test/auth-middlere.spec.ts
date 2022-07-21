@@ -1,6 +1,6 @@
 import { ICheckAccessTokenUseCase } from '../../../domain/usecases/account/check-access-token-usecase'
 import { AccessDeniedError } from '../../errors'
-import { forbidden } from '../../helpers/http-response-helper'
+import { forbidden, serverError } from '../../helpers/http-response-helper'
 import { IHttpRequest, IHttpResponse } from '../../protocols/http-protocol'
 import { AuthMiddleware } from '../auth-middleware'
 
@@ -50,5 +50,16 @@ describe('AuthMiddleware', () => {
     await sut.handle(makeFakeValidRequest())
 
     expect(check).toHaveBeenCalledWith('any_token')
+  })
+
+  test('should return 500 if CheckAccessTokenUseCase throws', async () => {
+    const { sut, checkAccessTokenUseCaseStub }: ISut = makeSut()
+    jest
+      .spyOn(checkAccessTokenUseCaseStub, 'check')
+      .mockImplementation(async () => Promise.reject(new Error()))
+
+    const httpResponse: IHttpResponse = await sut.handle(makeFakeValidRequest())
+
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
