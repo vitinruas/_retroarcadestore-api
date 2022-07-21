@@ -49,7 +49,6 @@ const makeSut = (): ISut => {
   const getAccountByAccessTokenRepositoryStub =
     makeGetAccountByAccessTokenRepositoryStub()
   const sut = new CheckAccessTokenUseCase(
-    false,
     tokenDecrypterAdapterStub,
     getAccountByAccessTokenRepositoryStub
   )
@@ -65,7 +64,7 @@ describe('CheckAccessTokenUseCase', () => {
     const { sut, tokenDecrypterAdapterStub } = makeSut()
     const decryptSpy = jest.spyOn(tokenDecrypterAdapterStub, 'decrypt')
 
-    await sut.check('any_token')
+    await sut.check('any_token', false)
 
     expect(decryptSpy).toHaveBeenCalledWith('any_token')
   })
@@ -76,7 +75,10 @@ describe('CheckAccessTokenUseCase', () => {
       .spyOn(tokenDecrypterAdapterStub, 'decrypt')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
-    const account: Promise<IAccountEntitie | null> = sut.check('any_token')
+    const account: Promise<IAccountEntitie | null> = sut.check(
+      'any_token',
+      false
+    )
 
     await expect(account).rejects.toThrow()
   })
@@ -87,7 +89,7 @@ describe('CheckAccessTokenUseCase', () => {
       .spyOn(tokenDecrypterAdapterStub, 'decrypt')
       .mockReturnValueOnce(Promise.resolve(null))
 
-    const account: IAccountEntitie | null = await sut.check('any_token')
+    const account: IAccountEntitie | null = await sut.check('any_token', false)
 
     expect(account).toBeNull()
   })
@@ -96,7 +98,7 @@ describe('CheckAccessTokenUseCase', () => {
     const { sut, getAccountByAccessTokenRepositoryStub } = makeSut()
     const getSpy = jest.spyOn(getAccountByAccessTokenRepositoryStub, 'get')
 
-    await sut.check('any_token')
+    await sut.check('any_token', false)
 
     expect(getSpy).toHaveBeenCalledWith('any_token', false)
   })
@@ -107,7 +109,10 @@ describe('CheckAccessTokenUseCase', () => {
       .spyOn(getAccountByAccessTokenRepositoryStub, 'get')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
-    const account: Promise<IAccountEntitie | null> = sut.check('any_token')
+    const account: Promise<IAccountEntitie | null> = sut.check(
+      'any_token',
+      false
+    )
 
     await expect(account).rejects.toThrow()
   })
@@ -118,14 +123,14 @@ describe('CheckAccessTokenUseCase', () => {
       .spyOn(getAccountByAccessTokenRepositoryStub, 'get')
       .mockReturnValueOnce(Promise.resolve(null))
 
-    const account: IAccountEntitie | null = await sut.check('any_token')
+    const account: IAccountEntitie | null = await sut.check('any_token', false)
 
     expect(account).toBeNull()
   })
   test('should return an account if GetAccountByAccessTokenRepository succeds', async () => {
     const { sut } = makeSut()
 
-    const account: IAccountEntitie | null = await sut.check('any_token')
+    const account: IAccountEntitie | null = await sut.check('any_token', false)
 
     expect(account).toEqual(makeFakeValidAccount())
   })

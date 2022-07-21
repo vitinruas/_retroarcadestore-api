@@ -36,7 +36,7 @@ interface ISut {
 const makeSut = (): ISut => {
   const checkAccessTokenUseCaseStub: ICheckAccessTokenUseCase =
     makeCheckAccessTokenUseCaseStub()
-  const sut = new AuthMiddleware(checkAccessTokenUseCaseStub, true)
+  const sut = new AuthMiddleware(checkAccessTokenUseCaseStub, false)
   return {
     sut,
     checkAccessTokenUseCaseStub
@@ -58,7 +58,7 @@ describe('AuthMiddleware', () => {
 
     await sut.handle(makeFakeValidRequest())
 
-    expect(check).toHaveBeenCalledWith('any_token')
+    expect(check).toHaveBeenCalledWith('any_token', false)
   })
 
   test('should return 500 if CheckAccessTokenUseCase throws', async () => {
