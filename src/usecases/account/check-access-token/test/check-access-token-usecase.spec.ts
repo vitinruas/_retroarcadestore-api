@@ -1,4 +1,5 @@
 import { IDecrypter } from '../../../protocols/cryptography/decrypter-protocol'
+import { IAccountEntitie } from '../../authentication/authentication-usecase-protocols'
 import { CheckAccessTokenUseCase } from '../check-access-token-usecase'
 
 const makeTokenDecrypterAdapterStub = (): IDecrypter => {
@@ -26,11 +27,23 @@ const makeSut = (): ISut => {
 }
 
 describe('CheckAccessTokenUseCase', () => {
-  test('should call TokenDecrypter with a token', async () => {
+  test('should call TokenDecrypterAdapter with a token', async () => {
     const { sut, tokenDecrypterAdapterStub } = makeSut()
     const decryptSpy = jest.spyOn(tokenDecrypterAdapterStub, 'decrypt')
 
     await sut.check('any_token')
+
     expect(decryptSpy).toHaveBeenCalledWith('any_token')
+  })
+
+  test('should return throw if TokenDecrypterAdapter fails', async () => {
+    const { sut, tokenDecrypterAdapterStub } = makeSut()
+    jest
+      .spyOn(tokenDecrypterAdapterStub, 'decrypt')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const account: Promise<IAccountEntitie | null> = sut.check('any_token')
+
+    await expect(account).rejects.toThrow()
   })
 })
