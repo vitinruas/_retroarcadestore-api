@@ -13,6 +13,7 @@ import {
   IHttpRequest,
   IHttpResponse
 } from '../signup-controller-protocols'
+import { FieldAlreadyUse } from '../../../../errors/field-already-use'
 
 const makeValidRequest = (): IHttpRequest => ({
   body: {
@@ -202,7 +203,7 @@ describe('SignUpController', () => {
 
     const response: IHttpResponse = await sut.perform(makeValidRequest())
 
-    expect(response).toEqual(forbidden('Email already in use'))
+    expect(response).toEqual(forbidden(new FieldAlreadyUse('email')))
   })
 
   test('should return access token if AddAccountUseCase succeeds', async () => {

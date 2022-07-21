@@ -12,6 +12,7 @@ import {
   serverError
 } from '../../../helpers/http-response-helper'
 import { MissingFieldError, InvalidFieldError } from '../../../errors'
+import { FieldAlreadyUse } from '../../../errors/field-already-use'
 
 export class SignUpController implements IController {
   constructor(
@@ -56,7 +57,7 @@ export class SignUpController implements IController {
       })
 
       if (!accessToken) {
-        return forbidden('Email already in use')
+        return forbidden(new FieldAlreadyUse('email'))
       }
 
       return ok({ accessToken })

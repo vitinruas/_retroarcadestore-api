@@ -1,4 +1,3 @@
-import { ForbiddenError } from '../errors/forbidden-error'
 import { ServerError } from '../errors/server-error'
 import { IHttpResponse } from '../protocols/http-protocol'
 
@@ -7,9 +6,9 @@ export const badRequest = (error: Error): IHttpResponse => ({
   body: error
 })
 
-export const forbidden = (message: string): IHttpResponse => ({
+export const forbidden = (error: Error): IHttpResponse => ({
   statusCode: 403,
-  body: new ForbiddenError(message)
+  body: error
 })
 
 export const unauthorized = (error: Error): IHttpResponse => ({
