@@ -11,7 +11,17 @@ export class CheckAccessTokenUseCase implements ICheckAccessTokenUseCase {
     accessToken: string,
     admin?: boolean | undefined
   ): Promise<IAccountEntitie | null> {
-    await this.tokenDecrypterAdapter.decrypt(accessToken)
+    const isValid: string | null = await this.tokenDecrypterAdapter.decrypt(
+      accessToken
+    )
+    if (isValid) {
+      return {
+        id: 'any_id',
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'hashed_password'
+      }
+    }
     return Promise.resolve(null)
   }
 }
