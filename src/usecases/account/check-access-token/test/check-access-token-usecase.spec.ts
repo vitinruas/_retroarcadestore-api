@@ -96,4 +96,15 @@ describe('CheckAccessTokenUseCase', () => {
 
     expect(getSpy).toHaveBeenCalledWith('any_token', false)
   })
+
+  test('should return throw if GetAccountByAccessTokenRepository throws', async () => {
+    const { sut, getAccountByAccessTokenRepositoryStub } = makeSut()
+    jest
+      .spyOn(getAccountByAccessTokenRepositoryStub, 'get')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const account: Promise<IAccountEntitie | null> = sut.check('any_token')
+
+    await expect(account).rejects.toThrow()
+  })
 })
