@@ -1,5 +1,5 @@
 export interface IHttpRequest {
-  headers?: {}
+  headers?: any
   body?: any
 }
 
