@@ -36,7 +36,7 @@ describe('CheckAccessTokenUseCase', () => {
     expect(decryptSpy).toHaveBeenCalledWith('any_token')
   })
 
-  test('should return throw if TokenDecrypterAdapter fails', async () => {
+  test('should return throw if TokenDecrypterAdapter throws', async () => {
     const { sut, tokenDecrypterAdapterStub } = makeSut()
     jest
       .spyOn(tokenDecrypterAdapterStub, 'decrypt')
@@ -45,5 +45,16 @@ describe('CheckAccessTokenUseCase', () => {
     const account: Promise<IAccountEntitie | null> = sut.check('any_token')
 
     await expect(account).rejects.toThrow()
+  })
+
+  test('should return null if TokenDecrypterAdapter fails', async () => {
+    const { sut, tokenDecrypterAdapterStub } = makeSut()
+    jest
+      .spyOn(tokenDecrypterAdapterStub, 'decrypt')
+      .mockReturnValueOnce(Promise.resolve(null))
+
+    const account: IAccountEntitie | null = await sut.check('any_token')
+
+    expect(account).toBeNull()
   })
 })
