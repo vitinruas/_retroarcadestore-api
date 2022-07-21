@@ -1,6 +1,7 @@
 import { IDecrypter } from '../../../protocols/cryptography/decrypter-protocol'
-import { IAccountEntitie } from '../../authentication/authentication-usecase-protocols'
+import { IAccountEntitie } from '../../../../domain/entities/account'
 import { CheckAccessTokenUseCase } from '../check-access-token-usecase'
+import { IGetAccountByAccessTokenRepository } from '../../../protocols/repository/account/get-account-by-access-token-repository'
 
 const makeTokenDecrypterAdapterStub = (): IDecrypter => {
   class TokenDecrypterAdapterStub implements IDecrypter {
@@ -12,17 +13,46 @@ const makeTokenDecrypterAdapterStub = (): IDecrypter => {
   return new TokenDecrypterAdapterStub()
 }
 
+const makeGetAccountByAccessTokenRepositoryStub =
+  (): IGetAccountByAccessTokenRepository => {
+    class GetAccountByAccessTokenRepository
+      implements IGetAccountByAccessTokenRepository
+    {
+      async get(
+        token: string,
+        admin?: boolean
+      ): Promise<IAccountEntitie | null> {
+        return Promise.resolve({
+          id: 'any_id',
+          name: 'any_name',
+          email: 'any_email@mail.com',
+          password: 'hashed_password'
+        })
+      }
+    }
+
+    return new GetAccountByAccessTokenRepository()
+  }
+
 interface ISut {
   sut: CheckAccessTokenUseCase
   tokenDecrypterAdapterStub: IDecrypter
+  getAccountByAccessTokenRepositoryStub: IGetAccountByAccessTokenRepository
 }
 
 const makeSut = (): ISut => {
   const tokenDecrypterAdapterStub = makeTokenDecrypterAdapterStub()
-  const sut = new CheckAccessTokenUseCase(tokenDecrypterAdapterStub)
+  const getAccountByAccessTokenRepositoryStub =
+    makeGetAccountByAccessTokenRepositoryStub()
+  const sut = new CheckAccessTokenUseCase(
+    false,
+    tokenDecrypterAdapterStub,
+    getAccountByAccessTokenRepositoryStub
+  )
   return {
     sut,
-    tokenDecrypterAdapterStub
+    tokenDecrypterAdapterStub,
+    getAccountByAccessTokenRepositoryStub
   }
 }
 
@@ -56,5 +86,14 @@ describe('CheckAccessTokenUseCase', () => {
     const account: IAccountEntitie | null = await sut.check('any_token')
 
     expect(account).toBeNull()
+  })
+
+  test('should call GetAccountByAccessTokenRepository with correct values', async () => {
+    const { sut, getAccountByAccessTokenRepositoryStub } = makeSut()
+    const getSpy = jest.spyOn(getAccountByAccessTokenRepositoryStub, 'get')
+
+    await sut.check('any_token')
+
+    expect(getSpy).toHaveBeenCalledWith('any_token', false)
   })
 })
