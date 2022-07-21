@@ -1,26 +1,24 @@
-import {
-  IAccountEntitie,
-  ICheckAccessTokenUseCase
-} from '../../../presentation/middlewares/auth-middleware-protocols'
+import { IAccountEntitie } from '../../../domain/entities/account'
+import { ICheckAccessTokenUseCase } from '../../../domain/usecases/account/check-access-token-usecase'
 import { IDecrypter } from '../../protocols/cryptography/decrypter-protocol'
+import { IGetAccountByAccessTokenRepository } from '../../protocols/repository/account/get-account-by-access-token-repository'
 
 export class CheckAccessTokenUseCase implements ICheckAccessTokenUseCase {
-  constructor(private readonly tokenDecrypterAdapter: IDecrypter) {}
+  constructor(
+    private readonly isAdmin: boolean,
+    private readonly tokenDecrypterAdapter: IDecrypter,
+    private readonly getAccountByAccessTokenRepository: IGetAccountByAccessTokenRepository
+  ) {}
 
-  async check(
-    accessToken: string,
-    admin?: boolean | undefined
-  ): Promise<IAccountEntitie | null> {
+  async check(accessToken: string): Promise<IAccountEntitie | null> {
     const isValid: string | null = await this.tokenDecrypterAdapter.decrypt(
       accessToken
     )
     if (isValid) {
-      return {
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password'
-      }
+      await this.getAccountByAccessTokenRepository.get(
+        accessToken,
+        this.isAdmin
+      )
     }
     return Promise.resolve(null)
   }
