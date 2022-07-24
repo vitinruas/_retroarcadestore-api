@@ -15,7 +15,7 @@ class MongoHelper {
 
   replaceMongoID(document: any): any {
     const { _id, ...data }: any = document
-    const formattedDocument = Object.assign({}, data, { id: _id })
+    const formattedDocument = Object.assign({}, data, { uid: _id })
     return formattedDocument
   }
 }

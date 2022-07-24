@@ -11,7 +11,7 @@ export class GetClientController implements IController {
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
-      const account = await this.GetClientUseCase.get(httpRequest.body?.id)
+      const account = await this.GetClientUseCase.get(httpRequest.body?.uid)
       return ok(account)
     } catch (error: any) {
       return serverError(error)

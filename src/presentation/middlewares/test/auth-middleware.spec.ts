@@ -18,7 +18,7 @@ const makeCheckAccessTokenUseCaseStub = (): ICheckAccessTokenUseCase => {
   class CheckAccessTokenUseCaseStub implements ICheckAccessTokenUseCase {
     async check(accessToken: string): Promise<IAccountEntitie | null> {
       return Promise.resolve({
-        id: 'any_id',
+        uid: 'any_uid',
         name: 'any_name',
         email: 'any_email@mail.com',
         password: 'hashed_password',
@@ -89,6 +89,6 @@ describe('AuthMiddleware', () => {
 
     const httpResponse: IHttpResponse = await sut.handle(makeFakeValidRequest())
 
-    expect(httpResponse.body).toEqual({ id: 'any_id' })
+    expect(httpResponse.body).toEqual({ uid: 'any_uid' })
   })
 })

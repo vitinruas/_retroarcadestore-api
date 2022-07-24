@@ -16,7 +16,7 @@ const makeValidNewAccountData = (): IAddAccountModel => ({
 })
 
 const makeValidCreatedAccountData = (): IAccountEntitie => ({
-  id: 'any_id',
+  uid: 'any_uid',
   name: 'any_name',
   email: 'any_email@mail.com',
   password: 'hashed_password',
@@ -182,13 +182,13 @@ describe('AddAccountUseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('should calls TokenGenerator with an user id', async () => {
+  test('should calls TokenGenerator with an uid', async () => {
     const { sut, tokenGeneratorStub } = makeSut()
     const encryptSpy = jest.spyOn(tokenGeneratorStub, 'encrypt')
 
     await sut.add(makeValidNewAccountData())
 
-    expect(encryptSpy).toHaveBeenCalledWith('any_id')
+    expect(encryptSpy).toHaveBeenCalledWith('any_uid')
   })
 
   test('should return throw if TokenGenerator throws', async () => {
@@ -208,7 +208,7 @@ describe('AddAccountUseCase', () => {
 
     await sut.add(makeValidNewAccountData())
 
-    expect(updateSpy).toHaveBeenCalledWith('any_id', 'any_token')
+    expect(updateSpy).toHaveBeenCalledWith('any_uid', 'any_token')
   })
 
   test('should return throw if UpdateAccountAccessToken throws', async () => {

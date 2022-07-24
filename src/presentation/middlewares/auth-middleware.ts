@@ -22,9 +22,9 @@ export class AuthMiddleware implements IMiddleware {
         // check if provided access token is valid
         const account: IAccountEntitie | null =
           await this.checkAccessTokenUseCase.check(accessToken, this.isAdmin)
-        // return an account ID to next Middleware if all validations above succeeds
+        // return an UID to next Middleware if all validations above succeeds
         if (account) {
-          return ok({ id: account.id })
+          return ok({ uid: account.uid })
         }
       }
       return forbidden(new AccessDeniedError())

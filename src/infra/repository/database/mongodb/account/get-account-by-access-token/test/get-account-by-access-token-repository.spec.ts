@@ -42,7 +42,7 @@ describe('GetAccountByAccessTokenRepository', () => {
 
     const account: IAccountEntitie | null = await sut.get('any_token', false)
 
-    expect(account!.id).toBeTruthy()
+    expect(account!.uid).toBeTruthy()
     expect(account!.name).toBe('any_name')
     expect(account!.email).toBe('any_email@mail.com')
     expect(account!.password).toBe('hashed_password')
@@ -56,7 +56,7 @@ describe('GetAccountByAccessTokenRepository', () => {
 
     const account: IAccountEntitie | null = await sut.get('any_token', true)
 
-    expect(account!.id).toBeTruthy()
+    expect(account!.uid).toBeTruthy()
     expect(account!.name).toBe('any_name')
     expect(account!.email).toBe('any_email@mail.com')
     expect(account!.password).toBe('hashed_password')

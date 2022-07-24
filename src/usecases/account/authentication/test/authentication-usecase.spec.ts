@@ -19,7 +19,7 @@ const makeGetAccountByEmailRepositoryStub = () => {
   {
     async get(email: string): Promise<IAccountEntitie | null> {
       return Promise.resolve({
-        id: 'any_id',
+        uid: 'any_uid',
         name: 'any_name',
         email: 'any_email@mail.com',
         password: 'hashed_password',
@@ -41,7 +41,7 @@ const makePasswordHashComparerAdapterStub = () => {
 
 const makeTokenGeneratorAdapterStub = () => {
   class TokenGeneratorAdapter implements IEncrypter {
-    async encrypt(id: string): Promise<string> {
+    async encrypt(uid: string): Promise<string> {
       return Promise.resolve('any_token')
     }
   }
@@ -52,7 +52,7 @@ const makeUpdateAccountAccessTokenStub = () => {
   class UpdateAccountAccessTokenStub
     implements IUpdateAccountAccessTokenRepository
   {
-    async update(id: string, accessToken: string): Promise<void> {
+    async update(uid: string, accessToken: string): Promise<void> {
       return Promise.resolve()
     }
   }
@@ -172,13 +172,13 @@ describe('AuthenticationUseCase', () => {
     expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
   })
 
-  test('should call TokenGeneratorAdapter with an user id', async () => {
+  test('should call TokenGeneratorAdapter with an uid', async () => {
     const { sut, tokenGeneratorAdapterStub } = makeSut()
     const getSpy = jest.spyOn(tokenGeneratorAdapterStub, 'encrypt')
 
     await sut.authenticate(makeFakeValidAuthenticationData())
 
-    expect(getSpy).toHaveBeenCalledWith('any_id')
+    expect(getSpy).toHaveBeenCalledWith('any_uid')
   })
 
   test('should return throw if TokenGeneratorAdapter throws', async () => {
@@ -203,7 +203,7 @@ describe('AuthenticationUseCase', () => {
 
     await sut.authenticate(makeFakeValidAuthenticationData())
 
-    expect(updateSpy).toHaveBeenCalledWith('any_id', 'any_token')
+    expect(updateSpy).toHaveBeenCalledWith('any_uid', 'any_token')
   })
 
   test('should return throw if UpdateAccountAccessTokenRepository throws', async () => {

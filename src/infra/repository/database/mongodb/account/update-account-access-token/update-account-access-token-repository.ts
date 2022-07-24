@@ -6,10 +6,10 @@ import mongoHelper from '../../helpers/mongo-helper'
 export class UpdateAccountAccessTokenMongoRepository
   implements IUpdateAccountAccessTokenRepository
 {
-  async update(id: string, accessToken: string): Promise<void> {
+  async update(uid: string, accessToken: string): Promise<void> {
     const collectionRef = mongoHelper.getCollection('accounts')
     await collectionRef.findOneAndUpdate(
-      { _id: new mongoose.Types.ObjectId(id) },
+      { _id: new mongoose.Types.ObjectId(uid) },
       {
         $set: {
           accessToken,

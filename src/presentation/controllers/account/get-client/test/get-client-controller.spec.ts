@@ -9,12 +9,12 @@ import { GetClientController } from '../get-client-controller'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
   body: {
-    id: 'any_id'
+    uid: 'any_uid'
   }
 })
 
 const makeFakeValidAccount = (): IClientEntitie => ({
-  id: 'any_id',
+  uid: 'any_uid',
   name: 'any_name',
   email: 'any_email@mail.com',
   password: 'hashed_password',
@@ -23,7 +23,7 @@ const makeFakeValidAccount = (): IClientEntitie => ({
 
 const makeGetClientUseCaseStub = (): IGetClientUseCase => {
   class GetClientUseCaseStub implements IGetClientUseCase {
-    get(id: string): Promise<IClientEntitie> {
+    get(uid: string): Promise<IClientEntitie> {
       return Promise.resolve(makeFakeValidAccount())
     }
   }
@@ -45,13 +45,13 @@ const makeSut = (): ISut => {
 }
 
 describe('GetClientUseCase', () => {
-  test('should call GetClientUseCase with an user id', async () => {
+  test('should call GetClientUseCase with an uid', async () => {
     const { sut, GetClientUseCaseStub } = makeSut()
     const getSpy = jest.spyOn(GetClientUseCaseStub, 'get')
 
     await sut.perform(makeFakeValidRequest())
 
-    expect(getSpy).toHaveBeenCalledWith('any_id')
+    expect(getSpy).toHaveBeenCalledWith('any_uid')
   })
 
   test('should return 500 if GetClientUseCase throws', async () => {

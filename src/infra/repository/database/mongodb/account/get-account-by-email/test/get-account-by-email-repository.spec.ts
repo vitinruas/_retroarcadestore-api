@@ -37,7 +37,7 @@ describe('GetAccountByEmail', () => {
 
     const sut = makeSut()
     const account = await sut.get('any_email@mail.com')
-    expect(account!.id).toBeTruthy()
+    expect(account!.uid).toBeTruthy()
     expect(account!.name).toBe('any_name')
     expect(account!.email).toBe('any_email@mail.com')
     expect(account!.password).toBe('hashed_password')

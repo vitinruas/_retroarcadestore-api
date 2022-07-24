@@ -32,10 +32,10 @@ export class AddAccountUseCase implements IAddAccountUseCase {
         )
 
       const accessToken: string = await this.tokenGeneratorAdapter.encrypt(
-        createdAccount.id
+        createdAccount.uid
       )
       await this.updateAccountAccessTokenStubRepository.update(
-        createdAccount.id,
+        createdAccount.uid,
         accessToken
       )
       return accessToken

@@ -27,9 +27,11 @@ export class AuthenticationUseCase implements IAuthenticationUseCase {
         account.password
       )
       if (isValid) {
-        const accessToken = await this.tokenGeneratorAdapter.encrypt(account.id)
+        const accessToken = await this.tokenGeneratorAdapter.encrypt(
+          account.uid
+        )
         await this.updateAccountAccessTokenRepository.update(
-          account.id,
+          account.uid,
           accessToken
         )
         return accessToken

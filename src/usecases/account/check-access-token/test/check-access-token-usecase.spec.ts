@@ -6,7 +6,7 @@ import {
 import { CheckAccessTokenUseCase } from '../check-access-token-usecase'
 
 const makeFakeValidAccount = (): IAccountEntitie => ({
-  id: 'any_id',
+  uid: 'any_uid',
   name: 'any_name',
   email: 'any_email@mail.com',
   password: 'hashed_password',

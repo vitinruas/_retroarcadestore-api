@@ -1,5 +1,5 @@
 export interface IAccountEntitie {
-  id: string
+  uid: string
   name: string
   email: string
   password: string

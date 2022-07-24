@@ -37,7 +37,7 @@ describe('AddAccountMongoRepository', () => {
   test('should add an account and return it', async () => {
     const sut = makeSut()
     const createdAccount = await sut.add(makeFakeValidAccount())
-    expect(createdAccount.id).toBeTruthy()
+    expect(createdAccount.uid).toBeTruthy()
     expect(createdAccount.name).toBe('any_name')
     expect(createdAccount.email).toBe('any_email@mail.com')
     expect(createdAccount.password).toBe('hashed_password')
