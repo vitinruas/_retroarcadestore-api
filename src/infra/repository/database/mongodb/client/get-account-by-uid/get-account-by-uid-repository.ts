@@ -1,5 +1,7 @@
-import { IGetClientByUIDRepository } from '../../../../../../usecases/protocols/repository/client/get-client-by-uid-repository-protocol'
-import { IGetClientModel } from '../../../../../../domain/usecases/client/get-client-usecase'
+import {
+  IGetClientModel,
+  IGetClientByUIDRepository
+} from './get-account-by-uid-repository-protocols'
 import mongoose from 'mongoose'
 import mongoHelper from '../../helpers/mongo-helper'
 

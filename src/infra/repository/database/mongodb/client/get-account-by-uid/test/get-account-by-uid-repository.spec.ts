@@ -1,7 +1,7 @@
+import { GetClientByUIDRepository } from '../get-account-by-uid-repository'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { Collection } from 'mongoose'
 import mongoHelper from '../../../helpers/mongo-helper'
-import { GetClientByUIDRepository } from '../get-account-by-uid-repository'
 
 let mongod: MongoMemoryServer
 let collectionRef: Collection
