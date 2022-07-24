@@ -4,13 +4,14 @@ import { ICheckAccessTokenUseCase } from '../../../../../presentation/middleware
 import { CheckAccessTokenUseCase } from '../../../../../usecases/account/check-access-token/check-access-token-usecase'
 import env from '../../../../config/env'
 
-export const makeCheckAccessTokenUseCase = (): ICheckAccessTokenUseCase => {
-  const tokenDecrypterAdapter = new JwtAdapter(env.secretKey)
-  const getAccountByAccessTokenRepository =
-    new GetAccountByAccessTokenRepository()
-  const checkAccessTokenUseCase = new CheckAccessTokenUseCase(
-    tokenDecrypterAdapter,
-    getAccountByAccessTokenRepository
-  )
-  return checkAccessTokenUseCase
-}
+export const makeCheckAccessTokenUseCaseFactory =
+  (): ICheckAccessTokenUseCase => {
+    const tokenDecrypterAdapter = new JwtAdapter(env.secretKey)
+    const getAccountByAccessTokenRepository =
+      new GetAccountByAccessTokenRepository()
+    const checkAccessTokenUseCase = new CheckAccessTokenUseCase(
+      tokenDecrypterAdapter,
+      getAccountByAccessTokenRepository
+    )
+    return checkAccessTokenUseCase
+  }

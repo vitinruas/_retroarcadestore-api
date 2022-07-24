@@ -1,12 +1,12 @@
-import { Request, Router } from 'express'
+import { Router } from 'express'
+import { expressRouteAdapter } from '../../../adapters/express-route-adapter'
 import { middlewareRouteAdapter } from '../../../adapters/middleware-route-adapter'
+import { makeGetClientControllerFactory } from '../../../factory/controllers/client/get-client-controller-factory'
 import { makeAuthMiddlewareFactory } from '../../../factory/middlewares/auth/auth-middleware-factory'
 export default (router: Router) => {
-  router.post(
-    '/client/update',
+  router.get(
+    '/client/',
     middlewareRouteAdapter(makeAuthMiddlewareFactory()),
-    (request: Request) => {
-      console.log(request.body)
-    }
+    expressRouteAdapter(makeGetClientControllerFactory())
   )
 }
