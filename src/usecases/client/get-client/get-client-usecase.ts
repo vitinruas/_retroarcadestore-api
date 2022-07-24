@@ -8,13 +8,7 @@ export class GetClientUseCase implements IGetClientUseCase {
   ) {}
 
   async get(uid: string): Promise<IClientEntitie> {
-    await this.getClientByUIDRepository.get(uid)
-    return Promise.resolve({
-      uid: 'any_uid',
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password',
-      accessToken: 'any_token'
-    })
+    const account = await this.getClientByUIDRepository.get(uid)
+    return account
   }
 }
