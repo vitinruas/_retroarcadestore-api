@@ -40,6 +40,15 @@ describe('JwtAdapter', () => {
   })
 
   describe('verify', () => {
+    test('should call Jwt.verify', async () => {
+      const sut = new JwtAdapter('secretKey')
+      const verifySpy = jest.spyOn(jwt, 'verify')
+
+      await sut.decrypt('any_value')
+
+      expect(verifySpy).toHaveBeenCalled()
+    })
+
     test('should returns false if provided token is valid', async () => {
       const sut = new JwtAdapter('genericSecretKey')
       const generatedToken = await sut.encrypt('any_value')
