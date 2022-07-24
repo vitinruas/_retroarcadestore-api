@@ -3,15 +3,15 @@ import {
   IController,
   IHttpRequest,
   IHttpResponse,
-  IGetAccountUseCase
-} from './get-account-controller-protocols'
+  IGetClientUseCase
+} from './get-client-controller-protocols'
 
-export class GetAccountController implements IController {
-  constructor(private readonly getAccountUseCase: IGetAccountUseCase) {}
+export class GetClientController implements IController {
+  constructor(private readonly GetClientUseCase: IGetClientUseCase) {}
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
-      const account = await this.getAccountUseCase.get(httpRequest.body?.id)
+      const account = await this.GetClientUseCase.get(httpRequest.body?.id)
       return ok(account)
     } catch (error: any) {
       return serverError(error)

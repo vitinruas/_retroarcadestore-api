@@ -1,5 +1,5 @@
 import { IClientEntitie } from '../../entities/account/client-entitie'
 
-export interface IGetAccountUseCase {
+export interface IGetClientUseCase {
   get(id: string): Promise<IClientEntitie>
 }

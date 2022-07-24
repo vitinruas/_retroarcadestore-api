@@ -2,10 +2,10 @@ import { ok, serverError } from '../../../../helpers/http-response-helper'
 import {
   IHttpRequest,
   IHttpResponse,
-  IGetAccountUseCase,
+  IGetClientUseCase,
   IClientEntitie
-} from '../get-account-controller-protocols'
-import { GetAccountController } from '../get-account-controller'
+} from '../get-client-controller-protocols'
+import { GetClientController } from '../get-client-controller'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
   body: {
@@ -21,46 +21,44 @@ const makeFakeValidAccount = (): IClientEntitie => ({
   accessToken: 'any_token'
 })
 
-const makeGetAccountUseCaseStub = (): IGetAccountUseCase => {
-  class GetAccountUseCaseStub implements IGetAccountUseCase {
+const makeGetClientUseCaseStub = (): IGetClientUseCase => {
+  class GetClientUseCaseStub implements IGetClientUseCase {
     get(id: string): Promise<IClientEntitie> {
       return Promise.resolve(makeFakeValidAccount())
     }
   }
-  return new GetAccountUseCaseStub()
+  return new GetClientUseCaseStub()
 }
 
 interface ISut {
-  sut: GetAccountController
-  getAccountUseCaseStub: IGetAccountUseCase
+  sut: GetClientController
+  GetClientUseCaseStub: IGetClientUseCase
 }
 
 const makeSut = (): ISut => {
-  const getAccountUseCaseStub: IGetAccountUseCase = makeGetAccountUseCaseStub()
-  const sut = new GetAccountController(getAccountUseCaseStub)
+  const GetClientUseCaseStub: IGetClientUseCase = makeGetClientUseCaseStub()
+  const sut = new GetClientController(GetClientUseCaseStub)
   return {
     sut,
-    getAccountUseCaseStub
+    GetClientUseCaseStub
   }
 }
 
-describe('GetAccountUseCase', () => {
-  test('should call GetAccountUseCase with an user id', async () => {
-    const { sut, getAccountUseCaseStub } = makeSut()
-    const getSpy = jest.spyOn(getAccountUseCaseStub, 'get')
+describe('GetClientUseCase', () => {
+  test('should call GetClientUseCase with an user id', async () => {
+    const { sut, GetClientUseCaseStub } = makeSut()
+    const getSpy = jest.spyOn(GetClientUseCaseStub, 'get')
 
     await sut.perform(makeFakeValidRequest())
 
     expect(getSpy).toHaveBeenCalledWith('any_id')
   })
 
-  test('should return 500 if GetAccountUseCase throws', async () => {
-    const { sut, getAccountUseCaseStub } = makeSut()
-    jest
-      .spyOn(getAccountUseCaseStub, 'get')
-      .mockImplementationOnce(async () => {
-        return Promise.reject(new Error())
-      })
+  test('should return 500 if GetClientUseCase throws', async () => {
+    const { sut, GetClientUseCaseStub } = makeSut()
+    jest.spyOn(GetClientUseCaseStub, 'get').mockImplementationOnce(async () => {
+      return Promise.reject(new Error())
+    })
 
     const httpResponse: IHttpResponse = await sut.perform(
       makeFakeValidRequest()
