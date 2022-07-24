@@ -1,7 +1,7 @@
 import {
-  IGetClientModel,
-  IGetClientUseCase
-} from '../../../domain/usecases/client/get-client-usecase'
+  IGetClientUseCase,
+  IGetClientModel
+} from './get-client-usecase-protocols'
 import { IGetClientByUIDRepository } from '../../protocols/repository/client/get-client-by-uid-repository-protocol'
 
 export class GetClientUseCase implements IGetClientUseCase {

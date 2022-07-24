@@ -1,6 +1,8 @@
-import { IGetClientModel } from '../../../../domain/usecases/client/get-client-usecase'
-import { IGetClientByUIDRepository } from '../../../protocols/repository/client/get-client-by-uid-repository-protocol'
 import { GetClientUseCase } from '../get-client-usecase'
+import {
+  IGetClientModel,
+  IGetClientByUIDRepository
+} from '../get-client-usecase-protocols'
 
 const makeFakeValidAccount = (): IGetClientModel => ({
   uid: 'any_uid',
