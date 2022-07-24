@@ -2,8 +2,8 @@ import { ok, serverError } from '../../../../helpers/http-response-helper'
 import {
   IHttpRequest,
   IHttpResponse,
-  IGetClientUseCase,
-  IClientEntitie
+  IGetClientModel,
+  IGetClientUseCase
 } from '../get-client-controller-protocols'
 import { GetClientController } from '../get-client-controller'
 
@@ -13,17 +13,17 @@ const makeFakeValidRequest = (): IHttpRequest => ({
   }
 })
 
-const makeFakeValidAccount = (): IClientEntitie => ({
+const makeFakeValidAccount = (): IGetClientModel => ({
   uid: 'any_uid',
   name: 'any_name',
   email: 'any_email@mail.com',
-  password: 'hashed_password',
-  accessToken: 'any_token'
+  createdAt: 'any_date',
+  authenticatedAt: 'any_date'
 })
 
 const makeGetClientUseCaseStub = (): IGetClientUseCase => {
   class GetClientUseCaseStub implements IGetClientUseCase {
-    get(uid: string): Promise<IClientEntitie> {
+    get(uid: string): Promise<IGetClientModel> {
       return Promise.resolve(makeFakeValidAccount())
     }
   }

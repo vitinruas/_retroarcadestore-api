@@ -1,18 +1,18 @@
-import { IClientEntitie } from '../../../../domain/entities/account/client-entitie'
+import { IGetClientModel } from '../../../../domain/usecases/client/get-client-usecase'
 import { IGetClientByUIDRepository } from '../../../protocols/repository/client/get-client-by-uid-repository-protocol'
 import { GetClientUseCase } from '../get-client-usecase'
 
-const makeFakeValidAccount = (): IClientEntitie => ({
+const makeFakeValidAccount = (): IGetClientModel => ({
   uid: 'any_uid',
   name: 'any_name',
   email: 'any_email@mail.com',
-  password: 'hashed_password',
-  accessToken: 'any_token'
+  createdAt: 'any_date',
+  authenticatedAt: 'any_date'
 })
 
 const makeGetClientByUIDRepositoryStub = (): IGetClientByUIDRepository => {
   class GetClientByUIDRepositoryStub implements IGetClientByUIDRepository {
-    async get(uid: string): Promise<IClientEntitie> {
+    async get(uid: string): Promise<IGetClientModel> {
       return Promise.resolve(makeFakeValidAccount())
     }
   }
@@ -53,7 +53,7 @@ describe('GetClientUseCase', () => {
       .spyOn(getClientByUIDRepositoryStub, 'get')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
-    const account: Promise<IClientEntitie> = sut.get('any_uid')
+    const account: Promise<IGetClientModel> = sut.get('any_uid')
 
     expect(account).rejects.toThrow()
   })

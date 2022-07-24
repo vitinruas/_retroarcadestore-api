@@ -1,5 +1,5 @@
-import { IClientEntitie } from '../../../../domain/entities/account/client-entitie'
+import { IGetClientModel } from '../../../../domain/usecases/client/get-client-usecase'
 
 export interface IGetClientByUIDRepository {
-  get(uid: string): Promise<IClientEntitie>
+  get(uid: string): Promise<IGetClientModel>
 }
