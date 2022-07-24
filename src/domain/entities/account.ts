@@ -3,6 +3,7 @@ export interface IAccountEntitie {
   name: string
   email: string
   password: string
+  accessToken: string
   isAdmin?: boolean
   createdAt?: string
   updatedAt?: string
