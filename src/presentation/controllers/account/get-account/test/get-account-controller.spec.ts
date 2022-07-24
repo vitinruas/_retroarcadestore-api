@@ -1,6 +1,10 @@
 import { IGetAccountUseCase } from '../../../../../domain/usecases/account/get-account-usecase'
+import { serverError } from '../../../../helpers/http-response-helper'
 import { IAccountEntitie } from '../../../../middlewares/auth-middleware-protocols'
-import { IHttpRequest } from '../../authentication/login/login-controller-protocols'
+import {
+  IHttpRequest,
+  IHttpResponse
+} from '../../authentication/login/login-controller-protocols'
 import { GetAccountController } from '../get-account-controller'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
@@ -46,5 +50,20 @@ describe('GetAccountUseCase', () => {
     await sut.perform(makeFakeValidRequest())
 
     expect(getSpy).toHaveBeenCalledWith('any_id')
+  })
+
+  test('should return 500 if GetAccountUseCase throws', async () => {
+    const { sut, getAccountUseCaseStub } = makeSut()
+    jest
+      .spyOn(getAccountUseCaseStub, 'get')
+      .mockImplementationOnce(async () => {
+        return Promise.reject(new Error())
+      })
+
+    const httpResponse: IHttpResponse = await sut.perform(
+      makeFakeValidRequest()
+    )
+
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
