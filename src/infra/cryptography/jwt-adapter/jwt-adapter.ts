@@ -1,11 +1,17 @@
 import { IEncrypter } from '../../../usecases/protocols/cryptography/encrypter-protocol'
 import jwt from 'jsonwebtoken'
+import { IDecrypter } from '../../../usecases/protocols/cryptography/decrypter-protocol'
 
-export class JwtAdapter implements IEncrypter {
-  constructor(private readonly secret: string) {}
+export class JwtAdapter implements IEncrypter, IDecrypter {
+  constructor(private readonly secretKey: string) {}
 
   async encrypt(id: string): Promise<string> {
-    const token = jwt.sign({ id }, this.secret)
+    const token = jwt.sign({ id }, this.secretKey)
     return token
+  }
+
+  async decrypt(accessToken: string): Promise<boolean> {
+    const token = await jwt.verify(accessToken, this.secretKey)
+    return !!token
   }
 }
