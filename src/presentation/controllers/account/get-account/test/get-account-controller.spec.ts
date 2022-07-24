@@ -1,5 +1,5 @@
 import { IGetAccountUseCase } from '../../../../../domain/usecases/account/get-account-usecase'
-import { serverError } from '../../../../helpers/http-response-helper'
+import { ok, serverError } from '../../../../helpers/http-response-helper'
 import { IAccountEntitie } from '../../../../middlewares/auth-middleware-protocols'
 import {
   IHttpRequest,
@@ -13,16 +13,18 @@ const makeFakeValidRequest = (): IHttpRequest => ({
   }
 })
 
+const makeFakeValidAccount = (): IAccountEntitie => ({
+  id: 'any_id',
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password',
+  accessToken: 'any_token'
+})
+
 const makeGetAccountUseCaseStub = (): IGetAccountUseCase => {
   class GetAccountUseCaseStub implements IGetAccountUseCase {
     get(id: string): Promise<IAccountEntitie> {
-      return Promise.resolve({
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password',
-        accessToken: 'any_token'
-      })
+      return Promise.resolve(makeFakeValidAccount())
     }
   }
   return new GetAccountUseCaseStub()
@@ -65,5 +67,15 @@ describe('GetAccountUseCase', () => {
     )
 
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('should return an account on success', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse: IHttpResponse = await sut.perform(
+      makeFakeValidRequest()
+    )
+
+    expect(httpResponse).toEqual(ok(makeFakeValidAccount()))
   })
 })
