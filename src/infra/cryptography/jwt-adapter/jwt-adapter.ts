@@ -5,8 +5,8 @@ import { IDecrypter } from '../../../usecases/protocols/cryptography/decrypter-p
 export class JwtAdapter implements IEncrypter, IDecrypter {
   constructor(private readonly secretKey: string) {}
 
-  async encrypt(id: string): Promise<string> {
-    const token = jwt.sign({ id }, this.secretKey)
+  async encrypt(value: string): Promise<string> {
+    const token = jwt.sign({ value }, this.secretKey)
     return token
   }
 
