@@ -23,21 +23,22 @@ beforeEach(async () => {
   await collectionRef.deleteMany({})
 })
 
+const makeFakeValidAccount = (admin: boolean) => ({
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password',
+  accessToken: 'any_token',
+  isAdmin: admin
+})
+
 const makeSut = (): GetAccountByAccessTokenRepository => {
   return new GetAccountByAccessTokenRepository()
 }
 
 describe('GetAccountByAccessTokenRepository', () => {
   test('should return a client account if using the provided access token', async () => {
-    const fakeValidAccount = {
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password',
-      accessToken: 'any_token',
-      isAdmin: false
-    }
-    await collectionRef.insertOne(fakeValidAccount)
     const sut = makeSut()
+    await collectionRef.insertOne(makeFakeValidAccount(false))
 
     const account: IAccountEntitie | null = await sut.get('any_token', false)
 
@@ -50,15 +51,8 @@ describe('GetAccountByAccessTokenRepository', () => {
   })
 
   test('should return an admin account if using the provided access token', async () => {
-    const fakeValidAccount = {
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password',
-      accessToken: 'any_token',
-      isAdmin: true
-    }
-    await collectionRef.insertOne(fakeValidAccount)
     const sut = makeSut()
+    await collectionRef.insertOne(makeFakeValidAccount(true))
 
     const account: IAccountEntitie | null = await sut.get('any_token', true)
 
