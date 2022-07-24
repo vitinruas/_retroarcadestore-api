@@ -19,6 +19,17 @@ describe('JwtAdapter', () => {
       expect(signspy).toHaveBeenCalledWith({ value: 'any_value' }, 'secretKey')
     })
 
+    test('should return throw if Jwt.sign throws', async () => {
+      const sut = new JwtAdapter('secretKey')
+      jest
+        .spyOn(jwt, 'sign')
+        .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+      const promise: Promise<string> = sut.encrypt('any_value')
+
+      expect(promise).rejects.toThrow()
+    })
+
     test('should return a new token', async () => {
       const sut = new JwtAdapter('secretKey')
 
