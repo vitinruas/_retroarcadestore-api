@@ -46,4 +46,15 @@ describe('GetClientUseCase', () => {
 
     expect(getSpy).toHaveBeenCalledWith('any_uid')
   })
+
+  test('should return throw if GetClientByUIDRepository throws', async () => {
+    const { sut, getClientByUIDRepositoryStub }: ISut = makeSut()
+    jest
+      .spyOn(getClientByUIDRepositoryStub, 'get')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const account: Promise<IClientEntitie> = sut.get('any_uid')
+
+    expect(account).rejects.toThrow()
+  })
 })
