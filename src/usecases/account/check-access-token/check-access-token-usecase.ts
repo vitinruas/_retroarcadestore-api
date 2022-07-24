@@ -16,7 +16,7 @@ export class CheckAccessTokenUseCase implements ICheckAccessTokenUseCase {
     isAdmin: boolean
   ): Promise<IAccountEntitie | null> {
     // check if provided access token is valid and return it
-    const isValid: string | null = await this.tokenDecrypterAdapter.decrypt(
+    const isValid: boolean | null = await this.tokenDecrypterAdapter.decrypt(
       accessToken
     )
     if (isValid) {

@@ -14,8 +14,8 @@ const makeFakeValidAccount = (): IAccountEntitie => ({
 
 const makeTokenDecrypterAdapterStub = (): IDecrypter => {
   class TokenDecrypterAdapterStub implements IDecrypter {
-    async decrypt(token: string): Promise<string> {
-      return Promise.resolve('any_token')
+    async decrypt(token: string): Promise<boolean> {
+      return Promise.resolve(true)
     }
   }
 
@@ -83,11 +83,11 @@ describe('CheckAccessTokenUseCase', () => {
     await expect(account).rejects.toThrow()
   })
 
-  test('should return null if TokenDecrypterAdapter fails', async () => {
+  test('should return false if TokenDecrypterAdapter fails', async () => {
     const { sut, tokenDecrypterAdapterStub } = makeSut()
     jest
       .spyOn(tokenDecrypterAdapterStub, 'decrypt')
-      .mockReturnValueOnce(Promise.resolve(null))
+      .mockReturnValueOnce(Promise.resolve(false))
 
     const account: IAccountEntitie | null = await sut.check('any_token', false)
 
