@@ -1,4 +1,4 @@
-export * from '../../../domain/entities/account'
+export * from '../../../domain/entities/account/account-entitie'
 export * from '../../../domain/usecases/account/authentication-usecase'
 export * from '../../protocols/repository/account/get-account-by-email-repository'
 export * from '../../protocols/cryptography/hash-comparer-protocol'

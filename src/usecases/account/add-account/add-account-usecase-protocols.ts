@@ -1,4 +1,4 @@
-export * from '../../../domain/entities/account'
+export * from '../../../domain/entities/account/account-entitie'
 export * from '../../../domain/usecases/account/add-account-usecase'
 export * from '../../protocols/cryptography/hasher-protocol'
 export * from '../../protocols/cryptography/encrypter-protocol'

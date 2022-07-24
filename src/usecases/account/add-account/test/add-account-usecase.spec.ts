@@ -15,6 +15,14 @@ const makeValidNewAccountData = (): IAddAccountModel => ({
   password: 'any_password'
 })
 
+const makeValidCreatedAccountData = (): IAccountEntitie => ({
+  id: 'any_id',
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password',
+  accessToken: 'any_token'
+})
+
 const makePasswordHasherStub = () => {
   class PasswordHasherStub implements IHasher {
     async hash(password: string): Promise<string> {
@@ -38,12 +46,7 @@ const makeGetAccountByEmailRepositoryStub = () => {
 const makeAddAccountRepositoryStub = () => {
   class AddAccountRepositoryStub implements IAddAccountRepository {
     async add(newAccountData: IAddAccountModel): Promise<IAccountEntitie> {
-      return Promise.resolve({
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password'
-      })
+      return Promise.resolve(makeValidCreatedAccountData())
     }
   }
   return new AddAccountRepositoryStub()
@@ -126,15 +129,9 @@ describe('AddAccountUseCase', () => {
 
   test('should return null if GetAccountByEmailRepository returns an account', async () => {
     const { sut, getAccountByEmailRepositoryStub } = makeSut()
-    jest.spyOn(getAccountByEmailRepositoryStub, 'get').mockReturnValueOnce(
-      Promise.resolve({
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email',
-        password: 'any_password',
-        isAdmin: false
-      })
-    )
+    jest
+      .spyOn(getAccountByEmailRepositoryStub, 'get')
+      .mockReturnValueOnce(Promise.resolve(makeValidCreatedAccountData()))
 
     const accessToken = await sut.add(makeValidNewAccountData())
 
