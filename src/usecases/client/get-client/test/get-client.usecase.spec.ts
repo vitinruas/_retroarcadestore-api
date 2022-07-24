@@ -57,4 +57,12 @@ describe('GetClientUseCase', () => {
 
     expect(account).rejects.toThrow()
   })
+
+  test('should returns an account if GetClientByUIDRepository succeeds', async () => {
+    const { sut }: ISut = makeSut()
+
+    const account = await sut.get('any_uid')
+
+    expect(account).toEqual(makeFakeValidAccount())
+  })
 })
