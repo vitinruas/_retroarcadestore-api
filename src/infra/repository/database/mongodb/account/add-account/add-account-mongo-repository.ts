@@ -3,7 +3,7 @@ import {
   IAddAccountModel,
   IAddAccountRepository
 } from './add-account-repository.protocols'
-import accountHelper from '../../helpers/account-helper'
+import entitieHelper from '../../helpers/entitie-helper'
 import mongoHelper from '../../helpers/mongo-helper'
 
 export class AddAccountMongoRepository implements IAddAccountRepository {
@@ -12,7 +12,7 @@ export class AddAccountMongoRepository implements IAddAccountRepository {
     const createdAccountID = (
       await collectionRef.insertOne({
         ...newAccountData,
-        createdAt: accountHelper.getCurrentTime()
+        createdAt: entitieHelper.getCurrentTime()
       })
     ).insertedId
     const createdAccount = await collectionRef.findOne({

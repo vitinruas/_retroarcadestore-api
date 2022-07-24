@@ -1,5 +1,5 @@
-import { IEncrypter } from '../../../usecases/protocols/cryptography/encrypter-protocol'
 import jwt from 'jsonwebtoken'
+import { IEncrypter } from '../../../usecases/protocols/cryptography/encrypter-protocol'
 import { IDecrypter } from '../../../usecases/protocols/cryptography/decrypter-protocol'
 
 export class JwtAdapter implements IEncrypter, IDecrypter {

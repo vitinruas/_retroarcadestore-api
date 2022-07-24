@@ -12,7 +12,7 @@ import {
   IHttpRequest,
   IHttpResponse,
   IAuthenticationUseCase
-} from './login-controller-protocol'
+} from './login-controller-protocols'
 
 export class LoginController implements IController {
   constructor(

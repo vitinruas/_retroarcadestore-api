@@ -13,7 +13,7 @@ import {
   IHttpResponse,
   IAuthenticationUseCase,
   IAuthenticationModel
-} from '../login-controller-protocol'
+} from '../login-controller-protocols'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
   body: {
