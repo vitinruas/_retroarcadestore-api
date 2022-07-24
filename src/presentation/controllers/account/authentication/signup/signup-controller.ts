@@ -10,9 +10,9 @@ import {
   forbidden,
   ok,
   serverError
-} from '../../../helpers/http-response-helper'
-import { MissingFieldError, InvalidFieldError } from '../../../errors'
-import { FieldAlreadyUse } from '../../../errors/field-already-use'
+} from '../../../../helpers/http-response-helper'
+import { MissingFieldError, InvalidFieldError } from '../../../../errors'
+import { FieldAlreadyUse } from '../../../../errors/field-already-use'
 
 export class SignUpController implements IController {
   constructor(

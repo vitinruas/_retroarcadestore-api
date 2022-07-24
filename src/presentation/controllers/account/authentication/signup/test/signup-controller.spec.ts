@@ -1,11 +1,11 @@
-import { MissingFieldError, InvalidFieldError } from '../../../../errors'
+import { MissingFieldError, InvalidFieldError } from '../../../../../errors'
 import { SignUpController } from '../signup-controller'
 import {
   badRequest,
   forbidden,
   ok,
   serverError
-} from '../../../../helpers/http-response-helper'
+} from '../../../../../helpers/http-response-helper'
 import {
   IAddAccountModel,
   IAddAccountUseCase,
@@ -13,7 +13,7 @@ import {
   IHttpRequest,
   IHttpResponse
 } from '../signup-controller-protocols'
-import { FieldAlreadyUse } from '../../../../errors/field-already-use'
+import { FieldAlreadyUse } from '../../../../../errors/field-already-use'
 
 const makeValidRequest = (): IHttpRequest => ({
   body: {
