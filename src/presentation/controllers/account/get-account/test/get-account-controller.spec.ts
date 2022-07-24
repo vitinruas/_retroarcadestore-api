@@ -1,10 +1,10 @@
-import { IGetAccountUseCase } from '../../../../../domain/usecases/account/get-account-usecase'
 import { ok, serverError } from '../../../../helpers/http-response-helper'
-import { IAccountEntitie } from '../../../../middlewares/auth-middleware-protocols'
 import {
   IHttpRequest,
-  IHttpResponse
-} from '../../authentication/login/login-controller-protocols'
+  IHttpResponse,
+  IGetAccountUseCase,
+  IClientEntitie
+} from '../get-account-controller-protocols'
 import { GetAccountController } from '../get-account-controller'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
@@ -13,7 +13,7 @@ const makeFakeValidRequest = (): IHttpRequest => ({
   }
 })
 
-const makeFakeValidAccount = (): IAccountEntitie => ({
+const makeFakeValidAccount = (): IClientEntitie => ({
   id: 'any_id',
   name: 'any_name',
   email: 'any_email@mail.com',
@@ -23,7 +23,7 @@ const makeFakeValidAccount = (): IAccountEntitie => ({
 
 const makeGetAccountUseCaseStub = (): IGetAccountUseCase => {
   class GetAccountUseCaseStub implements IGetAccountUseCase {
-    get(id: string): Promise<IAccountEntitie> {
+    get(id: string): Promise<IClientEntitie> {
       return Promise.resolve(makeFakeValidAccount())
     }
   }
