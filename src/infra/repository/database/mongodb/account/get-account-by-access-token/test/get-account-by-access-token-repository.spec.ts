@@ -48,4 +48,25 @@ describe('GetAccountByAccessTokenRepository', () => {
     expect(account!.accessToken).toBe('any_token')
     expect(account!.isAdmin).toBe(false)
   })
+
+  test('should return an admin account if using the provided access token', async () => {
+    const fakeValidAccount = {
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'hashed_password',
+      accessToken: 'any_token',
+      isAdmin: true
+    }
+    await collectionRef.insertOne(fakeValidAccount)
+    const sut = makeSut()
+
+    const account: IAccountEntitie | null = await sut.get('any_token', true)
+
+    expect(account!.id).toBeTruthy()
+    expect(account!.name).toBe('any_name')
+    expect(account!.email).toBe('any_email@mail.com')
+    expect(account!.password).toBe('hashed_password')
+    expect(account!.accessToken).toBe('any_token')
+    expect(account!.isAdmin).toBe(true)
+  })
 })
