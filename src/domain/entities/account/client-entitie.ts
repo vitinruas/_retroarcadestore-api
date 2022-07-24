@@ -10,6 +10,6 @@ export interface IAddress {
 }
 
 export interface IClientEntitie extends IAccountEntitie {
-  photo: string
-  address: IAddress
+  photo?: string
+  address?: IAddress
 }
