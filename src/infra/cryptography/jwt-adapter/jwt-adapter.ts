@@ -11,7 +11,12 @@ export class JwtAdapter implements IEncrypter, IDecrypter {
   }
 
   async decrypt(accessToken: string): Promise<boolean> {
-    const token = await jwt.verify(accessToken, this.secretKey)
-    return !!token
+    let isValid: boolean = false
+    await jwt.verify(accessToken, this.secretKey, (error, decode) => {
+      if (!error) {
+        isValid = true
+      }
+    })
+    return isValid
   }
 }
