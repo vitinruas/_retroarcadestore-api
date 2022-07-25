@@ -4,6 +4,7 @@ import {
   IHttpRequest,
   IHttpResponse
 } from '../../presentation/protocols/http-protocol'
+
 export const expressRouteAdapter = (controller: IController) => {
   return async (request: Request, response: Response) => {
     const httpRequest: IHttpRequest = {
