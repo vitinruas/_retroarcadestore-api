@@ -1,6 +1,6 @@
 import { AuthMiddleware } from '../auth-middleware'
-import { forbidden, serverError } from '../../helpers/http-response-helper'
-import { AccessDeniedError } from '../../errors'
+import { forbidden, serverError } from '../../../helpers/http-response-helper'
+import { AccessDeniedError } from '../../../errors'
 import {
   IAccountEntitie,
   IHttpRequest,
