@@ -4,9 +4,9 @@ import {
   IHttpResponse,
   IAccountEntitie
 } from './auth-middleware-protocols'
-import { ICheckAccessTokenUseCase } from '../../domain/usecases/account/check-access-token-usecase'
-import { AccessDeniedError } from '../errors'
-import { forbidden, ok, serverError } from '../helpers/http-response-helper'
+import { ICheckAccessTokenUseCase } from '../../../domain/usecases/account/check-access-token-usecase'
+import { AccessDeniedError } from '../../errors'
+import { forbidden, ok, serverError } from '../../helpers/http-response-helper'
 
 export class AuthMiddleware implements IMiddleware {
   constructor(
