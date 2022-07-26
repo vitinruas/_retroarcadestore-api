@@ -8,8 +8,13 @@ import {
 
 export class UpdateClientController implements IController {
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
-    const upgradableClientFields = ['name', 'email', 'password', 'photo']
-    const upgradableClientAddressFields = [
+    const upgradableClientFields: ReadonlyArray<string> = [
+      'name',
+      'email',
+      'password',
+      'photo'
+    ]
+    const upgradableClientAddressFields: ReadonlyArray<string> = [
       'street',
       'postalCode',
       'complement',
@@ -17,16 +22,15 @@ export class UpdateClientController implements IController {
       'city',
       'country'
     ]
-    const clientFieldsToUpdate = upgradableClientFields.filter(
-      (field: string) => {
+    const clientFieldsToUpdate: ReadonlyArray<string> =
+      upgradableClientFields.filter((field: string) => {
         return httpRequest.body[field]
-      }
-    )
-    const addressFieldsToUpdate = upgradableClientAddressFields.filter(
-      (field: string) => {
+      })
+
+    const addressFieldsToUpdate: ReadonlyArray<string> =
+      upgradableClientAddressFields.filter((field: string) => {
         return httpRequest.body[field]
-      }
-    )
+      })
 
     if (!clientFieldsToUpdate.length && !addressFieldsToUpdate.length) {
       return badRequest(new NoFieldProvidedError())
