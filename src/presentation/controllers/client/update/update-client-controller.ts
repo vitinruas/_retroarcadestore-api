@@ -1,5 +1,6 @@
 import { NoFieldProvidedError } from '../../../errors/no-field-provided'
 import { badRequest, ok } from '../../../helpers/http-response-helper'
+import { IEmailValidatorAdapter } from '../../../protocols/email-validator-protocol'
 import {
   IController,
   IHttpRequest,
@@ -7,6 +8,7 @@ import {
 } from '../get/get-client-controller-protocols'
 
 export class UpdateClientController implements IController {
+  constructor(private readonly emailValidatorAdapter: IEmailValidatorAdapter) {}
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     const upgradableClientFields: ReadonlyArray<string> = [
       'name',
@@ -35,6 +37,8 @@ export class UpdateClientController implements IController {
     if (!clientFieldsToUpdate.length && !addressFieldsToUpdate.length) {
       return badRequest(new NoFieldProvidedError())
     }
+
+    this.emailValidatorAdapter.validate(httpRequest.body.email)
 
     return Promise.resolve(ok())
   }
