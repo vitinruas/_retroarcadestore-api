@@ -19,19 +19,20 @@ export class UpdateClientController implements IController {
   ) {}
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
+    const { email, file, postalCode } = httpRequest.body
     try {
       const httpRequestKeys: ReadonlyArray<string> = Object.keys(
         httpRequest.body
       )
       // check if anything field was provided
       if (httpRequestKeys.length) {
-        if (httpRequest.body.file) {
+        if (file) {
           Object.assign(httpRequest.body, {
             photo: httpRequest.body.file.filename
           })
         }
         // check if provided postal code is valid and has a valid length
-        if (httpRequestKeys.includes('postalCode')) {
+        if (postalCode) {
           if (
             !Number(httpRequest.body.postalCode) ||
             httpRequest.body.postalCode.length > 10 ||
@@ -41,7 +42,7 @@ export class UpdateClientController implements IController {
           }
         }
         // check if an email was provided
-        if (httpRequestKeys.includes('email')) {
+        if (email) {
           // check if the provided email is valid
           const isValid: boolean = this.emailValidatorAdapter.validate(
             httpRequest.body.email
