@@ -122,6 +122,18 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(badRequest(new InvalidFieldError('email')))
   })
 
+  test('should return 400 if an invalid postal code is provided', async () => {
+    const { sut } = makeSut()
+    const request: IHttpRequest = {
+      body: {
+        postalCode: 'a123bsds'
+      }
+    }
+    const response: IHttpResponse = await sut.perform(request)
+
+    expect(response).toEqual(badRequest(new InvalidFieldError('postalCode')))
+  })
+
   test('should return 400 if an invalid postal code length is provided', async () => {
     const { sut } = makeSut()
     const request: IHttpRequest = {
