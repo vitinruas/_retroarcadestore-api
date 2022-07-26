@@ -30,6 +30,7 @@ export class UpdateClientController implements IController {
 
         if (httpRequest.body.postalCode) {
           if (
+            !Number(httpRequest.body.postalCode) ||
             httpRequest.body.postalCode.length > 10 ||
             httpRequest.body.postalCode.length < 5
           ) {
