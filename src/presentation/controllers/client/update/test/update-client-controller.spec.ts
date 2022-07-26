@@ -175,6 +175,16 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(serverError(new Error()))
   })
 
+  test('should skip file validation if its no provided', async () => {
+    const { sut } = makeSut()
+
+    const response: IHttpResponse = await sut.perform(
+      makeFakeValidRequest('file')
+    )
+
+    expect(response).toEqual(noContent())
+  })
+
   test('should skip postalCode validation if its no provided', async () => {
     const { sut } = makeSut()
 
