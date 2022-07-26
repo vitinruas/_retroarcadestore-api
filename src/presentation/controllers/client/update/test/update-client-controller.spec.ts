@@ -18,7 +18,9 @@ const makeFakeValidRequest = (): IHttpRequest => ({
     name: 'any_name',
     email: 'any_email@mail.com',
     password: 'any_password',
-    photo: 'any_photo',
+    file: {
+      filename: 'any_photo'
+    },
     street: 'any_street',
     postalCode: 'any_postalcode',
     complement: 'any_complement',
@@ -89,6 +91,15 @@ describe('UpdateClientController', () => {
     expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
+  test('should call EmailValidatorAdapter with an email', async () => {
+    const { sut, emailValidatorAdapterStub } = makeSut()
+    const validateSpy = jest.spyOn(emailValidatorAdapterStub, 'validate')
+
+    await sut.perform(makeFakeValidRequest())
+
+    expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
+  })
+
   test('should return 500 if EmailValidatorAdapter throws', async () => {
     const { sut, emailValidatorAdapterStub } = makeSut()
     jest
@@ -117,7 +128,9 @@ describe('UpdateClientController', () => {
 
     await sut.perform(makeFakeValidRequest())
 
-    expect(validateSpy).toHaveBeenCalledWith(makeFakeValidRequest().body)
+    expect(validateSpy).toHaveBeenCalledWith(
+      Object.assign(makeFakeValidRequest().body, { photo: 'any_photo' })
+    )
   })
 
   test('should return 500 if UpdateClientUseCase throws', async () => {
