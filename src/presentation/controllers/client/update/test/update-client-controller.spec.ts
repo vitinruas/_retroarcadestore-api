@@ -1,3 +1,7 @@
+import {
+  IUpdateClientUseCase,
+  IUpdateClientUseCaseModel
+} from '../../../../../domain/usecases/client/update-client-usecase'
 import { InvalidFieldError } from '../../../../errors'
 import { NoFieldProvidedError } from '../../../../errors/no-field-provided'
 import {
@@ -35,20 +39,34 @@ const makeEmailValidatorAdapterStub = (): IEmailValidatorAdapter => {
   return new EmailValidatorAdapterStub()
 }
 
+const makeUpdateClientUseCaseStub = (): IUpdateClientUseCase => {
+  class UpdateClientUseCaseStub implements IUpdateClientUseCase {
+    async update(fields: IUpdateClientUseCaseModel): Promise<void> {
+      return Promise.resolve()
+    }
+  }
+  return new UpdateClientUseCaseStub()
+}
+
 interface ISut {
   sut: UpdateClientController
   emailValidatorAdapterStub: IEmailValidatorAdapter
+  updateClientUseCaseStub: IUpdateClientUseCase
 }
 
 const makeSut = (): ISut => {
   const emailValidatorAdapterStub: IEmailValidatorAdapter =
     makeEmailValidatorAdapterStub()
+  const updateClientUseCaseStub: IUpdateClientUseCase =
+    makeUpdateClientUseCaseStub()
   const sut: UpdateClientController = new UpdateClientController(
-    emailValidatorAdapterStub
+    emailValidatorAdapterStub,
+    updateClientUseCaseStub
   )
   return {
     sut,
-    emailValidatorAdapterStub
+    emailValidatorAdapterStub,
+    updateClientUseCaseStub
   }
 }
 
@@ -93,5 +111,14 @@ describe('UpdateClientController', () => {
     const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
 
     expect(response).toEqual(badRequest(new InvalidFieldError('email')))
+  })
+
+  test('should call UpdateClientUseCase with correct values', async () => {
+    const { sut, updateClientUseCaseStub } = makeSut()
+    const validateSpy = jest.spyOn(updateClientUseCaseStub, 'update')
+
+    await sut.perform(makeFakeValidRequest())
+
+    expect(validateSpy).toHaveBeenCalledWith(makeFakeValidRequest().body)
   })
 })
