@@ -22,6 +22,11 @@ export class UpdateClientController implements IController {
     try {
       // check if anything field was provided
       if (Object.keys(httpRequest.body).length) {
+        if (httpRequest.body.file) {
+          Object.assign(httpRequest.body, {
+            photo: httpRequest.body.file.filename
+          })
+        }
         // check if an email was provided
         if (httpRequest.body.email) {
           // check if the provided email is valid
