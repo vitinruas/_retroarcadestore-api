@@ -121,4 +121,15 @@ describe('UpdateClientController', () => {
 
     expect(validateSpy).toHaveBeenCalledWith(makeFakeValidRequest().body)
   })
+
+  test('should return 500 if UpdateClientUseCase throws', async () => {
+    const { sut, updateClientUseCaseStub } = makeSut()
+    jest.spyOn(updateClientUseCaseStub, 'update').mockImplementationOnce(() => {
+      throw new Error()
+    })
+
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
+
+    expect(response).toEqual(serverError(new Error()))
+  })
 })
