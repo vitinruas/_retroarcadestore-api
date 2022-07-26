@@ -6,6 +6,7 @@ import { InvalidFieldError } from '../../../../errors'
 import { NoFieldProvidedError } from '../../../../errors/no-field-provided'
 import {
   badRequest,
+  ok,
   serverError
 } from '../../../../helpers/http-response-helper'
 import { IEmailValidatorAdapter } from '../../../../protocols/email-validator-protocol'
@@ -131,5 +132,13 @@ describe('UpdateClientController', () => {
     const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
 
     expect(response).toEqual(serverError(new Error()))
+  })
+
+  test('should return 200 if UpdateClientUseCase succeeds', async () => {
+    const { sut } = makeSut()
+
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
+
+    expect(response).toEqual(ok())
   })
 })
