@@ -1,10 +1,9 @@
-import { NoFieldProvidedError, InvalidFieldError } from '../../../../errors'
+import { UpdateClientController } from '../update-client-controller'
 import {
   badRequest,
   noContent,
   serverError
 } from '../../../../helpers/http-response-helper'
-import { UpdateClientController } from '../update-client-controller'
 import {
   IEmailValidatorAdapter,
   IHttpRequest,
@@ -12,6 +11,7 @@ import {
   IUpdateClientUseCaseModel,
   IHttpResponse
 } from '../update-client-controller-protocols'
+import { NoFieldProvidedError, InvalidFieldError } from '../../../../errors'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
   body: {

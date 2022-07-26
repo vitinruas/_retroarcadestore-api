@@ -1,15 +1,15 @@
 import {
-  badRequest,
-  noContent,
-  serverError
-} from '../../../helpers/http-response-helper'
-import {
   IController,
   IEmailValidatorAdapter,
   IUpdateClientUseCase,
   IHttpRequest,
   IHttpResponse
 } from './update-client-controller-protocols'
+import {
+  badRequest,
+  noContent,
+  serverError
+} from '../../../helpers/http-response-helper'
 import { NoFieldProvidedError, InvalidFieldError } from '../../../errors'
 
 export class UpdateClientController implements IController {
@@ -27,7 +27,7 @@ export class UpdateClientController implements IController {
             photo: httpRequest.body.file.filename
           })
         }
-
+        // check if provided postal code is valid and has a valid length
         if (httpRequest.body.postalCode) {
           if (
             !Number(httpRequest.body.postalCode) ||
