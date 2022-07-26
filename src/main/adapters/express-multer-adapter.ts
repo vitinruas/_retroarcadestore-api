@@ -1,8 +1,6 @@
-import {
-  InvalidProvidedFileError,
-  upload
-} from '../middlewares/multer/multer-middleware'
+import { upload } from '../middlewares/multer/multer-middleware'
 import { NextFunction, Request, Response } from 'express'
+import { InvalidProvidedFileError } from '../errors/invalid-provided-file-error'
 
 export default (fieldName: string) => {
   return (request: Request, response: Response, next: NextFunction) => {

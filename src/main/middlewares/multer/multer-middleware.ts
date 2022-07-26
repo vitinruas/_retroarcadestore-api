@@ -1,10 +1,5 @@
 import multer from 'multer'
-
-export class InvalidProvidedFileError extends Error {
-  constructor() {
-    super()
-  }
-}
+import { InvalidProvidedFileError } from '../../errors/invalid-provided-file-error'
 
 const getFileExtension = (originalName: string) => {
   const extension = originalName.split('.')[1]
