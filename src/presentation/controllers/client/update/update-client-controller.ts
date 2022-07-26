@@ -27,6 +27,15 @@ export class UpdateClientController implements IController {
             photo: httpRequest.body.file.filename
           })
         }
+
+        if (httpRequest.body.postalCode) {
+          if (
+            httpRequest.body.postalCode.length > 10 ||
+            httpRequest.body.postalCode.length < 5
+          ) {
+            return badRequest(new InvalidFieldError('postalCode'))
+          }
+        }
         // check if an email was provided
         if (httpRequest.body.email) {
           // check if the provided email is valid
