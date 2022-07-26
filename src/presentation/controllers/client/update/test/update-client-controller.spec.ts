@@ -13,7 +13,10 @@ import {
 } from '../update-client-controller-protocols'
 import { NoFieldProvidedError, InvalidFieldError } from '../../../../errors'
 
-const makeFakeValidRequest = (fieldToDelete?: string): IHttpRequest => {
+const makeFakeValidRequest = (
+  fieldToDelete?: string | null,
+  fieldToEmpty?: string
+): IHttpRequest => {
   const request: IHttpRequest = {
     body: {
       name: 'any_name',
@@ -34,6 +37,11 @@ const makeFakeValidRequest = (fieldToDelete?: string): IHttpRequest => {
     delete request.body[fieldToDelete]
     return request
   }
+
+  if (fieldToEmpty) {
+    request.body[fieldToEmpty] = ''
+  }
+
   return request
 }
 
@@ -173,6 +181,16 @@ describe('UpdateClientController', () => {
     const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
 
     expect(response).toEqual(serverError(new Error()))
+  })
+
+  test('should skip file validation if its is empty', async () => {
+    const { sut } = makeSut()
+
+    const response: IHttpResponse = await sut.perform(
+      makeFakeValidRequest(null, 'file')
+    )
+
+    expect(response).toEqual(noContent())
   })
 
   test('should skip file validation if its no provided', async () => {
