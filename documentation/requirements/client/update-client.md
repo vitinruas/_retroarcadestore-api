@@ -6,7 +6,7 @@
 2. ✅ Validar se existe algum campo fornecido no corpo da requisição
 3. ✅ Validar se existe o campo **file** da imagem e renomear para **photo** para corresponder ao protocolo
 4. ✅ Validar se existe o campo **email** e validar se corresponde ao protocolo, se fornecido
-5. ❌ Validar se existe o campo **postalCode** e validar se corresponde ao protocolo, se fornecido
+5. ✅ Validar se existe o campo **postalCode** e validar se corresponde ao protocolo, se fornecido
 6. ❌ Gerar uma **senha criptografada** se fornecida
 7. ❌ Atualizar os **dados fornecidos** do Cliente
 8. ✅ Retornar **204**
