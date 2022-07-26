@@ -35,7 +35,7 @@ export class UpdateClientController implements IController {
         }
         // update client data
         await this.updateClientUseCase.update({ ...httpRequest.body })
-        return Promise.resolve(ok())
+        return ok()
       }
       return badRequest(new NoFieldProvidedError())
     } catch (error: any) {
