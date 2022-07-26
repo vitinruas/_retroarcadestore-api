@@ -1,3 +1,4 @@
+import { IUpdateClientUseCase } from '../../../../domain/usecases/client/update-client-usecase'
 import { InvalidFieldError } from '../../../errors'
 import { NoFieldProvidedError } from '../../../errors/no-field-provided'
 import {
@@ -13,7 +14,11 @@ import {
 } from '../get/get-client-controller-protocols'
 
 export class UpdateClientController implements IController {
-  constructor(private readonly emailValidatorAdapter: IEmailValidatorAdapter) {}
+  constructor(
+    private readonly emailValidatorAdapter: IEmailValidatorAdapter,
+    private readonly updateClientUseCase: IUpdateClientUseCase
+  ) {}
+
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
       const upgradableClientFields: ReadonlyArray<string> = [
@@ -50,6 +55,8 @@ export class UpdateClientController implements IController {
       if (!isValid) {
         return badRequest(new InvalidFieldError('email'))
       }
+
+      await this.updateClientUseCase.update({ ...httpRequest.body })
 
       return Promise.resolve(ok())
     } catch (error: any) {
