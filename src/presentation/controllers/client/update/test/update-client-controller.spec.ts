@@ -1,5 +1,8 @@
 import { NoFieldProvidedError } from '../../../../errors/no-field-provided'
-import { badRequest } from '../../../../helpers/http-response-helper'
+import {
+  badRequest,
+  serverError
+} from '../../../../helpers/http-response-helper'
 import { IEmailValidatorAdapter } from '../../../../protocols/email-validator-protocol'
 import {
   IHttpRequest,
@@ -60,12 +63,25 @@ describe('UpdateClientController', () => {
     expect(httpResponse).toEqual(badRequest(new NoFieldProvidedError()))
   })
 
-  test('should call EmailValidator with an email', async () => {
+  test('should call EmailValidatorAdapter with an email', async () => {
     const { sut, emailValidatorAdapterStub } = makeSut()
     const validateSpy = jest.spyOn(emailValidatorAdapterStub, 'validate')
 
     await sut.perform(makeFakeValidRequest())
 
     expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
+  })
+
+  test('should return 500 if EmailValidatorAdapter throws', async () => {
+    const { sut, emailValidatorAdapterStub } = makeSut()
+    jest
+      .spyOn(emailValidatorAdapterStub, 'validate')
+      .mockImplementationOnce(() => {
+        throw new Error()
+      })
+
+    const response = await sut.perform(makeFakeValidRequest())
+
+    await expect(response).toEqual(serverError(new Error()))
   })
 })
