@@ -1,3 +1,4 @@
+import { InvalidFieldError } from '../../../../errors'
 import { NoFieldProvidedError } from '../../../../errors/no-field-provided'
 import {
   badRequest,
@@ -58,9 +59,9 @@ describe('UpdateClientController', () => {
       body: {}
     }
 
-    const httpResponse: IHttpResponse = await sut.perform(httpRequest)
+    const response: IHttpResponse = await sut.perform(httpRequest)
 
-    expect(httpResponse).toEqual(badRequest(new NoFieldProvidedError()))
+    expect(response).toEqual(badRequest(new NoFieldProvidedError()))
   })
 
   test('should call EmailValidatorAdapter with an email', async () => {
@@ -80,8 +81,17 @@ describe('UpdateClientController', () => {
         throw new Error()
       })
 
-    const response = await sut.perform(makeFakeValidRequest())
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
 
-    await expect(response).toEqual(serverError(new Error()))
+    expect(response).toEqual(serverError(new Error()))
+  })
+
+  test('should return 400 if EmailValidatorAdapter fails', async () => {
+    const { sut, emailValidatorAdapterStub } = makeSut()
+    jest.spyOn(emailValidatorAdapterStub, 'validate').mockReturnValueOnce(false)
+
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
+
+    expect(response).toEqual(badRequest(new InvalidFieldError('email')))
   })
 })
