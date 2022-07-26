@@ -13,22 +13,29 @@ import {
 } from '../update-client-controller-protocols'
 import { NoFieldProvidedError, InvalidFieldError } from '../../../../errors'
 
-const makeFakeValidRequest = (): IHttpRequest => ({
-  body: {
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'any_password',
-    file: {
-      filename: 'any_photo'
-    },
-    street: 'any_street',
-    postalCode: '1123456789',
-    complement: 'any_complement',
-    district: 'any_district',
-    city: 'any_city',
-    country: 'any_contry'
+const makeFakeValidRequest = (fieldToDelete?: string): IHttpRequest => {
+  const request: IHttpRequest = {
+    body: {
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password',
+      file: {
+        filename: 'any_photo'
+      },
+      street: 'any_street',
+      postalCode: '1123456789',
+      complement: 'any_complement',
+      district: 'any_district',
+      city: 'any_city',
+      country: 'any_contry'
+    }
   }
-})
+  if (fieldToDelete) {
+    delete request.body[fieldToDelete]
+    return request
+  }
+  return request
+}
 
 const makeEmailValidatorAdapterStub = (): IEmailValidatorAdapter => {
   class EmailValidatorAdapterStub implements IEmailValidatorAdapter {
@@ -168,24 +175,12 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(serverError(new Error()))
   })
 
-  test('should skip postal code validation if its no provided', async () => {
+  test('should skip postalCode validation if its no provided', async () => {
     const { sut } = makeSut()
-    const request: IHttpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        file: {
-          filename: 'any_photo'
-        },
-        street: 'any_street',
-        complement: 'any_complement',
-        district: 'any_district',
-        city: 'any_city',
-        country: 'any_contry'
-      }
-    }
-    const response: IHttpResponse = await sut.perform(request)
+
+    const response: IHttpResponse = await sut.perform(
+      makeFakeValidRequest('postalCode')
+    )
 
     expect(response).toEqual(noContent())
   })
