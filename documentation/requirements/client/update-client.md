@@ -3,11 +3,13 @@
 > ## Success
 
 1. ❌ Receber uma requisição do tipo **PUT** na rota **/api/client/**
-2. ❌ Validar se existe algum campo fornecido no corpo da requisição
-3. ❌ Validar se e❌iste o campo **email**
-4. ❌ Validar se o campo **email** é valido, se fornecido
-5. ❌ Atualizar os **dados fornecidos** do Cliente, não alterar os demais
-6. ❌ Retornar **204**
+2. ✅ Validar se existe algum campo fornecido no corpo da requisição
+3. ❌ Validar se existe o campo **photo** e validar se corresponde ao protocolo, se fornecida
+4. ✅ Validar se existe o campo **email** e validar se corresponde ao protocolo, se fornecido
+5. ❌ Validar se existe o campo **postalCode** e validar se corresponde ao protocolo, se fornecido
+6. ❌ Gerar uma **senha criptografada** se fornecida
+7. ❌ Atualizar os **dados fornecidos** do Cliente
+8. ✅ Retornar **204**
 
 > ## Exceptions
 
