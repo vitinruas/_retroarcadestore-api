@@ -21,44 +21,23 @@ export class UpdateClientController implements IController {
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
-      const upgradableClientFields: ReadonlyArray<string> = [
-        'name',
-        'email',
-        'password',
-        'photo'
-      ]
-      const upgradableClientAddressFields: ReadonlyArray<string> = [
-        'street',
-        'postalCode',
-        'complement',
-        'district',
-        'city',
-        'country'
-      ]
-      const clientFieldsToUpdate: ReadonlyArray<string> =
-        upgradableClientFields.filter((field: string) => {
-          return httpRequest.body[field]
-        })
-
-      const addressFieldsToUpdate: ReadonlyArray<string> =
-        upgradableClientAddressFields.filter((field: string) => {
-          return httpRequest.body[field]
-        })
-
-      if (!clientFieldsToUpdate.length && !addressFieldsToUpdate.length) {
-        return badRequest(new NoFieldProvidedError())
+      // check if anything field was provided
+      if (Object.keys(httpRequest.body).length) {
+        // check if an email was provided
+        if (httpRequest.body.email) {
+          // check if the provided email is valid
+          const isValid: boolean = this.emailValidatorAdapter.validate(
+            httpRequest.body.email
+          )
+          if (!isValid) {
+            return badRequest(new InvalidFieldError('email'))
+          }
+        }
+        // update client data
+        await this.updateClientUseCase.update({ ...httpRequest.body })
+        return Promise.resolve(ok())
       }
-
-      const isValid: boolean = this.emailValidatorAdapter.validate(
-        httpRequest.body.email
-      )
-      if (!isValid) {
-        return badRequest(new InvalidFieldError('email'))
-      }
-
-      await this.updateClientUseCase.update({ ...httpRequest.body })
-
-      return Promise.resolve(ok())
+      return badRequest(new NoFieldProvidedError())
     } catch (error: any) {
       return serverError(error)
     }
