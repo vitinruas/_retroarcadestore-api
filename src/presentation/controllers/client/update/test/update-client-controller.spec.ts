@@ -168,6 +168,28 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(serverError(new Error()))
   })
 
+  test('should skip postal code validation if its no provided', async () => {
+    const { sut } = makeSut()
+    const request: IHttpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        file: {
+          filename: 'any_photo'
+        },
+        street: 'any_street',
+        complement: 'any_complement',
+        district: 'any_district',
+        city: 'any_city',
+        country: 'any_contry'
+      }
+    }
+    const response: IHttpResponse = await sut.perform(request)
+
+    expect(response).toEqual(noContent())
+  })
+
   test('should return 204 if UpdateClientUseCase succeeds', async () => {
     const { sut } = makeSut()
 
