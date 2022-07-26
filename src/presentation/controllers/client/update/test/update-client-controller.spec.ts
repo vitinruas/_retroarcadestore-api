@@ -22,7 +22,7 @@ const makeFakeValidRequest = (): IHttpRequest => ({
       filename: 'any_photo'
     },
     street: 'any_street',
-    postalCode: 'any_postalcode',
+    postalCode: '1123456789',
     complement: 'any_complement',
     district: 'any_district',
     city: 'any_city',
@@ -120,6 +120,18 @@ describe('UpdateClientController', () => {
     const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
 
     expect(response).toEqual(badRequest(new InvalidFieldError('email')))
+  })
+
+  test('should return 400 if an invalid postal code length is provided', async () => {
+    const { sut } = makeSut()
+    const request: IHttpRequest = {
+      body: {
+        postalCode: '123'
+      }
+    }
+    const response: IHttpResponse = await sut.perform(request)
+
+    expect(response).toEqual(badRequest(new InvalidFieldError('postalCode')))
   })
 
   test('should call UpdateClientUseCase with correct values', async () => {
