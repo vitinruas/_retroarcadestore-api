@@ -24,7 +24,7 @@ export class UpdateClientController implements IController {
         httpRequest.body
       )
       // check if anything field was provided
-      if (Object.keys(httpRequest.body).length) {
+      if (httpRequestKeys.length) {
         if (httpRequest.body.file) {
           Object.assign(httpRequest.body, {
             photo: httpRequest.body.file.filename
@@ -41,7 +41,7 @@ export class UpdateClientController implements IController {
           }
         }
         // check if an email was provided
-        if (httpRequest.body.email) {
+        if (httpRequestKeys.includes('postalCode')) {
           // check if the provided email is valid
           const isValid: boolean = this.emailValidatorAdapter.validate(
             httpRequest.body.email
