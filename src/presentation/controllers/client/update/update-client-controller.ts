@@ -41,7 +41,7 @@ export class UpdateClientController implements IController {
           }
         }
         // check if an email was provided
-        if (httpRequestKeys.includes('postalCode')) {
+        if (httpRequestKeys.includes('email')) {
           // check if the provided email is valid
           const isValid: boolean = this.emailValidatorAdapter.validate(
             httpRequest.body.email
