@@ -20,6 +20,9 @@ export class UpdateClientController implements IController {
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
+      const httpRequestKeys: ReadonlyArray<string> = Object.keys(
+        httpRequest.body
+      )
       // check if anything field was provided
       if (Object.keys(httpRequest.body).length) {
         if (httpRequest.body.file) {
@@ -28,7 +31,7 @@ export class UpdateClientController implements IController {
           })
         }
         // check if provided postal code is valid and has a valid length
-        if (httpRequest.body.postalCode) {
+        if (httpRequestKeys.includes('postalCode')) {
           if (
             !Number(httpRequest.body.postalCode) ||
             httpRequest.body.postalCode.length > 10 ||
