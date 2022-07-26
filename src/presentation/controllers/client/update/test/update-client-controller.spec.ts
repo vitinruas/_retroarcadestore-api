@@ -185,6 +185,16 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(noContent())
   })
 
+  test('should skip email validation if its no provided', async () => {
+    const { sut } = makeSut()
+
+    const response: IHttpResponse = await sut.perform(
+      makeFakeValidRequest('email')
+    )
+
+    expect(response).toEqual(noContent())
+  })
+
   test('should skip postalCode validation if its no provided', async () => {
     const { sut } = makeSut()
 
