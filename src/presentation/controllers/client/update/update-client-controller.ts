@@ -1,3 +1,4 @@
+import { InvalidFieldError } from '../../../errors'
 import { NoFieldProvidedError } from '../../../errors/no-field-provided'
 import {
   badRequest,
@@ -43,7 +44,12 @@ export class UpdateClientController implements IController {
         return badRequest(new NoFieldProvidedError())
       }
 
-      this.emailValidatorAdapter.validate(httpRequest.body.email)
+      const isValid: boolean = this.emailValidatorAdapter.validate(
+        httpRequest.body.email
+      )
+      if (!isValid) {
+        return badRequest(new InvalidFieldError('email'))
+      }
 
       return Promise.resolve(ok())
     } catch (error: any) {
