@@ -1,6 +1,6 @@
 import {
   badRequest,
-  ok,
+  noContent,
   serverError
 } from '../../../helpers/http-response-helper'
 import {
@@ -34,7 +34,7 @@ export class UpdateClientController implements IController {
         }
         // update client data
         await this.updateClientUseCase.update({ ...httpRequest.body })
-        return ok()
+        return noContent()
       }
       return badRequest(new NoFieldProvidedError())
     } catch (error: any) {

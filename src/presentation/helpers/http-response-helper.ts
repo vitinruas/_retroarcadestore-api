@@ -21,6 +21,11 @@ export const ok = (data?: any): IHttpResponse => ({
   body: data
 })
 
+export const noContent = (): IHttpResponse => ({
+  statusCode: 400,
+  body: null
+})
+
 export const serverError = (error: Error): IHttpResponse => ({
   statusCode: 500,
   body: new ServerError(error.stack)

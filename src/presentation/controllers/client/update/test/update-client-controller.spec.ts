@@ -1,7 +1,7 @@
 import { NoFieldProvidedError, InvalidFieldError } from '../../../../errors'
 import {
   badRequest,
-  ok,
+  noContent,
   serverError
 } from '../../../../helpers/http-response-helper'
 import { UpdateClientController } from '../update-client-controller'
@@ -131,11 +131,11 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(serverError(new Error()))
   })
 
-  test('should return 200 if UpdateClientUseCase succeeds', async () => {
+  test('should return 204 if UpdateClientUseCase succeeds', async () => {
     const { sut } = makeSut()
 
     const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
 
-    expect(response).toEqual(ok())
+    expect(response).toEqual(noContent())
   })
 })
