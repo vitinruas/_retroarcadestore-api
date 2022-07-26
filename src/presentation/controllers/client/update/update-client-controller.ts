@@ -1,17 +1,16 @@
-import { IUpdateClientUseCase } from '../../../../domain/usecases/client/update-client-usecase'
-import { InvalidFieldError } from '../../../errors'
-import { NoFieldProvidedError } from '../../../errors/no-field-provided'
 import {
   badRequest,
   ok,
   serverError
 } from '../../../helpers/http-response-helper'
-import { IEmailValidatorAdapter } from '../../../protocols/email-validator-protocol'
 import {
   IController,
+  IEmailValidatorAdapter,
+  IUpdateClientUseCase,
   IHttpRequest,
   IHttpResponse
-} from '../get/get-client-controller-protocols'
+} from './update-client-controller-protocols'
+import { NoFieldProvidedError, InvalidFieldError } from '../../../errors'
 
 export class UpdateClientController implements IController {
   constructor(

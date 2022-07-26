@@ -1,20 +1,17 @@
-import {
-  IUpdateClientUseCase,
-  IUpdateClientUseCaseModel
-} from '../../../../../domain/usecases/client/update-client-usecase'
-import { InvalidFieldError } from '../../../../errors'
-import { NoFieldProvidedError } from '../../../../errors/no-field-provided'
+import { NoFieldProvidedError, InvalidFieldError } from '../../../../errors'
 import {
   badRequest,
   ok,
   serverError
 } from '../../../../helpers/http-response-helper'
-import { IEmailValidatorAdapter } from '../../../../protocols/email-validator-protocol'
-import {
-  IHttpRequest,
-  IHttpResponse
-} from '../../get/get-client-controller-protocols'
 import { UpdateClientController } from '../update-client-controller'
+import {
+  IEmailValidatorAdapter,
+  IHttpRequest,
+  IUpdateClientUseCase,
+  IUpdateClientUseCaseModel,
+  IHttpResponse
+} from '../update-client-controller-protocols'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
   body: {
