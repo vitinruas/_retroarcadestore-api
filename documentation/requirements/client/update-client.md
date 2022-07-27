@@ -4,12 +4,13 @@
 
 1. ❌ Receber uma requisição do tipo **PUT** na rota **/api/client/**
 2. ✅ Validar se existe algum campo fornecido no corpo da requisição
-3. ✅ Validar se existe o campo **file** da imagem e renomear para **photo** para corresponder ao protocolo
-4. ✅ Validar se existe o campo **email** e validar se corresponde ao protocolo, se fornecido
-5. ✅ Validar se existe o campo **postalCode** e validar se corresponde ao protocolo, se fornecido
-6. ❌ Gerar uma **senha criptografada** se fornecida
-7. ❌ Atualizar os **dados fornecidos** do Cliente
-8. ✅ Retornar **204**
+3. ✅ Validar se contém valores nos campos obrigatórios **name** e **email**, se foram fornecidos
+4. ✅ Validar se existe o campo **file** da imagem e renomear para **photo** para corresponder ao protocolo
+5. ✅ Validar se existe o campo **email** e validar se corresponde ao protocolo, se fornecido
+6. ✅ Validar se existe o campo **postalCode** e validar se corresponde ao protocolo, se fornecido
+7. ❌ Gerar uma **senha criptografada** se fornecida
+8. ❌ Atualizar os **dados fornecidos** do Cliente
+9. ✅ Retornar **204**
 
 > ## Exceptions
 
