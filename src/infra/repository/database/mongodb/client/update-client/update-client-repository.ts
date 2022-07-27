@@ -1,7 +1,9 @@
-import { IUpdateClientRepository } from '../../../../../../usecases/protocols/repository/client/update-client-repository-protocol'
-import { IUpdateClientUseCaseModel } from '../../../../../../domain/usecases/client/update-client-usecase'
 import mongoose from 'mongoose'
 import mongoHelper from '../../helpers/mongo-helper'
+import {
+  IUpdateClientRepository,
+  IUpdateClientUseCaseModel
+} from './update-client-repository-protocols'
 
 export class UpdateClientRepository implements IUpdateClientRepository {
   async update(dataToUpdate: IUpdateClientUseCaseModel): Promise<void> {
