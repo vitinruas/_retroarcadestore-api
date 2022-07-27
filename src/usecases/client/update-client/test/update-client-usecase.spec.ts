@@ -76,6 +76,20 @@ describe('UpdateClientUseCase', () => {
     expect(compareSpy).toHaveBeenCalledWith('any_password', '')
   })
 
+  test('should return throw if PasswordHashComparerAdapter throws', async () => {
+    const { sut, passwordHashComparerAdapterStub } = makeSut()
+    jest
+      .spyOn(passwordHashComparerAdapterStub, 'compare')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const promise: Promise<boolean> = sut.update({
+      password: 'any_password',
+      newPassword: 'new_password'
+    })
+
+    await expect(promise).rejects.toThrow()
+  })
+
   test('should call PasswordHasher with a newPassword', async () => {
     const { sut, passwordHasherAdapterStub } = makeSut()
     const hashSpy = jest.spyOn(passwordHasherAdapterStub, 'hash')
