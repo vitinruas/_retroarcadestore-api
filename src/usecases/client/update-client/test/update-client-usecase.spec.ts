@@ -94,6 +94,20 @@ describe('UpdateClientUseCase', () => {
     expect(getSpy).toHaveBeenCalledWith('any_id')
   })
 
+  test('should return throw if GetClientByUIDRepository throws', async () => {
+    const { sut, getClientByUIDRepositoryStub } = makeSut()
+    jest
+      .spyOn(getClientByUIDRepositoryStub, 'get')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const promise: Promise<boolean> = sut.update({
+      uid: 'any_id',
+      password: 'any_password'
+    })
+
+    await expect(promise).rejects.toThrow()
+  })
+
   test('should call PasswordHashComparerAdapter with a password', async () => {
     const { sut, passwordHashComparerAdapterStub } = makeSut()
     const compareSpy = jest.spyOn(passwordHashComparerAdapterStub, 'compare')
