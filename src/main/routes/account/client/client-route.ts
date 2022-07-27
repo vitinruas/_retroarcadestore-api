@@ -4,6 +4,7 @@ import { middlewareRouteAdapter } from '../../../adapters/middleware-route-adapt
 import { expressMulterAdapter } from '../../../adapters/express-multer-adapter'
 import { makeGetClientControllerFactory } from '../../../factory/controllers/client/get-client-controller-factory'
 import { makeAuthMiddlewareFactory } from '../../../factory/middlewares/auth/auth-middleware-factory'
+import { makeUpdateClientController } from '../../../factory/controllers/client/update-client-controller.factory'
 
 export default (router: Router) => {
   router.get(
@@ -12,5 +13,10 @@ export default (router: Router) => {
     expressRouteAdapter(makeGetClientControllerFactory())
   )
 
-  router.put('/client', expressMulterAdapter())
+  router.put(
+    '/client',
+    middlewareRouteAdapter(makeAuthMiddlewareFactory()),
+    expressMulterAdapter(),
+    expressRouteAdapter(makeUpdateClientController())
+  )
 }
