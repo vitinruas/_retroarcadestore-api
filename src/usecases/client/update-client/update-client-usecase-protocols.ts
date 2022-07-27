@@ -1,0 +1,5 @@
+export * from '../../../domain/usecases/client/update-client-usecase'
+export * from '../../protocols/cryptography/hash-comparer-protocol'
+export * from '../../protocols/cryptography/hasher-protocol'
+export * from '../../protocols/repository/account/get-account-by-uid-repository-protocol'
+export * from '../../protocols/repository/client/update-client-repository-protocol'

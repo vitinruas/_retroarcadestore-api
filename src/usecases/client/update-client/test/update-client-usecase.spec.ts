@@ -1,10 +1,12 @@
-import { IUpdateClientUseCaseModel } from '../../../../domain/usecases/client/update-client-usecase'
-import { IAccountEntitie } from '../../../account/authentication/authentication-usecase-protocols'
-import { IHashComparer } from '../../../protocols/cryptography/hash-comparer-protocol'
-import { IHasher } from '../../../protocols/cryptography/hasher-protocol'
-import { IGetAccountByUIDRepository } from '../../../protocols/repository/account/get-account-by-uid-repository-protocol'
-import { IUpdateClientRepository } from '../../../protocols/repository/client/update-client-repository-protocol'
 import { UpdateClientUseCase } from '../update-client-usecase'
+import { IAccountEntitie } from '../../../../domain/entities/account/account-entitie'
+import {
+  IGetAccountByUIDRepository,
+  IHashComparer,
+  IHasher,
+  IUpdateClientRepository,
+  IUpdateClientUseCaseModel
+} from '../update-client-usecase-protocols'
 
 const makeFakeValidAccount = (): IAccountEntitie => ({
   uid: 'any_uid',

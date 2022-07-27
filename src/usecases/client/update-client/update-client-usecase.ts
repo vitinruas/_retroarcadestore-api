@@ -1,11 +1,11 @@
 import {
   IUpdateClientUseCase,
+  IGetAccountByUIDRepository,
+  IHashComparer,
+  IHasher,
+  IUpdateClientRepository,
   IUpdateClientUseCaseModel
-} from '../../../domain/usecases/client/update-client-usecase'
-import { IHashComparer } from '../../protocols/cryptography/hash-comparer-protocol'
-import { IHasher } from '../../protocols/cryptography/hasher-protocol'
-import { IGetAccountByUIDRepository } from '../../protocols/repository/account/get-account-by-uid-repository-protocol'
-import { IUpdateClientRepository } from '../../protocols/repository/client/update-client-repository-protocol'
+} from './update-client-usecase-protocols'
 
 export class UpdateClientUseCase implements IUpdateClientUseCase {
   constructor(
