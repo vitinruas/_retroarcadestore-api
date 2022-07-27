@@ -8,9 +8,11 @@
 4. ✅ Validar se existe o campo **file** da imagem e renomear para **photo** para corresponder ao protocolo
 5. ✅ Validar se existe o campo **email** e validar se corresponde ao protocolo, se fornecido
 6. ✅ Validar se existe o campo **postalCode** e validar se corresponde ao protocolo, se fornecido
-7. ✅ Gerar uma **senha criptografada** se fornecida
-8. ✅ Atualizar os **dados fornecidos** do Cliente
-9. ✅ Retornar **204**
+7. ❌ Validar se **newPassword** e **newPasswordConfirmation** se correspondem, antes deve ser enviado **password**, se fornecido
+8. ❌ Validar se a senha atual fornecida corresponde ao hash
+9. ✅ Gerar uma **senha criptografada** se fornecida
+10. ✅ Atualizar os **dados fornecidos** do Cliente
+11. ✅ Retornar **204**
 
 > ## Exceptions
 
