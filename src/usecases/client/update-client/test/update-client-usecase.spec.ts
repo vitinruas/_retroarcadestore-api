@@ -1,4 +1,6 @@
+import { IUpdateClientUseCaseModel } from '../../../../domain/usecases/client/update-client-usecase'
 import { IHasher } from '../../../protocols/cryptography/hasher-protocol'
+import { IUpdateClientRepository } from '../../../protocols/repository/client/update-client-repository-protocol'
 import { UpdateClientUseCase } from '../update-client-usecase'
 
 const makePasswordHasherAdapterStub = () => {
@@ -10,17 +12,32 @@ const makePasswordHasherAdapterStub = () => {
   return new PasswordHasherStub()
 }
 
+const makeUpdateClientRepositoryStub = () => {
+  class UpdateClientRepositoryStub implements IUpdateClientRepository {
+    async update(data: IUpdateClientUseCaseModel): Promise<void> {
+      return Promise.resolve()
+    }
+  }
+  return new UpdateClientRepositoryStub()
+}
+
 interface ISut {
   sut: UpdateClientUseCase
   passwordHasherAdapterStub: IHasher
+  updateClientRepositoryStub: IUpdateClientRepository
 }
 
 const makeSut = (): ISut => {
   const passwordHasherAdapterStub = makePasswordHasherAdapterStub()
-  const sut = new UpdateClientUseCase(passwordHasherAdapterStub)
+  const updateClientRepositoryStub = makeUpdateClientRepositoryStub()
+  const sut = new UpdateClientUseCase(
+    passwordHasherAdapterStub,
+    updateClientRepositoryStub
+  )
   return {
     sut,
-    passwordHasherAdapterStub
+    passwordHasherAdapterStub,
+    updateClientRepositoryStub
   }
 }
 
@@ -47,5 +64,20 @@ describe('UpdateClientUseCase', () => {
     })
 
     expect(promise).rejects.toThrow()
+  })
+
+  test('should call UpdateClientRepository correct values', async () => {
+    const { sut, updateClientRepositoryStub } = makeSut()
+    const updateSpy = jest.spyOn(updateClientRepositoryStub, 'update')
+
+    await sut.update({
+      name: 'new_name',
+      password: 'new_password'
+    })
+
+    expect(updateSpy).toHaveBeenCalledWith({
+      name: 'new_name',
+      password: 'hashed_password'
+    })
   })
 })
