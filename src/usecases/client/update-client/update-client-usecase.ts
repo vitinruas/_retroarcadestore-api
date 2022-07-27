@@ -4,12 +4,12 @@ import {
 } from '../../../domain/usecases/client/update-client-usecase'
 import { IHashComparer } from '../../protocols/cryptography/hash-comparer-protocol'
 import { IHasher } from '../../protocols/cryptography/hasher-protocol'
+import { IGetAccountByUIDRepository } from '../../protocols/repository/account/get-account-by-uid-repository-protocol'
 import { IUpdateClientRepository } from '../../protocols/repository/client/update-client-repository-protocol'
-import { IGetClientByUIDRepository } from '../get-client/get-client-usecase-protocols'
 
 export class UpdateClientUseCase implements IUpdateClientUseCase {
   constructor(
-    private readonly getClientByUIDRepository: IGetClientByUIDRepository,
+    private readonly getAccountByUIDRepository: IGetAccountByUIDRepository,
     private readonly passwordHashComparerAdapter: IHashComparer,
     private readonly passwordHasherAdapter: IHasher,
     private readonly updateClientRepository: IUpdateClientRepository
@@ -18,11 +18,11 @@ export class UpdateClientUseCase implements IUpdateClientUseCase {
   async update(fields: IUpdateClientUseCaseModel): Promise<boolean> {
     // check if a password was provided
     if (fields.password) {
-      const account = await this.getClientByUIDRepository.get(fields.uid)
+      const account = await this.getAccountByUIDRepository.get(fields.uid)
       // check if the password is valid
       const isValid = await this.passwordHashComparerAdapter.compare(
         fields.password,
-        ''
+        account.password
       )
       // if invalid then returns false
       if (!isValid) {
