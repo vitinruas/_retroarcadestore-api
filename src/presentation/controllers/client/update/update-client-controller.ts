@@ -10,7 +10,11 @@ import {
   noContent,
   serverError
 } from '../../../helpers/http-response-helper'
-import { NoFieldProvidedError, InvalidFieldError } from '../../../errors'
+import {
+  NoFieldProvidedError,
+  InvalidFieldError,
+  MissingFieldError
+} from '../../../errors'
 
 export class UpdateClientController implements IController {
   constructor(
@@ -19,13 +23,19 @@ export class UpdateClientController implements IController {
   ) {}
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
-    const { email, file, postalCode } = httpRequest.body
     try {
       const httpRequestKeys: ReadonlyArray<string> = Object.keys(
         httpRequest.body
       )
+      const requiredFields: ReadonlyArray<string> = ['name', 'email']
+      for (const field of requiredFields) {
+        if (httpRequestKeys.includes(field) && !httpRequest.body[field]) {
+          return badRequest(new MissingFieldError(field))
+        }
+      }
       // check if anything field was provided
       if (httpRequestKeys.length) {
+        const { email, file, postalCode } = httpRequest.body
         if (file) {
           Object.assign(httpRequest.body, {
             photo: httpRequest.body.file.filename
