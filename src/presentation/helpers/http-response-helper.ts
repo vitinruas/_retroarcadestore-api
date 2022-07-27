@@ -22,8 +22,8 @@ export const ok = (data?: any): IHttpResponse => ({
 })
 
 export const noContent = (): IHttpResponse => ({
-  statusCode: 400,
-  body: null
+  statusCode: 204,
+  body: ''
 })
 
 export const serverError = (error: Error): IHttpResponse => ({
