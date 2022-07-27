@@ -5,7 +5,7 @@ import {
 import mongoose from 'mongoose'
 import mongoHelper from '../../helpers/mongo-helper'
 
-export class GetClientByUIDRepository implements IGetAccountByUIDRepository {
+export class GetAccountByUIDRepository implements IGetAccountByUIDRepository {
   async get(uid: string): Promise<IAccountEntitie> {
     const collectionRef = mongoose.connection.collection('accounts')
     const document = await collectionRef.findOne({
