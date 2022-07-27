@@ -90,6 +90,20 @@ describe('UpdateClientUseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 
+  test('should return false if PasswordHashComparerAdapter fails', async () => {
+    const { sut, passwordHashComparerAdapterStub } = makeSut()
+    jest
+      .spyOn(passwordHashComparerAdapterStub, 'compare')
+      .mockReturnValueOnce(Promise.resolve(false))
+
+    const response: boolean = await sut.update({
+      password: 'any_password',
+      newPassword: 'new_password'
+    })
+
+    expect(response).toBe(false)
+  })
+
   test('should call PasswordHasher with a newPassword', async () => {
     const { sut, passwordHasherAdapterStub } = makeSut()
     const hashSpy = jest.spyOn(passwordHasherAdapterStub, 'hash')
