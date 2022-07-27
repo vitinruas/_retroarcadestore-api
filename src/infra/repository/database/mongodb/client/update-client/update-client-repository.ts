@@ -9,8 +9,8 @@ export class UpdateClientRepository implements IUpdateClientRepository {
   async update(dataToUpdate: IUpdateClientUseCaseModel): Promise<void> {
     const { uid, ...dataWithoutID } = dataToUpdate
     const collectionRef = mongoHelper.getCollection('accounts')
-    await collectionRef.findOneAndUpdate(
-      { _id: new mongoose.Types.ObjectId(dataToUpdate.uid) },
+    await collectionRef.updateOne(
+      { _id: new mongoose.Types.ObjectId(uid) },
       {
         $set: {
           ...dataWithoutID
