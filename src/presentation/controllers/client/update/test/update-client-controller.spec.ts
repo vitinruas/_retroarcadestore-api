@@ -26,6 +26,8 @@ const makeFakeValidRequest = (
       name: 'any_name',
       email: 'any_email@mail.com',
       password: 'any_password',
+      newPassword: 'any_password',
+      newPasswordConfirmation: 'any_password',
       file: {
         filename: 'any_photo'
       },
@@ -119,6 +121,23 @@ describe('UpdateClientController', () => {
     )
 
     expect(response).toEqual(badRequest(new MissingFieldError('email')))
+  })
+
+  test('should return 400 if passwords do not match', async () => {
+    const { sut } = makeSut()
+
+    const request: IHttpRequest = {
+      body: {
+        newPassword: 'any_password',
+        newPasswordConfirmation: 'wrong_password'
+      }
+    }
+
+    const response: IHttpResponse = await sut.perform(request)
+
+    expect(response).toEqual(
+      badRequest(new InvalidFieldError('newPasswordConfirmation'))
+    )
   })
 
   test('should call EmailValidatorAdapter with an email', async () => {
