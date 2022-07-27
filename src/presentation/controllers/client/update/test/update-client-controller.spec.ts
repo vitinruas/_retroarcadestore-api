@@ -62,8 +62,8 @@ const makeEmailValidatorAdapterStub = (): IEmailValidatorAdapter => {
 
 const makeUpdateClientUseCaseStub = (): IUpdateClientUseCase => {
   class UpdateClientUseCaseStub implements IUpdateClientUseCase {
-    async update(fields: IUpdateClientUseCaseModel): Promise<void> {
-      return Promise.resolve()
+    async update(fields: IUpdateClientUseCaseModel): Promise<boolean> {
+      return Promise.resolve(true)
     }
   }
   return new UpdateClientUseCaseStub()
@@ -211,28 +211,6 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(badRequest(new InvalidFieldError('postalCode')))
   })
 
-  test('should call UpdateClientUseCase with correct values', async () => {
-    const { sut, updateClientUseCaseStub } = makeSut()
-    const validateSpy = jest.spyOn(updateClientUseCaseStub, 'update')
-
-    await sut.perform(makeFakeValidRequest())
-
-    expect(validateSpy).toHaveBeenCalledWith(
-      Object.assign(makeFakeValidRequest().body, { photo: 'any_photo' })
-    )
-  })
-
-  test('should return 500 if UpdateClientUseCase throws', async () => {
-    const { sut, updateClientUseCaseStub } = makeSut()
-    jest.spyOn(updateClientUseCaseStub, 'update').mockImplementationOnce(() => {
-      throw new Error()
-    })
-
-    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
-
-    expect(response).toEqual(serverError(new Error()))
-  })
-
   test('should skip file validation if its is empty', async () => {
     const { sut } = makeSut()
 
@@ -281,6 +259,39 @@ describe('UpdateClientController', () => {
     )
 
     expect(response).toEqual(noContent())
+  })
+
+  test('should call UpdateClientUseCase with correct values', async () => {
+    const { sut, updateClientUseCaseStub } = makeSut()
+    const validateSpy = jest.spyOn(updateClientUseCaseStub, 'update')
+
+    await sut.perform(makeFakeValidRequest())
+
+    expect(validateSpy).toHaveBeenCalledWith(
+      Object.assign(makeFakeValidRequest().body, { photo: 'any_photo' })
+    )
+  })
+
+  test('should return 500 if UpdateClientUseCase throws', async () => {
+    const { sut, updateClientUseCaseStub } = makeSut()
+    jest.spyOn(updateClientUseCaseStub, 'update').mockImplementationOnce(() => {
+      throw new Error()
+    })
+
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
+
+    expect(response).toEqual(serverError(new Error()))
+  })
+
+  test('should return 400 if UpdateClientUseCase fails', async () => {
+    const { sut, updateClientUseCaseStub } = makeSut()
+    jest
+      .spyOn(updateClientUseCaseStub, 'update')
+      .mockReturnValueOnce(Promise.resolve(false))
+
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
+
+    expect(response).toEqual(badRequest(new InvalidFieldError('password')))
   })
 
   test('should return 204 if UpdateClientUseCase succeeds', async () => {
