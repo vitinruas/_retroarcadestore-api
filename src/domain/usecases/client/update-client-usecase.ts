@@ -2,6 +2,8 @@ export interface IUpdateClientUseCaseModel {
   name?: string
   photo?: string
   email?: string
+  newPassword?: string
+  newPasswordConfirmation?: string
   password?: string
   street?: string
   postalCode?: number
