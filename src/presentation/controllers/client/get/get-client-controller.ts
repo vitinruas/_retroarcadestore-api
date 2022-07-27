@@ -3,7 +3,8 @@ import {
   IController,
   IHttpRequest,
   IHttpResponse,
-  IGetClientUseCase
+  IGetClientUseCase,
+  IGetClientModel
 } from './get-client-controller-protocols'
 
 export class GetClientController implements IController {
@@ -11,8 +12,11 @@ export class GetClientController implements IController {
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
-      const account = await this.GetClientUseCase.get(httpRequest.body?.uid)
-      return ok(account)
+      // get client account using the provided uid by AuthMiddleware
+      const client: IGetClientModel = await this.GetClientUseCase.get(
+        httpRequest.body?.uid
+      )
+      return ok(client)
     } catch (error: any) {
       return serverError(error)
     }

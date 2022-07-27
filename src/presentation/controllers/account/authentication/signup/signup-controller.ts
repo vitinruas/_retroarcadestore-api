@@ -23,7 +23,7 @@ export class SignUpController implements IController {
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
       // check if all required fields has been provided
-      const requiredFields = [
+      const requiredFields: ReadonlyArray<string> = [
         'name',
         'email',
         'password',
@@ -43,14 +43,16 @@ export class SignUpController implements IController {
       }
 
       // check if provided email is valid
-      const isValid = this.emailValidatorStub.validate(httpRequest.body.email)
+      const isValid: boolean = this.emailValidatorStub.validate(
+        httpRequest.body.email
+      )
 
       if (!isValid) {
         return badRequest(new InvalidFieldError('email'))
       }
 
       // add a new account with the credentials and it should returns an access token
-      const accessToken = await this.addAccountUseCase.add({
+      const accessToken: string | null = await this.addAccountUseCase.add({
         name,
         email,
         password

@@ -17,7 +17,8 @@ export class AuthMiddleware implements IMiddleware {
   async handle(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
       // check if there are access token
-      const accessToken = httpRequest.headers?.['x-access-token']
+      const accessToken: string | undefined =
+        httpRequest.headers?.['x-access-token']
       if (accessToken) {
         // check if provided access token is valid
         const account: IAccountEntitie | null =

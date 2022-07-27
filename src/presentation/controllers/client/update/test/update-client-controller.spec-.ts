@@ -188,6 +188,16 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(badRequest(new InvalidFieldError('email')))
   })
 
+  test('should skip email validation if its no provided', async () => {
+    const { sut } = makeSut()
+
+    const response: IHttpResponse = await sut.perform(
+      makeFakeValidRequest('email')
+    )
+
+    expect(response).toEqual(noContent())
+  })
+
   test('should return 400 if an invalid postal code is provided', async () => {
     const { sut } = makeSut()
     const request: IHttpRequest = {
@@ -212,36 +222,6 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(badRequest(new InvalidFieldError('postalCode')))
   })
 
-  test('should skip file validation if its is empty', async () => {
-    const { sut } = makeSut()
-
-    const response: IHttpResponse = await sut.perform(
-      makeFakeValidRequest(null, 'file')
-    )
-
-    expect(response).toEqual(noContent())
-  })
-
-  test('should skip file validation if its no provided', async () => {
-    const { sut } = makeSut()
-
-    const response: IHttpResponse = await sut.perform(
-      makeFakeValidRequest('file')
-    )
-
-    expect(response).toEqual(noContent())
-  })
-
-  test('should skip email validation if its no provided', async () => {
-    const { sut } = makeSut()
-
-    const response: IHttpResponse = await sut.perform(
-      makeFakeValidRequest('email')
-    )
-
-    expect(response).toEqual(noContent())
-  })
-
   test('should skip postalCode validation if its is empty', async () => {
     const { sut } = makeSut()
 
@@ -257,6 +237,26 @@ describe('UpdateClientController', () => {
 
     const response: IHttpResponse = await sut.perform(
       makeFakeValidRequest('postalCode')
+    )
+
+    expect(response).toEqual(noContent())
+  })
+
+  test('should skip file validation if its no provided', async () => {
+    const { sut } = makeSut()
+
+    const response: IHttpResponse = await sut.perform(
+      makeFakeValidRequest('file')
+    )
+
+    expect(response).toEqual(noContent())
+  })
+
+  test('should skip file validation if its is empty', async () => {
+    const { sut } = makeSut()
+
+    const response: IHttpResponse = await sut.perform(
+      makeFakeValidRequest(null, 'file')
     )
 
     expect(response).toEqual(noContent())

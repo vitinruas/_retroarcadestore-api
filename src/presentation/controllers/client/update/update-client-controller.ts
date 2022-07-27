@@ -82,7 +82,7 @@ export class UpdateClientController implements IController {
         }
 
         // update client data
-        const isUpdated = await this.updateClientUseCase.update({
+        const isUpdated: boolean = await this.updateClientUseCase.update({
           ...httpRequest.body
         })
         if (!isUpdated) {
