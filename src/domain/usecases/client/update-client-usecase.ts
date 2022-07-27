@@ -1,4 +1,5 @@
 export interface IUpdateClientUseCaseModel {
+  uid: string
   name?: string
   photo?: string
   email?: string

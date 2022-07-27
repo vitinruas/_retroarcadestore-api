@@ -23,6 +23,7 @@ const makeFakeValidRequest = (
 ): IHttpRequest => {
   const request: IHttpRequest = {
     body: {
+      uid: 'any_uid',
       name: 'any_name',
       email: 'any_email@mail.com',
       password: 'any_password',
