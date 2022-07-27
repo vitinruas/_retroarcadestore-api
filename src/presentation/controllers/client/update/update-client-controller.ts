@@ -33,6 +33,7 @@ export class UpdateClientController implements IController {
           email,
           file,
           postalCode,
+          password,
           newPassword,
           newPasswordConfirmation
         } = httpRequest.body
@@ -41,6 +42,10 @@ export class UpdateClientController implements IController {
           if (httpRequestKeys.includes(field) && !httpRequest.body[field]) {
             return badRequest(new MissingFieldError(field))
           }
+        }
+
+        if ((newPassword || newPasswordConfirmation) && !password) {
+          return badRequest(new MissingFieldError('password'))
         }
 
         // check passwords match
