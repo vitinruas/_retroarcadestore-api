@@ -2,7 +2,10 @@ import { IUpdateClientUseCaseModel } from '../../../../domain/usecases/client/up
 import { IHashComparer } from '../../../protocols/cryptography/hash-comparer-protocol'
 import { IHasher } from '../../../protocols/cryptography/hasher-protocol'
 import { IUpdateClientRepository } from '../../../protocols/repository/client/update-client-repository-protocol'
-import { IGetClientModel } from '../../get-client/get-client-usecase-protocols'
+import {
+  IGetClientByUIDRepository,
+  IGetClientModel
+} from '../../get-client/get-client-usecase-protocols'
 import { UpdateClientUseCase } from '../update-client-usecase'
 
 const makeFakeValidAccount = (): IGetClientModel => ({
@@ -12,6 +15,16 @@ const makeFakeValidAccount = (): IGetClientModel => ({
   createdAt: 'any_date',
   authenticatedAt: 'any_date'
 })
+
+const makeGetClientByUIDRepositoryStub = (): IGetClientByUIDRepository => {
+  class GetClientByUIDRepositoryStub implements IGetClientByUIDRepository {
+    async get(uid: string): Promise<IGetClientModel> {
+      return Promise.resolve(makeFakeValidAccount())
+    }
+  }
+
+  return new GetClientByUIDRepositoryStub()
+}
 
 const makePasswordHasherAdapterStub = () => {
   class PasswordHasherStub implements IHasher {
@@ -42,34 +55,51 @@ const makePasswordHashComparerAdapterStub = () => {
 
 interface ISut {
   sut: UpdateClientUseCase
+  getClientByUIDRepositoryStub: IGetClientByUIDRepository
   passwordHashComparerAdapterStub: IHashComparer
   passwordHasherAdapterStub: IHasher
   updateClientRepositoryStub: IUpdateClientRepository
 }
 
 const makeSut = (): ISut => {
+  const getClientByUIDRepositoryStub = makeGetClientByUIDRepositoryStub()
   const passwordHashComparerAdapterStub = makePasswordHashComparerAdapterStub()
   const passwordHasherAdapterStub = makePasswordHasherAdapterStub()
   const updateClientRepositoryStub = makeUpdateClientRepositoryStub()
   const sut = new UpdateClientUseCase(
+    getClientByUIDRepositoryStub,
     passwordHashComparerAdapterStub,
     passwordHasherAdapterStub,
     updateClientRepositoryStub
   )
   return {
     sut,
+    getClientByUIDRepositoryStub,
     passwordHasherAdapterStub,
-    updateClientRepositoryStub,
-    passwordHashComparerAdapterStub
+    passwordHashComparerAdapterStub,
+    updateClientRepositoryStub
   }
 }
 
 describe('UpdateClientUseCase', () => {
+  test('should call GetClientByUIDRepository with an uid', async () => {
+    const { sut, getClientByUIDRepositoryStub } = makeSut()
+    const getSpy = jest.spyOn(getClientByUIDRepositoryStub, 'get')
+
+    await sut.update({
+      uid: 'any_id',
+      password: 'any_password'
+    })
+
+    expect(getSpy).toHaveBeenCalledWith('any_id')
+  })
+
   test('should call PasswordHashComparerAdapter with a password', async () => {
     const { sut, passwordHashComparerAdapterStub } = makeSut()
     const compareSpy = jest.spyOn(passwordHashComparerAdapterStub, 'compare')
 
     await sut.update({
+      uid: 'any_id',
       password: 'any_password'
     })
 
@@ -83,6 +113,7 @@ describe('UpdateClientUseCase', () => {
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
     const promise: Promise<boolean> = sut.update({
+      uid: 'any_id',
       password: 'any_password',
       newPassword: 'new_password'
     })
@@ -97,6 +128,7 @@ describe('UpdateClientUseCase', () => {
       .mockReturnValueOnce(Promise.resolve(false))
 
     const response: boolean = await sut.update({
+      uid: 'any_id',
       password: 'any_password',
       newPassword: 'new_password'
     })
@@ -109,6 +141,7 @@ describe('UpdateClientUseCase', () => {
     const hashSpy = jest.spyOn(passwordHasherAdapterStub, 'hash')
 
     await sut.update({
+      uid: 'any_id',
       password: 'any_password',
       newPassword: 'new_password'
     })
@@ -123,6 +156,7 @@ describe('UpdateClientUseCase', () => {
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
     const promise: Promise<boolean> = sut.update({
+      uid: 'any_id',
       password: 'any_password',
       newPassword: 'new_password'
     })
@@ -135,12 +169,14 @@ describe('UpdateClientUseCase', () => {
     const updateSpy = jest.spyOn(updateClientRepositoryStub, 'update')
 
     await sut.update({
+      uid: 'any_id',
       name: 'new_name',
       password: 'any_password',
       newPassword: 'hashed_password'
     })
 
     expect(updateSpy).toHaveBeenCalledWith({
+      uid: 'any_id',
       name: 'new_name',
       password: 'any_password',
       newPassword: 'hashed_password'
