@@ -25,7 +25,7 @@ const makeSut = (): ISut => {
 }
 
 describe('UpdateClientUseCase', () => {
-  test('should call passwordHasher with a password', async () => {
+  test('should call PasswordHasher with a password', async () => {
     const { sut, passwordHasherAdapterStub } = makeSut()
     const hashSpy = jest.spyOn(passwordHasherAdapterStub, 'hash')
 
@@ -34,5 +34,18 @@ describe('UpdateClientUseCase', () => {
     })
 
     expect(hashSpy).toHaveBeenCalledWith('new_password')
+  })
+
+  test('should return throw if PasswordHasher throws', async () => {
+    const { sut, passwordHasherAdapterStub } = makeSut()
+    jest
+      .spyOn(passwordHasherAdapterStub, 'hash')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const promise: Promise<void> = sut.update({
+      password: 'new_password'
+    })
+
+    expect(promise).rejects.toThrow()
   })
 })
