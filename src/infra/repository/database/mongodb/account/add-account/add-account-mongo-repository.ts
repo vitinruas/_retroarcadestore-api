@@ -1,3 +1,4 @@
+import { Collection } from 'mongoose'
 import {
   IAccountEntitie,
   IAddAccountModel,
@@ -8,7 +9,7 @@ import mongoHelper from '../../helpers/mongo-helper'
 
 export class AddAccountMongoRepository implements IAddAccountRepository {
   async add(newAccountData: IAddAccountModel): Promise<IAccountEntitie> {
-    const collectionRef = mongoHelper.getCollection('accounts')
+    const collectionRef: Collection = mongoHelper.getCollection('accounts')
     const createdAccountID = (
       await collectionRef.insertOne({
         ...newAccountData,

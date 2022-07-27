@@ -13,6 +13,6 @@ export class GetAccountByAccessTokenRepository
   ): Promise<IAccountEntitie | null> {
     const collectionRef = mongoHelper.getCollection('accounts')
     const document = await collectionRef.findOne({ accessToken, isAdmin })
-    return document ? mongoHelper.replaceMongoID(document) : null
+    return (document && mongoHelper.replaceMongoID(document)) || null
   }
 }

@@ -29,7 +29,14 @@ interface FakeValidAccount {
   accessToken: string
 }
 
-const createAccount = async (
+const makeFakeValidAccount = (): FakeValidAccount => ({
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password',
+  accessToken: 'any_token'
+})
+
+const addAccountToDB = async (
   fakeValidAccount: FakeValidAccount
 ): Promise<any> => {
   const createdAccountID = (await collectionRef.insertOne(fakeValidAccount))
@@ -44,16 +51,14 @@ const getAccount = async (id: string) => {
   return createdAccount
 }
 
+const makeSut = (): UpdateAccountAccessTokenMongoRepository => {
+  return new UpdateAccountAccessTokenMongoRepository()
+}
+
 describe('UpdateAccountAccessTokenMongoRepository', () => {
   test('should update a token to a new generated token', async () => {
-    const sut = new UpdateAccountAccessTokenMongoRepository()
-    const fakeValidAccount = {
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password',
-      accessToken: 'any_token'
-    }
-    const createdAccountID = await createAccount(fakeValidAccount)
+    const sut = makeSut()
+    const createdAccountID = await addAccountToDB(makeFakeValidAccount())
     const createdAccount = await getAccount(createdAccountID._id.toString())
 
     expect(createdAccount!.accessToken).toBe('any_token')

@@ -22,21 +22,39 @@ beforeEach(async () => {
   await collectionRef.deleteMany({})
 })
 
+interface FakeValidAccount {
+  name: string
+  email: string
+  password: string
+  accessToken: string
+}
+
+const makeFakeValidAccount = (): FakeValidAccount => ({
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password',
+  accessToken: 'any_token'
+})
+
+const addAccountToDB = async (
+  fakeValidAccount: FakeValidAccount
+): Promise<any> => {
+  const createdAccountID = (await collectionRef.insertOne(fakeValidAccount))
+    .insertedId
+  return createdAccountID
+}
+
 const makeSut = (): GetAccountByEmailMongoRepository => {
   return new GetAccountByEmailMongoRepository()
 }
 
-describe('GetAccountByEmail', () => {
+describe('GetAccountByEmailRepository', () => {
   test('should return an account if using the provided email', async () => {
-    const fakeValidAccount = {
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password'
-    }
-    await collectionRef.insertOne(fakeValidAccount)
-
     const sut = makeSut()
+    addAccountToDB(makeFakeValidAccount())
+
     const account = await sut.get('any_email@mail.com')
+
     expect(account!.uid).toBeTruthy()
     expect(account!.name).toBe('any_name')
     expect(account!.email).toBe('any_email@mail.com')

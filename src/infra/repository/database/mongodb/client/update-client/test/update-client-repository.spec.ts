@@ -22,21 +22,36 @@ beforeEach(async () => {
   await collectionRef.deleteMany({})
 })
 
+interface FakeValidAccount {
+  name: string
+  email: string
+  password: string
+  accessToken: string
+}
+
+const makeFakeValidAccount = (): FakeValidAccount => ({
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password',
+  accessToken: 'any_token'
+})
+
+const addAccountToDB = async (
+  fakeValidAccount: FakeValidAccount
+): Promise<any> => {
+  const createdAccountID = (await collectionRef.insertOne(fakeValidAccount))
+    .insertedId
+  return createdAccountID
+}
+
 const makeSut = (): UpdateClientRepository => {
   return new UpdateClientRepository()
 }
 
 describe('UpdateClientRepository', () => {
   test('should update a client account', async () => {
-    const fakeValidAccount = {
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      createdAt: 'any_date',
-      authenticatedAt: 'any_date'
-    }
-    const createdAccountID = (
-      await collectionRef.insertOne(fakeValidAccount)
-    ).insertedId.toString()
+    const createdAccountID = await addAccountToDB(makeFakeValidAccount())
+
     const sut = makeSut()
 
     await sut.update({
@@ -48,7 +63,7 @@ describe('UpdateClientRepository', () => {
     })
 
     const account = await collectionRef.findOne({
-      _id: new mongoose.Types.ObjectId(createdAccountID)
+      _id: new mongoose.Types.ObjectId(createdAccountID.toString())
     })
 
     expect(account!._id).toBeTruthy()

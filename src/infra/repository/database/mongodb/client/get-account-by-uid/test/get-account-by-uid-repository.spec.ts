@@ -22,21 +22,37 @@ beforeEach(async () => {
   await collectionRef.deleteMany({})
 })
 
+interface FakeValidAccount {
+  name: string
+  email: string
+  password: string
+  createdAt: string
+  authenticatedAt: string
+}
+
+const makeFakeValidAccount = (): FakeValidAccount => ({
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password',
+  createdAt: 'any_date',
+  authenticatedAt: 'any_date'
+})
+
+const addAccountToDB = async (
+  fakeValidAccount: FakeValidAccount
+): Promise<any> => {
+  const createdAccountID = (await collectionRef.insertOne(fakeValidAccount))
+    .insertedId
+  return createdAccountID
+}
+
 const makeSut = (): GetClientByUIDRepository => {
   return new GetClientByUIDRepository()
 }
 
 describe('GetClientByUIDRepository', () => {
   test('should return an account with provided uid', async () => {
-    const fakeValidAccount = {
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      createdAt: 'any_date',
-      authenticatedAt: 'any_date'
-    }
-    const createdAccountID = (
-      await collectionRef.insertOne(fakeValidAccount)
-    ).insertedId.toString()
+    const createdAccountID = await addAccountToDB(makeFakeValidAccount())
     const sut = makeSut()
 
     const account = await sut.get(createdAccountID)
