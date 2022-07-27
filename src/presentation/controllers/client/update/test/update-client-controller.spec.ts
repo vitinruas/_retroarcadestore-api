@@ -11,7 +11,11 @@ import {
   IUpdateClientUseCaseModel,
   IHttpResponse
 } from '../update-client-controller-protocols'
-import { NoFieldProvidedError, InvalidFieldError } from '../../../../errors'
+import {
+  NoFieldProvidedError,
+  InvalidFieldError,
+  MissingFieldError
+} from '../../../../errors'
 
 const makeFakeValidRequest = (
   fieldToDelete?: string | null,
@@ -203,21 +207,21 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(noContent())
   })
 
-  test('should skip email validation if its is empty', async () => {
-    const { sut } = makeSut()
-
-    const response: IHttpResponse = await sut.perform(
-      makeFakeValidRequest(null, 'email')
-    )
-
-    expect(response).toEqual(noContent())
-  })
-
   test('should skip email validation if its no provided', async () => {
     const { sut } = makeSut()
 
     const response: IHttpResponse = await sut.perform(
       makeFakeValidRequest('email')
+    )
+
+    expect(response).toEqual(noContent())
+  })
+
+  test('should skip postalCode validation if its is empty', async () => {
+    const { sut } = makeSut()
+
+    const response: IHttpResponse = await sut.perform(
+      makeFakeValidRequest(null, 'postalCode')
     )
 
     expect(response).toEqual(noContent())
@@ -231,6 +235,16 @@ describe('UpdateClientController', () => {
     )
 
     expect(response).toEqual(noContent())
+  })
+
+  test('should return 400 if required field name is not provided', async () => {
+    const { sut } = makeSut()
+
+    const response: IHttpResponse = await sut.perform(
+      makeFakeValidRequest(null, 'name')
+    )
+
+    expect(response).toEqual(badRequest(new MissingFieldError('name')))
   })
 
   test('should return 204 if UpdateClientUseCase succeeds', async () => {
