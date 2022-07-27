@@ -8,8 +8,8 @@
 4. ✅ Validar se existe o campo **file** da imagem e renomear para **photo** para corresponder ao protocolo
 5. ✅ Validar se existe o campo **email** e validar se corresponde ao protocolo, se fornecido
 6. ✅ Validar se existe o campo **postalCode** e validar se corresponde ao protocolo, se fornecido
-7. ❌ Gerar uma **senha criptografada** se fornecida
-8. ❌ Atualizar os **dados fornecidos** do Cliente
+7. ✅ Gerar uma **senha criptografada** se fornecida
+8. ✅ Atualizar os **dados fornecidos** do Cliente
 9. ✅ Retornar **204**
 
 > ## Exceptions
