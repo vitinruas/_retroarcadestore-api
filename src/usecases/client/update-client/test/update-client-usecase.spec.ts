@@ -37,8 +37,8 @@ const makePasswordHasherAdapterStub = () => {
 
 const makeUpdateClientRepositoryStub = () => {
   class UpdateClientRepositoryStub implements IUpdateClientRepository {
-    async update(data: IUpdateClientUseCaseModel): Promise<IGetClientModel> {
-      return Promise.resolve(makeFakeValidAccount())
+    async update(data: IUpdateClientUseCaseModel): Promise<void> {
+      return Promise.resolve()
     }
   }
   return new UpdateClientRepositoryStub()
