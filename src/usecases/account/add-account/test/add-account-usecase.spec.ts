@@ -74,35 +74,36 @@ const makeUpdateAccountAccessTokenStub = () => {
 
 interface ISut {
   sut: AddAccountUseCase
-  passwordHasherStub: IHasher
+  passwordHasherAdapterStub: IHasher
   getAccountByEmailRepositoryStub: IGetAccountByEmailRepository
   addAccountRepositoryStub: IAddAccountRepository
-  tokenGeneratorStub: IEncrypter
-  updateAccountAccessTokenStub: IUpdateAccountAccessTokenRepository
+  tokenGeneratorAdapterStub: IEncrypter
+  updateAccountAccessTokenRepositoryStub: IUpdateAccountAccessTokenRepository
 }
 
 const makeSut = (): ISut => {
   const getAccountByEmailRepositoryStub: IGetAccountByEmailRepository =
     makeGetAccountByEmailRepositoryStub()
-  const passwordHasherStub: IHasher = makePasswordHasherStub()
+  const passwordHasherAdapterStub: IHasher = makePasswordHasherStub()
   const addAccountRepositoryStub: IAddAccountRepository =
     makeAddAccountRepositoryStub()
-  const tokenGeneratorStub = makeTokenGeneratorStub()
-  const updateAccountAccessTokenStub = makeUpdateAccountAccessTokenStub()
+  const tokenGeneratorAdapterStub = makeTokenGeneratorStub()
+  const updateAccountAccessTokenRepositoryStub =
+    makeUpdateAccountAccessTokenStub()
   const sut = new AddAccountUseCase(
     getAccountByEmailRepositoryStub,
-    passwordHasherStub,
+    passwordHasherAdapterStub,
     addAccountRepositoryStub,
-    tokenGeneratorStub,
-    updateAccountAccessTokenStub
+    tokenGeneratorAdapterStub,
+    updateAccountAccessTokenRepositoryStub
   )
   return {
     sut,
-    passwordHasherStub,
+    passwordHasherAdapterStub,
     getAccountByEmailRepositoryStub,
     addAccountRepositoryStub,
-    tokenGeneratorStub,
-    updateAccountAccessTokenStub
+    tokenGeneratorAdapterStub,
+    updateAccountAccessTokenRepositoryStub
   }
 }
 
@@ -139,8 +140,8 @@ describe('AddAccountUseCase', () => {
   })
 
   test('should calls PasswordHasher with a password', async () => {
-    const { sut, passwordHasherStub } = makeSut()
-    const hashSpy = jest.spyOn(passwordHasherStub, 'hash')
+    const { sut, passwordHasherAdapterStub } = makeSut()
+    const hashSpy = jest.spyOn(passwordHasherAdapterStub, 'hash')
 
     await sut.add(makeValidNewAccountData())
 
@@ -148,9 +149,9 @@ describe('AddAccountUseCase', () => {
   })
 
   test('should return throw if PasswordHasher throws', async () => {
-    const { sut, passwordHasherStub } = makeSut()
+    const { sut, passwordHasherAdapterStub } = makeSut()
     jest
-      .spyOn(passwordHasherStub, 'hash')
+      .spyOn(passwordHasherAdapterStub, 'hash')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
     const promise = sut.add(makeValidNewAccountData())
@@ -183,8 +184,8 @@ describe('AddAccountUseCase', () => {
   })
 
   test('should calls TokenGenerator with an uid', async () => {
-    const { sut, tokenGeneratorStub } = makeSut()
-    const encryptSpy = jest.spyOn(tokenGeneratorStub, 'encrypt')
+    const { sut, tokenGeneratorAdapterStub } = makeSut()
+    const encryptSpy = jest.spyOn(tokenGeneratorAdapterStub, 'encrypt')
 
     await sut.add(makeValidNewAccountData())
 
@@ -192,9 +193,9 @@ describe('AddAccountUseCase', () => {
   })
 
   test('should return throw if TokenGenerator throws', async () => {
-    const { sut, tokenGeneratorStub } = makeSut()
+    const { sut, tokenGeneratorAdapterStub } = makeSut()
     jest
-      .spyOn(tokenGeneratorStub, 'encrypt')
+      .spyOn(tokenGeneratorAdapterStub, 'encrypt')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
     const promise = sut.add(makeValidNewAccountData())
@@ -203,8 +204,11 @@ describe('AddAccountUseCase', () => {
   })
 
   test('should calls UpdateAccountAccessToken with correct values', async () => {
-    const { sut, updateAccountAccessTokenStub } = makeSut()
-    const updateSpy = jest.spyOn(updateAccountAccessTokenStub, 'update')
+    const { sut, updateAccountAccessTokenRepositoryStub } = makeSut()
+    const updateSpy = jest.spyOn(
+      updateAccountAccessTokenRepositoryStub,
+      'update'
+    )
 
     await sut.add(makeValidNewAccountData())
 
@@ -212,9 +216,9 @@ describe('AddAccountUseCase', () => {
   })
 
   test('should return throw if UpdateAccountAccessToken throws', async () => {
-    const { sut, updateAccountAccessTokenStub } = makeSut()
+    const { sut, updateAccountAccessTokenRepositoryStub } = makeSut()
     jest
-      .spyOn(updateAccountAccessTokenStub, 'update')
+      .spyOn(updateAccountAccessTokenRepositoryStub, 'update')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
     const promise = sut.add(makeValidNewAccountData())

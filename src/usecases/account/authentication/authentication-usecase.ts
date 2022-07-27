@@ -22,12 +22,12 @@ export class AuthenticationUseCase implements IAuthenticationUseCase {
     const account: IAccountEntitie | null =
       await this.getAccountByEmailRepository.get(authenticationData.email)
     if (account) {
-      const isValid = await this.passwordHashComparerAdapter.compare(
+      const isValid: boolean = await this.passwordHashComparerAdapter.compare(
         authenticationData.password,
         account.password
       )
       if (isValid) {
-        const accessToken = await this.tokenGeneratorAdapter.encrypt(
+        const accessToken: string = await this.tokenGeneratorAdapter.encrypt(
           account.uid
         )
         await this.updateAccountAccessTokenRepository.update(

@@ -16,6 +16,12 @@ const makeFakeValidAccount = (): IAccountEntitie => ({
   accessToken: 'any_token'
 })
 
+const makeFakeValidUpdateData = (): IUpdateClientUseCaseModel => ({
+  uid: 'any_id',
+  password: 'any_password',
+  newPassword: 'new_password'
+})
+
 const makeGetAccountByUIDRepositoryStub = (): IGetAccountByUIDRepository => {
   class GetClientByUIDRepositoryStub implements IGetAccountByUIDRepository {
     async get(uid: string): Promise<IAccountEntitie> {
@@ -37,7 +43,7 @@ const makePasswordHasherAdapterStub = () => {
 
 const makeUpdateClientRepositoryStub = () => {
   class UpdateClientRepositoryStub implements IUpdateClientRepository {
-    async update(data: IUpdateClientUseCaseModel): Promise<void> {
+    async update(dataToUpdate: IUpdateClientUseCaseModel): Promise<void> {
       return Promise.resolve()
     }
   }
@@ -86,10 +92,7 @@ describe('UpdateClientUseCase', () => {
     const { sut, getAccountByUIDRepositoryStub } = makeSut()
     const getSpy = jest.spyOn(getAccountByUIDRepositoryStub, 'get')
 
-    await sut.update({
-      uid: 'any_id',
-      password: 'any_password'
-    })
+    await sut.update(makeFakeValidUpdateData())
 
     expect(getSpy).toHaveBeenCalledWith('any_id')
   })
@@ -100,10 +103,7 @@ describe('UpdateClientUseCase', () => {
       .spyOn(getAccountByUIDRepositoryStub, 'get')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
-    const promise: Promise<boolean> = sut.update({
-      uid: 'any_id',
-      password: 'any_password'
-    })
+    const promise: Promise<boolean> = sut.update(makeFakeValidUpdateData())
 
     await expect(promise).rejects.toThrow()
   })
@@ -112,10 +112,7 @@ describe('UpdateClientUseCase', () => {
     const { sut, passwordHashComparerAdapterStub } = makeSut()
     const compareSpy = jest.spyOn(passwordHashComparerAdapterStub, 'compare')
 
-    await sut.update({
-      uid: 'any_id',
-      password: 'any_password'
-    })
+    await sut.update(makeFakeValidUpdateData())
 
     expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
   })
@@ -126,11 +123,7 @@ describe('UpdateClientUseCase', () => {
       .spyOn(passwordHashComparerAdapterStub, 'compare')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
-    const promise: Promise<boolean> = sut.update({
-      uid: 'any_id',
-      password: 'any_password',
-      newPassword: 'new_password'
-    })
+    const promise: Promise<boolean> = sut.update(makeFakeValidUpdateData())
 
     await expect(promise).rejects.toThrow()
   })
@@ -141,39 +134,27 @@ describe('UpdateClientUseCase', () => {
       .spyOn(passwordHashComparerAdapterStub, 'compare')
       .mockReturnValueOnce(Promise.resolve(false))
 
-    const response: boolean = await sut.update({
-      uid: 'any_id',
-      password: 'any_password',
-      newPassword: 'new_password'
-    })
+    const response: boolean = await sut.update(makeFakeValidUpdateData())
 
     expect(response).toBe(false)
   })
 
-  test('should call PasswordHasher with a newPassword', async () => {
+  test('should call PasswordHasherAdapter with a newPassword', async () => {
     const { sut, passwordHasherAdapterStub } = makeSut()
     const hashSpy = jest.spyOn(passwordHasherAdapterStub, 'hash')
 
-    await sut.update({
-      uid: 'any_id',
-      password: 'any_password',
-      newPassword: 'new_password'
-    })
+    await sut.update(makeFakeValidUpdateData())
 
     expect(hashSpy).toHaveBeenCalledWith('new_password')
   })
 
-  test('should return throw if PasswordHasher throws', async () => {
+  test('should return throw if PasswordHasherAdapter throws', async () => {
     const { sut, passwordHasherAdapterStub } = makeSut()
     jest
       .spyOn(passwordHasherAdapterStub, 'hash')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
-    const promise: Promise<boolean> = sut.update({
-      uid: 'any_id',
-      password: 'any_password',
-      newPassword: 'new_password'
-    })
+    const promise: Promise<boolean> = sut.update(makeFakeValidUpdateData())
 
     await expect(promise).rejects.toThrow()
   })
@@ -182,18 +163,13 @@ describe('UpdateClientUseCase', () => {
     const { sut, updateClientRepositoryStub } = makeSut()
     const updateSpy = jest.spyOn(updateClientRepositoryStub, 'update')
 
-    await sut.update({
-      uid: 'any_id',
-      name: 'new_name',
-      password: 'any_password',
-      newPassword: 'hashed_password'
-    })
+    await sut.update(makeFakeValidUpdateData())
 
-    expect(updateSpy).toHaveBeenCalledWith({
-      uid: 'any_id',
-      name: 'new_name',
-      password: 'any_password',
-      newPassword: 'hashed_password'
-    })
+    expect(updateSpy).toHaveBeenCalledWith(
+      Object.assign({
+        uid: 'any_id',
+        password: 'hashed_password'
+      })
+    )
   })
 })

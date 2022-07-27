@@ -21,10 +21,8 @@ export class CheckAccessTokenUseCase implements ICheckAccessTokenUseCase {
     )
     if (isValid) {
       // check if there are account with this access token
-      const account = await this.getAccountByAccessTokenRepository.get(
-        accessToken,
-        isAdmin
-      )
+      const account: IAccountEntitie | null =
+        await this.getAccountByAccessTokenRepository.get(accessToken, isAdmin)
       // return an account if all validations above succeeds
       if (account) {
         return account

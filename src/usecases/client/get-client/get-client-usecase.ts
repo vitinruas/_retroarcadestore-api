@@ -1,8 +1,8 @@
 import {
   IGetClientUseCase,
-  IGetClientModel
+  IGetClientModel,
+  IGetClientByUIDRepository
 } from './get-client-usecase-protocols'
-import { IGetClientByUIDRepository } from '../../protocols/repository/client/get-client-by-uid-repository-protocol'
 
 export class GetClientUseCase implements IGetClientUseCase {
   constructor(
@@ -10,7 +10,9 @@ export class GetClientUseCase implements IGetClientUseCase {
   ) {}
 
   async get(uid: string): Promise<IGetClientModel> {
-    const account = await this.getClientByUIDRepository.get(uid)
+    const account: IGetClientModel = await this.getClientByUIDRepository.get(
+      uid
+    )
     return account
   }
 }

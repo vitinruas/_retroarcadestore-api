@@ -1,3 +1,4 @@
+import { IAccountEntitie } from '../../account/authentication/authentication-usecase-protocols'
 import {
   IUpdateClientUseCase,
   IGetAccountByUIDRepository,
@@ -18,9 +19,11 @@ export class UpdateClientUseCase implements IUpdateClientUseCase {
   async update(fields: IUpdateClientUseCaseModel): Promise<boolean> {
     // check if a password was provided
     if (fields.password) {
-      const account = await this.getAccountByUIDRepository.get(fields.uid)
+      const account: IAccountEntitie = await this.getAccountByUIDRepository.get(
+        fields.uid
+      )
       // check if the password is valid
-      const isValid = await this.passwordHashComparerAdapter.compare(
+      const isValid: boolean = await this.passwordHashComparerAdapter.compare(
         fields.password,
         account.password
       )
@@ -30,12 +33,15 @@ export class UpdateClientUseCase implements IUpdateClientUseCase {
       }
 
       if (fields.newPassword) {
-        fields.newPassword = await this.passwordHasherAdapter.hash(
+        fields.password = await this.passwordHasherAdapter.hash(
           fields.newPassword
         )
       }
     }
-    await this.updateClientRepository.update(fields)
+
+    const { newPassword, newPasswordConfirmation, ...dataToUpdate } = fields
+
+    await this.updateClientRepository.update(dataToUpdate)
     return true
   }
 }

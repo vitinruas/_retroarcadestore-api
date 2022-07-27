@@ -128,7 +128,7 @@ describe('AuthenticationUseCase', () => {
     expect(accessToken).toBeNull()
   })
 
-  test('should call PasswordHashComparer with correct values', async () => {
+  test('should call PasswordHashComparerAdapter with correct values', async () => {
     const { sut, passwordHashComparerStub } = makeSut()
     const compareSpy = jest.spyOn(passwordHashComparerStub, 'compare')
 
@@ -137,7 +137,7 @@ describe('AuthenticationUseCase', () => {
     expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
   })
 
-  test('should return throw if PasswordHashComparer throws', async () => {
+  test('should return throw if PasswordHashComparerAdapter throws', async () => {
     const { sut, passwordHashComparerStub } = makeSut()
     jest
       .spyOn(passwordHashComparerStub, 'compare')
@@ -150,7 +150,7 @@ describe('AuthenticationUseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('should return null if PasswordHashComparer fails', async () => {
+  test('should return null if PasswordHashComparerAdapter fails', async () => {
     const { sut, passwordHashComparerStub } = makeSut()
     jest
       .spyOn(passwordHashComparerStub, 'compare')
@@ -161,15 +161,6 @@ describe('AuthenticationUseCase', () => {
     )
 
     expect(accessToken).toBeNull()
-  })
-
-  test('should call PasswordHashComparer with correct values', async () => {
-    const { sut, passwordHashComparerStub } = makeSut()
-    const compareSpy = jest.spyOn(passwordHashComparerStub, 'compare')
-
-    await sut.authenticate(makeFakeValidAuthenticationData())
-
-    expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
   })
 
   test('should call TokenGeneratorAdapter with an uid', async () => {

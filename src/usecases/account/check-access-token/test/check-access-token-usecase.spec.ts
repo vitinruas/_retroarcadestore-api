@@ -1,9 +1,9 @@
+import { CheckAccessTokenUseCase } from '../check-access-token-usecase'
 import {
   IAccountEntitie,
   IGetAccountByAccessTokenRepository,
   IDecrypter
 } from '../check-access-token-usecase-protocols'
-import { CheckAccessTokenUseCase } from '../check-access-token-usecase'
 
 const makeFakeValidAccount = (): IAccountEntitie => ({
   uid: 'any_uid',
