@@ -23,7 +23,7 @@ export const ok = (data?: any): IHttpResponse => ({
 
 export const noContent = (): IHttpResponse => ({
   statusCode: 204,
-  body: ''
+  body: null
 })
 
 export const serverError = (error: Error): IHttpResponse => ({

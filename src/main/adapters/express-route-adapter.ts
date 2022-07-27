@@ -8,7 +8,6 @@ import {
 export const expressRouteAdapter = (controller: IController) => {
   return async (request: Request, response: Response) => {
     const httpRequest: IHttpRequest = {
-      headers: request.headers,
       body: request.body
     }
 
@@ -17,11 +16,7 @@ export const expressRouteAdapter = (controller: IController) => {
       return response
         .status(httpResponse.statusCode)
         .json(httpResponse.body.message)
-        .send()
     }
-    return response
-      .status(httpResponse.statusCode)
-      .json(httpResponse.body)
-      .send()
+    return response.status(httpResponse.statusCode).json(httpResponse.body)
   }
 }
