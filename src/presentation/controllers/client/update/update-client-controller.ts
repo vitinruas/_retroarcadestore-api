@@ -68,18 +68,26 @@ export class UpdateClientController implements IController {
             return badRequest(new InvalidFieldError('postalCode'))
           }
         }
+
         // check if an email was provided
         if (email) {
+          if (!password) {
+            return badRequest(new MissingFieldError('password'))
+          }
           // check if the provided email is valid
-          const isValid: boolean = this.emailValidatorAdapter.validate(
-            httpRequest.body.email
-          )
+          const isValid: boolean = this.emailValidatorAdapter.validate(email)
           if (!isValid) {
             return badRequest(new InvalidFieldError('email'))
           }
         }
+
         // update client data
-        await this.updateClientUseCase.update({ ...httpRequest.body })
+        const isUpdated = await this.updateClientUseCase.update({
+          ...httpRequest.body
+        })
+        if (!isUpdated) {
+          return badRequest(new InvalidFieldError('password'))
+        }
         return noContent()
       }
       return badRequest(new NoFieldProvidedError())
