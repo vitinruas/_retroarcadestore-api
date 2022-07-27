@@ -13,5 +13,5 @@ export interface IUpdateClientUseCaseModel {
   country?: string
 }
 export interface IUpdateClientUseCase {
-  update(fields: IUpdateClientUseCaseModel): Promise<void>
+  update(fields: IUpdateClientUseCaseModel): Promise<boolean>
 }
