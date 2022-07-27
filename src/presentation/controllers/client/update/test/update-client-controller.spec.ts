@@ -101,7 +101,7 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(badRequest(new NoFieldProvidedError()))
   })
 
-  test('should return 400 if required field name is not provided', async () => {
+  test('should return 400 if required field name is empty', async () => {
     const { sut } = makeSut()
 
     const response: IHttpResponse = await sut.perform(
@@ -111,7 +111,7 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(badRequest(new MissingFieldError('name')))
   })
 
-  test('should return 400 if required field email is not provided', async () => {
+  test('should return 400 if required field email is empty', async () => {
     const { sut } = makeSut()
 
     const response: IHttpResponse = await sut.perform(
@@ -119,15 +119,6 @@ describe('UpdateClientController', () => {
     )
 
     expect(response).toEqual(badRequest(new MissingFieldError('email')))
-  })
-
-  test('should call EmailValidatorAdapter with an email', async () => {
-    const { sut, emailValidatorAdapterStub } = makeSut()
-    const validateSpy = jest.spyOn(emailValidatorAdapterStub, 'validate')
-
-    await sut.perform(makeFakeValidRequest())
-
-    expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
   test('should call EmailValidatorAdapter with an email', async () => {
