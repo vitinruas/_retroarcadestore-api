@@ -123,11 +123,27 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(badRequest(new MissingFieldError('email')))
   })
 
+  test('should return 400 if newPassword or newPasswordConfirmation is provided, but no password', async () => {
+    const { sut } = makeSut()
+
+    const request: IHttpRequest = {
+      body: {
+        newPassword: 'any_password',
+        newPasswordConfirmation: 'any_password'
+      }
+    }
+
+    const response: IHttpResponse = await sut.perform(request)
+
+    expect(response).toEqual(badRequest(new MissingFieldError('password')))
+  })
+
   test('should return 400 if passwords do not match', async () => {
     const { sut } = makeSut()
 
     const request: IHttpRequest = {
       body: {
+        password: 'any_password',
         newPassword: 'any_password',
         newPasswordConfirmation: 'wrong_password'
       }
