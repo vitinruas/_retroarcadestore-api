@@ -21,13 +21,15 @@ export class UpdateClientUseCase implements IUpdateClientUseCase {
         fields.password,
         ''
       )
-      // if valid, then update security fields
-      if (isValid) {
-        if (fields.newPassword) {
-          fields.newPassword = await this.passwordHasherAdapter.hash(
-            fields.newPassword
-          )
-        }
+      // if invalid then returns false
+      if (!isValid) {
+        return false
+      }
+
+      if (fields.newPassword) {
+        fields.newPassword = await this.passwordHasherAdapter.hash(
+          fields.newPassword
+        )
       }
     }
     await this.updateClientRepository.update(fields)
