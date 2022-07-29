@@ -7,7 +7,6 @@ export interface IUpdateClientUseCaseModel {
   newPassword?: string
   street?: string
   postalCode?: number
-  complement?: string
   district?: string
   city?: string
   country?: string

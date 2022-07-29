@@ -6,7 +6,6 @@ export interface IAddress {
   district: string
   city: string
   country: string
-  complement: string
 }
 
 export interface IClientEntitie extends IAccountEntitie {

@@ -34,7 +34,6 @@ const makeFakeValidRequest = (
       newPasswordConfirmation: 'any_password',
       street: 'any_street',
       postalCode: '1123456789',
-      complement: 'any_complement',
       district: 'any_district',
       city: 'any_city',
       country: 'any_contry'
