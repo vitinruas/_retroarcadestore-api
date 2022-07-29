@@ -16,10 +16,18 @@ const makeFakeValidAccount = (): IAccountEntitie => ({
   accessToken: 'any_token'
 })
 
-const makeFakeValidUpdateData = (): IUpdateClientUseCaseModel => ({
+const makeFakeValidUpdateData = () => ({
   uid: 'any_id',
+  name: 'any_name',
+  photo: 'any_photo',
+  email: 'any_email',
   password: 'any_password',
-  newPassword: 'new_password'
+  newPassword: 'new_password',
+  street: 'any_street',
+  postalCode: 1111111111,
+  district: 'any_district',
+  city: 'any_city',
+  country: 'any_country'
 })
 
 const makeGetAccountByUIDRepositoryStub = (): IGetAccountByUIDRepository => {
@@ -168,7 +176,17 @@ describe('UpdateClientUseCase', () => {
     expect(updateSpy).toHaveBeenCalledWith(
       Object.assign({
         uid: 'any_id',
-        password: 'hashed_password'
+        name: 'any_name',
+        photo: 'any_photo',
+        email: 'any_email',
+        password: 'hashed_password',
+        address: {
+          street: 'any_street',
+          postalCode: 1111111111,
+          district: 'any_district',
+          city: 'any_city',
+          country: 'any_country'
+        }
       })
     )
   })

@@ -17,15 +17,16 @@ export class UpdateClientUseCase implements IUpdateClientUseCase {
   ) {}
 
   async update(fields: IUpdateClientUseCaseModel): Promise<boolean> {
-    const { password, newPassword, ...dataToUpdate } = fields
+    const { newPassword, ...dataToUpdate } = fields
+
     // check if a password was provided
-    if (fields.password) {
+    if (dataToUpdate.password) {
       const account: IAccountEntitie = await this.getAccountByUIDRepository.get(
-        fields.uid
+        dataToUpdate.uid
       )
       // check if the password is valid
       const isValid: boolean = await this.passwordHashComparerAdapter.compare(
-        fields.password,
+        dataToUpdate.password,
         account.password
       )
       // if invalid then returns false
@@ -37,7 +38,9 @@ export class UpdateClientUseCase implements IUpdateClientUseCase {
           newPassword
         )
 
-        Object.assign(dataToUpdate, { password: hashedPassword })
+        Object.assign(dataToUpdate, {
+          password: hashedPassword || account.password
+        })
       }
     }
 

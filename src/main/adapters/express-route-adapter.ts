@@ -13,8 +13,8 @@ export const expressRouteAdapter = (controller: IController) => {
       file: request.file,
       files: request.files
     }
-
     const httpResponse: IHttpResponse = await controller.perform(httpRequest)
+    console.log(httpResponse)
     if (httpResponse.statusCode >= 400) {
       return response
         .status(httpResponse.statusCode)
