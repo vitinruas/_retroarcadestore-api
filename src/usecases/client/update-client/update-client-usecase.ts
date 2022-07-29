@@ -17,8 +17,7 @@ export class UpdateClientUseCase implements IUpdateClientUseCase {
   ) {}
 
   async update(fields: IUpdateClientUseCaseModel): Promise<boolean> {
-    const { password, newPassword, newPasswordConfirmation, ...dataToUpdate } =
-      fields
+    const { password, newPassword, ...dataToUpdate } = fields
     // check if a password was provided
     if (fields.password) {
       const account: IAccountEntitie = await this.getAccountByUIDRepository.get(

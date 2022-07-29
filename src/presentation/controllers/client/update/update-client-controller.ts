@@ -28,10 +28,9 @@ export class UpdateClientController implements IController {
         httpRequest.body
       )
       // check if anything field was provided
-      if (httpRequestKeys.length) {
+      if (httpRequestKeys.length > 1 || httpRequest.file) {
         const {
           email,
-          file,
           postalCode,
           password,
           newPassword,
@@ -53,11 +52,12 @@ export class UpdateClientController implements IController {
           return badRequest(new InvalidFieldError('newPasswordConfirmation'))
         }
 
-        if (file) {
+        if (httpRequest.file) {
           Object.assign(httpRequest.body, {
-            photo: httpRequest.body.file.filename
+            photo: httpRequest.file.filename
           })
         }
+
         // check if provided postal code is valid and has a valid length
         if (postalCode) {
           if (
@@ -80,7 +80,6 @@ export class UpdateClientController implements IController {
             return badRequest(new InvalidFieldError('email'))
           }
         }
-
         // update client data
         const isUpdated: boolean = await this.updateClientUseCase.update({
           ...httpRequest.body

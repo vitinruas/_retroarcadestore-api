@@ -21,7 +21,10 @@ const makeFakeValidRequest = (
   fieldToDelete?: string | null,
   fieldToEmpty?: string
 ): IHttpRequest => {
-  const request: IHttpRequest = {
+  const request: any = {
+    file: {
+      filename: 'any_photo'
+    },
     body: {
       uid: 'any_uid',
       name: 'any_name',
@@ -29,9 +32,6 @@ const makeFakeValidRequest = (
       password: 'any_password',
       newPassword: 'any_password',
       newPasswordConfirmation: 'any_password',
-      file: {
-        filename: 'any_photo'
-      },
       street: 'any_street',
       postalCode: '1123456789',
       complement: 'any_complement',
@@ -41,7 +41,11 @@ const makeFakeValidRequest = (
     }
   }
   if (fieldToDelete) {
-    delete request.body[fieldToDelete]
+    if (request.body[fieldToDelete]) {
+      delete request.body[fieldToDelete]
+    } else {
+      delete request[fieldToDelete]
+    }
     return request
   }
 
@@ -96,7 +100,9 @@ describe('UpdateClientController', () => {
   test('should return 400 if no field is provided', async () => {
     const { sut } = makeSut()
     const httpRequest: IHttpRequest = {
-      body: {}
+      body: {
+        uid: 'any_id'
+      }
     }
 
     const response: IHttpResponse = await sut.perform(httpRequest)
@@ -202,6 +208,7 @@ describe('UpdateClientController', () => {
     const { sut } = makeSut()
     const request: IHttpRequest = {
       body: {
+        uid: 'any_id',
         postalCode: 'a123bsds'
       }
     }
@@ -214,6 +221,7 @@ describe('UpdateClientController', () => {
     const { sut } = makeSut()
     const request: IHttpRequest = {
       body: {
+        uid: 'any_id',
         postalCode: '123'
       }
     }
