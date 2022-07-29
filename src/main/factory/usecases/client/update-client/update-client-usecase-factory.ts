@@ -4,16 +4,19 @@ import { UpdateClientRepository } from '../../../../../infra/repository/database
 import { UpdateClientUseCase } from '../../../../../usecases/client/update-client/update-client-usecase'
 import { BcryptAdapter } from '../../../../../infra/cryptography/bcrypt-adapter/bcrypt-adapter'
 import env from '../../../../config/env'
+import { UpdateClientAddressRepository } from '../../../../../infra/repository/database/mongodb/client/update-client-address/update-client-address-repository'
 
 export const makeUpdateClientUseCase = (): IUpdateClientUseCase => {
   const getAccountByUIDRepository = new GetAccountByUIDRepository()
   const bcryptAdapter = new BcryptAdapter(env.bcryptSalt)
   const updateClientRepository = new UpdateClientRepository()
+  const updateClientAddressRepository = new UpdateClientAddressRepository()
   const updateClientUseCase = new UpdateClientUseCase(
     getAccountByUIDRepository,
     bcryptAdapter,
     bcryptAdapter,
-    updateClientRepository
+    updateClientRepository,
+    updateClientAddressRepository
   )
   return updateClientUseCase
 }

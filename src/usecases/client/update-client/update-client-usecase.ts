@@ -67,7 +67,6 @@ export class UpdateClientUseCase implements IUpdateClientUseCase {
         })
       }
     }
-
     await this.updateClientRepository.update(userDataToUpdate)
     await this.updateClientAddressRepository.update(addressDataToUpdate)
     return true

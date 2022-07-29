@@ -10,7 +10,7 @@ class MongoHelper {
   }
 
   getCollection(collectionName: string): Collection {
-    return mongoose.connection.collection('accounts')
+    return mongoose.connection.collection(collectionName)
   }
 
   replaceMongoID(document: any): any {

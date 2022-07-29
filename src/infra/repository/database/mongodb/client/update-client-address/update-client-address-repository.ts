@@ -20,7 +20,8 @@ export class UpdateClientAddressRepository
           uid,
           ...dataWithoutID
         }
-      }
+      },
+      { upsert: true }
     )
   }
 }
