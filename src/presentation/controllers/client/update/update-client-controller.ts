@@ -23,7 +23,6 @@ export class UpdateClientController implements IController {
   ) {}
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
-    console.log(httpRequest)
     try {
       const httpRequestKeys: ReadonlyArray<string> = Object.keys(
         httpRequest.body

@@ -9,9 +9,9 @@ const getFileExtension = (originalName: string) => {
 const storage = multer.diskStorage({
   destination: function (request, file, callback) {
     if (file.fieldname === 'photo') {
-      callback(null, 'uploads/client')
+      callback(null, 'public/uploads/client')
     } else {
-      callback(null, 'uploads/client')
+      callback(null, 'public/uploads/client')
     }
   },
   filename: function (request, file, callback) {
