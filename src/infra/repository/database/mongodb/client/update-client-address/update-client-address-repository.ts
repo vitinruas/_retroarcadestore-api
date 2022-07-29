@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import mongoHelper from '../../helpers/mongo-helper'
+import accountHelper from '../../helpers/entitie-helper'
 import {
   IUpdateClientAddressRepository,
   IUpdateClientAddressRepositoryModel
@@ -18,7 +19,8 @@ export class UpdateClientAddressRepository
       {
         $set: {
           uid,
-          ...dataWithoutID
+          ...dataWithoutID,
+          updatedAt: accountHelper.getCurrentTime()
         }
       },
       { upsert: true }
