@@ -2,11 +2,11 @@ import mongoose from 'mongoose'
 import mongoHelper from '../../helpers/mongo-helper'
 import {
   IUpdateClientRepository,
-  IUpdateClientUseCaseModel
+  IUpdateClientRepositoryModel
 } from './update-client-repository-protocols'
 
 export class UpdateClientRepository implements IUpdateClientRepository {
-  async update(dataToUpdate: IUpdateClientUseCaseModel): Promise<void> {
+  async update(dataToUpdate: IUpdateClientRepositoryModel): Promise<void> {
     const { uid, ...dataWithoutID } = dataToUpdate
     const collectionRef = mongoHelper.getCollection('accounts')
     await collectionRef.updateOne(

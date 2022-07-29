@@ -1,5 +1,11 @@
-import { IUpdateClientUseCaseModel } from '../../../../domain/usecases/client/update-client-usecase'
+export interface IUpdateClientRepositoryModel {
+  uid: string
+  name?: string
+  photo?: string
+  email?: string
+  password?: string
+}
 
 export interface IUpdateClientRepository {
-  update(dataToUpdate: IUpdateClientUseCaseModel): Promise<void>
+  update(dataToUpdate: IUpdateClientRepositoryModel): Promise<void>
 }
