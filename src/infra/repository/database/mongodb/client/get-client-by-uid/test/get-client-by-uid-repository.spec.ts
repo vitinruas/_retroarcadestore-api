@@ -1,6 +1,6 @@
 import { GetClientByUIDRepository } from '../get-client-by-uid-repository'
 import { MongoMemoryServer } from 'mongodb-memory-server'
-import { Collection } from 'mongoose'
+import mongoose, { Collection } from 'mongoose'
 import mongoHelper from '../../../helpers/mongo-helper'
 
 let mongod: MongoMemoryServer
@@ -22,7 +22,7 @@ beforeEach(async () => {
   await collectionRef.deleteMany({})
 })
 
-interface FakeValidAccount {
+interface IFakeValidAccount {
   name: string
   email: string
   password: string
@@ -30,7 +30,7 @@ interface FakeValidAccount {
   authenticatedAt: string
 }
 
-const makeFakeValidAccount = (): FakeValidAccount => ({
+const makeFakeValidAccount = (): IFakeValidAccount => ({
   name: 'any_name',
   email: 'any_email@mail.com',
   password: 'hashed_password',
@@ -39,11 +39,42 @@ const makeFakeValidAccount = (): FakeValidAccount => ({
 })
 
 const addAccountToDB = async (
-  fakeValidAccount: FakeValidAccount
+  fakeValidAccount: IFakeValidAccount
 ): Promise<any> => {
   const createdAccountID = (await collectionRef.insertOne(fakeValidAccount))
     .insertedId
   return createdAccountID
+}
+
+interface IFakeValidAddress {
+  uid: any
+  street: string
+  postalCode: number
+  district: string
+  city: string
+  country: string
+  updatedAt: string
+}
+const makeFakeValidAddress = (uid: string): IFakeValidAddress => ({
+  uid: new mongoose.Types.ObjectId(uid),
+  street: 'any_street',
+  postalCode: 1111111111,
+  district: 'any_district',
+  city: 'any_city',
+  country: 'any_country',
+  updatedAt: 'any_data'
+})
+
+const addAddressToDB = async (
+  fakeValidAddress: IFakeValidAddress
+): Promise<any> => {
+  const collectionRef = mongoHelper.getCollection('addresses')
+  const createdAddressID = (
+    await collectionRef.insertOne({
+      ...fakeValidAddress
+    })
+  ).insertedId
+  return createdAddressID
 }
 
 const makeSut = (): GetClientByUIDRepository => {
@@ -51,15 +82,24 @@ const makeSut = (): GetClientByUIDRepository => {
 }
 
 describe('GetClientByUIDRepository', () => {
-  test('should return an account with provided uid', async () => {
-    const createdAccountID = await addAccountToDB(makeFakeValidAccount())
+  test('should return an account and its address with provided uid', async () => {
     const sut = makeSut()
+    const createdAccountID = await addAccountToDB(makeFakeValidAccount())
+    await addAddressToDB(makeFakeValidAddress(createdAccountID))
 
     const account = await sut.get(createdAccountID)
 
     expect(account!.uid).toBeTruthy()
     expect(account!.name).toBe('any_name')
     expect(account!.email).toBe('any_email@mail.com')
+    expect(account!.address?.aid).toBeTruthy()
+    expect(account!.address?.uid).toBeTruthy()
+    expect(account!.address?.street).toBe('any_street')
+    expect(account!.address?.postalCode).toBe(1111111111)
+    expect(account!.address?.district).toBe('any_district')
+    expect(account!.address?.city).toBe('any_city')
+    expect(account!.address?.country).toBe('any_country')
+    expect(account!.address?.updatedAt).toBe('any_data')
     expect(account!.createdAt).toBe('any_date')
     expect(account!.authenticatedAt).toBe('any_date')
   })

@@ -22,7 +22,7 @@ beforeEach(async () => {
   await collectionRef.deleteMany({})
 })
 
-interface FakeValidAddress {
+interface IFakeValidAddress {
   uid: string
   street: string
   postalCode: number
@@ -30,7 +30,7 @@ interface FakeValidAddress {
   city: string
   country: string
 }
-const makeFakeValidAddress = (): FakeValidAddress => ({
+const makeFakeValidAddress = (): IFakeValidAddress => ({
   uid: 'any_id',
   street: 'any_street',
   postalCode: 1111111111,
@@ -40,7 +40,7 @@ const makeFakeValidAddress = (): FakeValidAddress => ({
 })
 
 const addAddressToDB = async (
-  fakeValidAddress: FakeValidAddress
+  fakeValidAddress: IFakeValidAddress
 ): Promise<any> => {
   const createdAddressID = (await collectionRef.insertOne(fakeValidAddress))
     .insertedId
