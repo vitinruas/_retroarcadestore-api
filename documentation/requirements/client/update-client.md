@@ -2,7 +2,7 @@
 
 > ## Success
 
-1. ❌ Receber uma requisição do tipo **PUT** na rota **/api/client/**
+1. ✅ Receber uma requisição do tipo **PUT** na rota **/api/client/**
 2. ✅ Validar se existe algum campo fornecido no corpo da requisição
 3. ✅ Validar se contém valores nos campos obrigatórios **name** e **email**, se foram fornecidos
 4. ✅ Validar se existe o campo **file** da imagem e renomear para **photo** para corresponder ao protocolo
@@ -16,7 +16,7 @@
 
 > ## Exceptions
 
-1. ❌ Retornar erro **404** se a API não existir
+1. ✅ Retornar erro **404** se a API não existir
 1. ✅ Retornar erro **400** se nenhum campo for fornecido
 1. ✅ Retornar erro **500** se houver falha ao validar o campo **email**
 1. ✅ Retornar erro **400** se o **email** fornecido é inválido
