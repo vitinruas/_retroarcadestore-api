@@ -5,7 +5,9 @@ import {
   IHashComparer,
   IHasher,
   IUpdateClientRepository,
-  IUpdateClientUseCaseModel
+  IUpdateClientUseCaseModel,
+  IUpdateClientAddressRepository,
+  IUpdateClientAddressRepositoryModel
 } from '../update-client-usecase-protocols'
 
 const makeFakeValidAccount = (): IAccountEntitie => ({
@@ -40,6 +42,15 @@ const makeGetAccountByUIDRepositoryStub = (): IGetAccountByUIDRepository => {
   return new GetClientByUIDRepositoryStub()
 }
 
+const makePasswordHashComparerAdapterStub = () => {
+  class PasswordHashComparerAdapterStub implements IHashComparer {
+    compare(value: string, hash: string): Promise<boolean> {
+      return Promise.resolve(true)
+    }
+  }
+  return new PasswordHashComparerAdapterStub()
+}
+
 const makePasswordHasherAdapterStub = () => {
   class PasswordHasherStub implements IHasher {
     async hash(password: string): Promise<string> {
@@ -58,13 +69,17 @@ const makeUpdateClientRepositoryStub = () => {
   return new UpdateClientRepositoryStub()
 }
 
-const makePasswordHashComparerAdapterStub = () => {
-  class PasswordHashComparerAdapterStub implements IHashComparer {
-    compare(value: string, hash: string): Promise<boolean> {
-      return Promise.resolve(true)
+const makeUpdateClientAddressRepositoryStub = () => {
+  class UpdateClientAddressRepositoryStub
+    implements IUpdateClientAddressRepository
+  {
+    async update(
+      dataToUpdate: IUpdateClientAddressRepositoryModel
+    ): Promise<void> {
+      return Promise.resolve()
     }
   }
-  return new PasswordHashComparerAdapterStub()
+  return new UpdateClientAddressRepositoryStub()
 }
 
 interface ISut {
@@ -73,6 +88,7 @@ interface ISut {
   passwordHashComparerAdapterStub: IHashComparer
   passwordHasherAdapterStub: IHasher
   updateClientRepositoryStub: IUpdateClientRepository
+  updateClientAddressRepository: IUpdateClientAddressRepository
 }
 
 const makeSut = (): ISut => {
@@ -80,18 +96,21 @@ const makeSut = (): ISut => {
   const passwordHashComparerAdapterStub = makePasswordHashComparerAdapterStub()
   const passwordHasherAdapterStub = makePasswordHasherAdapterStub()
   const updateClientRepositoryStub = makeUpdateClientRepositoryStub()
+  const updateClientAddressRepository = makeUpdateClientAddressRepositoryStub()
   const sut = new UpdateClientUseCase(
     getAccountByUIDRepositoryStub,
     passwordHashComparerAdapterStub,
     passwordHasherAdapterStub,
-    updateClientRepositoryStub
+    updateClientRepositoryStub,
+    updateClientAddressRepository
   )
   return {
     sut,
     getAccountByUIDRepositoryStub,
     passwordHasherAdapterStub,
     passwordHashComparerAdapterStub,
-    updateClientRepositoryStub
+    updateClientRepositoryStub,
+    updateClientAddressRepository
   }
 }
 
@@ -167,6 +186,22 @@ describe('UpdateClientUseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 
+  test('should call UpdateClientAddressRepository with correct values', async () => {
+    const { sut, updateClientAddressRepository } = makeSut()
+    const updateSpy = jest.spyOn(updateClientAddressRepository, 'update')
+
+    await sut.update(makeFakeValidUpdateData())
+
+    expect(updateSpy).toHaveBeenCalledWith({
+      uid: 'any_id',
+      street: 'any_street',
+      postalCode: 1111111111,
+      district: 'any_district',
+      city: 'any_city',
+      country: 'any_country'
+    })
+  })
+
   test('should call UpdateClientRepository correct values', async () => {
     const { sut, updateClientRepositoryStub } = makeSut()
     const updateSpy = jest.spyOn(updateClientRepositoryStub, 'update')
@@ -179,14 +214,7 @@ describe('UpdateClientUseCase', () => {
         name: 'any_name',
         photo: 'any_photo',
         email: 'any_email',
-        password: 'hashed_password',
-        address: {
-          street: 'any_street',
-          postalCode: 1111111111,
-          district: 'any_district',
-          city: 'any_city',
-          country: 'any_country'
-        }
+        password: 'hashed_password'
       })
     )
   })
