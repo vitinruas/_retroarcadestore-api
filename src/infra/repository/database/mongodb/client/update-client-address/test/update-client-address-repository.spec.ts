@@ -29,6 +29,7 @@ interface IFakeValidAddress {
   district: string
   city: string
   country: string
+  updatedAt?: string
 }
 const makeFakeValidAddress = (): IFakeValidAddress => ({
   uid: 'any_id',
@@ -75,5 +76,6 @@ describe('UpdateClientAddressRepository', () => {
     expect(address!.district).toBe('new_district')
     expect(address!.city).toBe('new_city')
     expect(address!.country).toBe('new_country')
+    expect(address!.updatedAt).toBeTruthy()
   })
 })
