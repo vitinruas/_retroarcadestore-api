@@ -12,10 +12,7 @@ export const middlewareRouteAdapter = (middleware: IMiddleware) => {
 
     const httpResponse: IHttpResponse = await middleware.handle(httpRequest)
     if (httpResponse.statusCode === 200) {
-      request.body = {
-        ...httpResponse.body,
-        ...request.body
-      }
+      Object.assign(request.body, { ...httpResponse.body })
       return next()
     }
     return response
