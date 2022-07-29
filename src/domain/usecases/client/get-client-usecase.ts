@@ -1,13 +1,11 @@
+import { IAddress } from '../../entities/account/client-entitie'
+
 export interface IGetClientModel {
   uid: string
   name: string
   photo?: string
   email: string
-  street?: string
-  postalCode?: number
-  district?: string
-  city?: string
-  country?: string
+  address?: IAddress
   createdAt: string
   authenticatedAt: string
 }
