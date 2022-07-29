@@ -8,7 +8,10 @@ import {
 export const expressRouteAdapter = (controller: IController) => {
   return async (request: Request, response: Response) => {
     const httpRequest: IHttpRequest = {
-      body: request.body
+      headers: request.headers,
+      body: request.body,
+      file: request.file,
+      files: request.files
     }
 
     const httpResponse: IHttpResponse = await controller.perform(httpRequest)
