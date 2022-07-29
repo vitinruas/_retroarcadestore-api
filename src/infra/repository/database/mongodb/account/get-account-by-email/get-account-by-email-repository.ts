@@ -12,6 +12,6 @@ export class GetAccountByEmailMongoRepository
     const collectionRef = mongoose.connection.collection('accounts')
     const document = await collectionRef.findOne({ email })
 
-    return (document && mongoHelper.replaceMongoID(document)) || null
+    return (document && mongoHelper.replaceMongoID(document, 'uid')) || null
   }
 }

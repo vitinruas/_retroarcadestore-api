@@ -19,6 +19,6 @@ export class AddAccountMongoRepository implements IAddAccountRepository {
     const createdAccount = await collectionRef.findOne({
       _id: createdAccountID
     })
-    return mongoHelper.replaceMongoID(createdAccount)
+    return mongoHelper.replaceMongoID(createdAccount, 'uid')
   }
 }

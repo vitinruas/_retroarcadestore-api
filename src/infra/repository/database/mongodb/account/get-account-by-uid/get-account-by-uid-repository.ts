@@ -11,6 +11,6 @@ export class GetAccountByUIDRepository implements IGetAccountByUIDRepository {
     const document = await collectionRef.findOne({
       _id: new mongoose.Types.ObjectId(uid)
     })
-    return mongoHelper.replaceMongoID(document)
+    return mongoHelper.replaceMongoID(document, 'uid')
   }
 }

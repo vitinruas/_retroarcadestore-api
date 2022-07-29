@@ -13,9 +13,9 @@ class MongoHelper {
     return mongoose.connection.collection(collectionName)
   }
 
-  replaceMongoID(document: any): any {
+  replaceMongoID(document: any, idName: string): any {
     const { _id, ...data }: any = document
-    const formattedDocument = Object.assign({}, data, { uid: _id })
+    const formattedDocument = Object.assign({}, data, { [idName]: _id })
     return formattedDocument
   }
 }
