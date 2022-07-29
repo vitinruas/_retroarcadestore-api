@@ -17,6 +17,7 @@ export class UpdateClientAddressRepository
       { _id: new mongoose.Types.ObjectId(uid) },
       {
         $set: {
+          uid,
           ...dataWithoutID
         }
       }
