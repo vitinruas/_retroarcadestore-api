@@ -5,5 +5,7 @@ export const contentTypeMiddleware = (
   next: NextFunction
 ) => {
   response.contentType('json')
+  response.contentType('png')
+  response.contentType('jpg')
   return next()
 }
