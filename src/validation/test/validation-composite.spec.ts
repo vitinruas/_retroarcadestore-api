@@ -55,4 +55,12 @@ describe('ValidationComposite', () => {
 
     expect(error).toEqual(new InvalidFieldError('field'))
   })
+
+  test('should not return anything if no there is an errors', async () => {
+    const { sut } = makeSut()
+
+    const error = await sut.validate(makeFakeValidRequest().body)
+
+    expect(error).toBeFalsy()
+  })
 })
