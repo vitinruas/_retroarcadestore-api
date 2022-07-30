@@ -14,9 +14,13 @@ class MongoHelper {
   }
 
   replaceMongoID(document: any, idName: string): any {
-    const { _id, ...data }: any = document
-    const formattedDocument = Object.assign({}, data, { [idName]: _id })
-    return formattedDocument
+    try {
+      const { _id, ...data }: any = document
+      const formattedDocument = Object.assign({}, data, { [idName]: _id })
+      return formattedDocument
+    } catch (error) {
+      return {}
+    }
   }
 }
 
