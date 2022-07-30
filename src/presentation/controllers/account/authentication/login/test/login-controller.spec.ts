@@ -6,6 +6,7 @@ import {
   unauthorized
 } from '../../../../../helpers/http-response-helper'
 import {
+  IValidation,
   IHttpRequest,
   IHttpResponse,
   IAuthenticationUseCase,
@@ -18,6 +19,15 @@ const makeFakeValidRequest = (): IHttpRequest => ({
     password: 'any_password'
   }
 })
+
+const makeValidationCompositeStub = (): IValidation => {
+  class ValidationCompositeStub implements IValidation {
+    async validate(fields: any): Promise<void | Error> {
+      return Promise.resolve()
+    }
+  }
+  return new ValidationCompositeStub()
+}
 
 const makeAuthenticationUseCaseStub = (): IAuthenticationUseCase => {
   class AuthenticationUseCaseStub implements IAuthenticationUseCase {
@@ -32,20 +42,36 @@ const makeAuthenticationUseCaseStub = (): IAuthenticationUseCase => {
 
 interface ISut {
   sut: LoginController
+  validationCompositeStub: IValidation
   authenticationUseCaseStub: IAuthenticationUseCase
 }
 
 const makeSut = (): ISut => {
+  const validationCompositeStub: IValidation = makeValidationCompositeStub()
   const authenticationUseCaseStub: IAuthenticationUseCase =
     makeAuthenticationUseCaseStub()
-  const sut: LoginController = new LoginController(authenticationUseCaseStub)
+  const sut: LoginController = new LoginController(
+    validationCompositeStub,
+    authenticationUseCaseStub
+  )
   return {
     sut,
+    validationCompositeStub,
     authenticationUseCaseStub
   }
 }
 
 describe('LoginController', () => {
+  test('should call ValidationComposite with correct values', async () => {
+    const { sut, validationCompositeStub }: ISut = makeSut()
+    const validateSpy = jest.spyOn(validationCompositeStub, 'validate')
+    const httpRequest: IHttpRequest = makeFakeValidRequest()
+
+    await sut.perform(makeFakeValidRequest())
+
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
   test('should call AuthenticationUseCase with correct values', async () => {
     const { sut, authenticationUseCaseStub } = makeSut()
     const authenticateSpy = jest.spyOn(
