@@ -1,4 +1,3 @@
-import { noContent } from '../../../presentation/helpers/http-response-helper'
 import {
   IController,
   IHttpRequest,
@@ -8,7 +7,7 @@ import {
 export class LogControllerDecorator implements IController {
   constructor(private readonly controller: IController) {}
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
-    await this.controller.perform(httpRequest)
-    return Promise.resolve(noContent())
+    const response: IHttpResponse = await this.controller.perform(httpRequest)
+    return response
   }
 }
