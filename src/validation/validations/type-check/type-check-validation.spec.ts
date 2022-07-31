@@ -13,4 +13,12 @@ describe('TypeCheckValidation', () => {
 
     expect(error).toEqual(new InvalidFieldError('field'))
   })
+
+  test('should not return anything if field type is valid', () => {
+    const sut = makeSut()
+
+    const error = sut.validate({ field: 1234 })
+
+    expect(error).toBeFalsy()
+  })
 })
