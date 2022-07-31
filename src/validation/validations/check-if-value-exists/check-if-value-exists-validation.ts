@@ -8,8 +8,10 @@ export class CheckIfValueExistsValidation implements IValidation {
   ) {}
 
   validate(fields: any): any {
-    if (!this.list.includes(fields[this.fieldName])) {
-      return new InvalidFieldError(this.fieldName)
+    if (fields[this.fieldName]) {
+      if (!this.list.includes(fields[this.fieldName])) {
+        return new InvalidFieldError(this.fieldName)
+      }
     }
   }
 }

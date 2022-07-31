@@ -8,11 +8,13 @@ export class EmailValidation implements IValidation {
   ) {}
 
   validate(fields: any): any {
-    const isValid: boolean = this.emailValidator.validate(
-      fields[this.fieldName]
-    )
-    if (!isValid) {
-      return new InvalidFieldError(this.fieldName)
+    if (fields[this.fieldName]) {
+      const isValid: boolean = this.emailValidator.validate(
+        fields[this.fieldName]
+      )
+      if (!isValid) {
+        return new InvalidFieldError(this.fieldName)
+      }
     }
   }
 }

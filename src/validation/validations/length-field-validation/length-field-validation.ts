@@ -9,17 +9,19 @@ export class LengthFieldValidation implements IValidation {
   ) {}
 
   validate(fields: any): any {
-    const minMsg = `${this.fieldName} must have at least ${this.minLength} characters`
-    const maxMsg = `${this.fieldName} must have maximum of ${this.maxLength} characters`
+    if (fields[this.fieldName]) {
+      const minMsg = `${this.fieldName} must have at least ${this.minLength} characters`
+      const maxMsg = `${this.fieldName} must have maximum of ${this.maxLength} characters`
 
-    const isSmaller: boolean =
-      this.minLength !== 0 && fields[this.fieldName].length < this.minLength
-    const isBigger: boolean =
-      this.maxLength !== 0 && fields[this.fieldName].length > this.maxLength
-    if (isSmaller) {
-      return new LengthFieldError(minMsg)
-    } else if (isBigger) {
-      return new LengthFieldError(maxMsg)
+      const isSmaller: boolean =
+        this.minLength !== 0 && fields[this.fieldName].length < this.minLength
+      const isBigger: boolean =
+        this.maxLength !== 0 && fields[this.fieldName].length > this.maxLength
+      if (isSmaller) {
+        return new LengthFieldError(minMsg)
+      } else if (isBigger) {
+        return new LengthFieldError(maxMsg)
+      }
     }
   }
 }
