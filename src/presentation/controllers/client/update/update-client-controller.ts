@@ -1,6 +1,5 @@
 import {
   IController,
-  IEmailValidatorAdapter,
   IUpdateClientUseCase,
   IHttpRequest,
   IHttpResponse
@@ -10,76 +9,31 @@ import {
   noContent,
   serverError
 } from '../../../helpers/http-response-helper'
-import {
-  NoFieldProvidedError,
-  InvalidFieldError,
-  MissingFieldError
-} from '../../../errors'
+import { NoFieldProvidedError, InvalidFieldError } from '../../../errors'
+import { IValidation } from '../../../protocols'
 
 export class UpdateClientController implements IController {
   constructor(
-    private readonly emailValidatorAdapter: IEmailValidatorAdapter,
+    private readonly validationCompositeStub: IValidation,
     private readonly updateClientUseCase: IUpdateClientUseCase
   ) {}
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
-      const httpRequestKeys: ReadonlyArray<string> = Object.keys(
-        httpRequest.body
-      )
-      // check if anything field was provided
-      if (httpRequestKeys.length > 1 || httpRequest.file) {
-        const {
-          email,
-          postalCode,
-          password,
-          newPassword,
-          newPasswordConfirmation
-        } = httpRequest.body
-        const requiredFields: ReadonlyArray<string> = ['name', 'email']
-        for (const field of requiredFields) {
-          if (httpRequestKeys.includes(field) && !httpRequest.body[field]) {
-            return badRequest(new MissingFieldError(field))
-          }
-        }
-
-        if ((newPassword || newPasswordConfirmation) && !password) {
-          return badRequest(new MissingFieldError('password'))
-        }
-
-        // check passwords match
-        if (newPassword !== newPasswordConfirmation) {
-          return badRequest(new InvalidFieldError('newPasswordConfirmation'))
-        }
-
+      if (Object.keys(httpRequest.body).length > 1 || httpRequest.file) {
+        // add photo param if exists file
         if (httpRequest.file) {
-          Object.assign(httpRequest.body, {
-            photo: httpRequest.file.filename
-          })
+          Object.assign(httpRequest.body, { photo: httpRequest.file.filename })
         }
 
-        // check if provided postal code is valid and has a valid length
-        if (postalCode) {
-          if (
-            !Number(httpRequest.body.postalCode) ||
-            httpRequest.body.postalCode.length > 10 ||
-            httpRequest.body.postalCode.length < 5
-          ) {
-            return badRequest(new InvalidFieldError('postalCode'))
-          }
+        // body validation
+        const error: Error | void = await this.validationCompositeStub.validate(
+          httpRequest.body
+        )
+        if (error) {
+          return badRequest(error)
         }
 
-        // check if an email was provided
-        if (email) {
-          if (!password) {
-            return badRequest(new MissingFieldError('password'))
-          }
-          // check if the provided email is valid
-          const isValid: boolean = this.emailValidatorAdapter.validate(email)
-          if (!isValid) {
-            return badRequest(new InvalidFieldError('email'))
-          }
-        }
         // update client data
         const isUpdated: boolean = await this.updateClientUseCase.update({
           ...httpRequest.body
