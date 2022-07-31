@@ -1,5 +1,9 @@
-import { MissingFieldError, InvalidFieldError } from '../../../../../errors'
 import { SignUpController } from '../signup-controller'
+import {
+  MissingFieldError,
+  InvalidFieldError,
+  FieldAlreadyUse
+} from '../../../../../errors'
 import {
   badRequest,
   forbidden,
@@ -13,7 +17,6 @@ import {
   IHttpRequest,
   IHttpResponse
 } from '../signup-controller-protocols'
-import { FieldAlreadyUse } from '../../../../../errors/field-already-use'
 
 const makeValidRequest = (): IHttpRequest => ({
   body: {

@@ -27,7 +27,6 @@ export class LoginController implements IController {
       if (error) {
         return badRequest(error)
       }
-
       const { email, password } = httpRequest.body
       const accessToken = await this.authentication.authenticate({
         email,
