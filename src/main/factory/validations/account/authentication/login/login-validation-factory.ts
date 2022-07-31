@@ -1,10 +1,10 @@
 import { IValidation } from './login-validation-factory-protocols'
-import { EmailValidatorAdapter } from '../../../../utils/email-validator/email-validator-adapter'
-import { ValidationComposite } from '../../../../validation/validation-composite'
+import { EmailValidatorAdapter } from '../../../../../../utils/email-validator/email-validator-adapter'
+import { ValidationComposite } from '../../../../../../validation/validation-composite'
 import {
   EmailValidation,
   RequiredFieldValidation
-} from '../../../../validation/validations'
+} from '../../../../../../validation/validations'
 
 export const makeLoginValidationFactory = () => {
   const validations: IValidation[] = []
