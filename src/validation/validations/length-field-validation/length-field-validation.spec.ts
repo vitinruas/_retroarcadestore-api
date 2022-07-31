@@ -1,4 +1,4 @@
-import { InvalidFieldError } from '../validations-errors'
+import { LengthFieldError } from '../validations-errors'
 import { LengthFieldValidation } from './length-field-validation'
 
 const makeSut = (): LengthFieldValidation => {
@@ -6,17 +6,23 @@ const makeSut = (): LengthFieldValidation => {
 }
 
 describe('LengthFieldValidation', () => {
-  // return an error if field length is invalid
-  it('should return an error if field length is invalid', () => {
+  test('should return an error if the field value does not have minimum number of characters', () => {
     const sut = makeSut()
 
     const error = sut.validate({ field: 'small' })
 
-    expect(error).toEqual(new InvalidFieldError('field'))
+    expect(error).toEqual(new LengthFieldError('field', 8))
   })
 
-  // not return anything if field length is valid
-  it('should not return anything if field length is valid', () => {
+  test('should return an error if the field value pass maximum number of characters', () => {
+    const sut = makeSut()
+
+    const error = sut.validate({ field: 'small' })
+
+    expect(error).toEqual(new LengthFieldError('field', 8, 12))
+  })
+
+  test('should not return anything if field length is valid', () => {
     const sut = makeSut()
 
     const error = sut.validate({ field: 'valid_length' })
