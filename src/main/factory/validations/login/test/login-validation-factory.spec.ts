@@ -1,4 +1,4 @@
-import { IValidation } from '../../../../../presentation/protocols'
+import { IValidation } from '../login-validation-factory-protocols'
 import { EmailValidatorAdapter } from '../../../../../utils/email-validator/email-validator-adapter'
 import { ValidationComposite } from '../../../../../validation/validation-composite'
 import {
