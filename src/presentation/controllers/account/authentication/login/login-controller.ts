@@ -1,5 +1,6 @@
 import { UnauthenticatedLoginError } from '../../../../errors/unauthenticated-error'
 import {
+  badRequest,
   ok,
   serverError,
   unauthorized
@@ -20,7 +21,13 @@ export class LoginController implements IController {
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
-      await this.validationComposite.validate(httpRequest.body)
+      const error: void | Error = await this.validationComposite.validate(
+        httpRequest.body
+      )
+      if (error) {
+        return badRequest(error)
+      }
+
       const { email, password } = httpRequest.body
       const accessToken = await this.authentication.authenticate({
         email,
