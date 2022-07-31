@@ -1,9 +1,5 @@
 import { SignUpController } from '../signup-controller'
-import {
-  MissingFieldError,
-  InvalidFieldError,
-  FieldAlreadyUse
-} from '../../../../../errors'
+import { FieldAlreadyUse } from '../../../../../errors'
 import {
   badRequest,
   forbidden,
@@ -13,12 +9,12 @@ import {
 import {
   IAddAccountModel,
   IAddAccountUseCase,
-  IEmailValidatorAdapter,
   IHttpRequest,
-  IHttpResponse
+  IHttpResponse,
+  IValidation
 } from '../signup-controller-protocols'
 
-const makeValidRequest = (): IHttpRequest => ({
+const makeFakeValidRequest = (): IHttpRequest => ({
   body: {
     name: 'any_name',
     email: 'any_email@mail.com',
@@ -27,13 +23,13 @@ const makeValidRequest = (): IHttpRequest => ({
   }
 })
 
-const makeEmailValidatorStub = (): IEmailValidatorAdapter => {
-  class EmailValidatorStub implements IEmailValidatorAdapter {
-    validate(email: string): boolean {
-      return true
+const makeValidationCompositeStub = (): IValidation => {
+  class ValidationCompositeStub implements IValidation {
+    async validate(fields: any): Promise<void | Error> {
+      return Promise.resolve()
     }
   }
-  return new EmailValidatorStub()
+  return new ValidationCompositeStub()
 }
 
 const makeAddAccountUseCaseStub = (): IAddAccountUseCase => {
@@ -47,141 +43,53 @@ const makeAddAccountUseCaseStub = (): IAddAccountUseCase => {
 
 interface ISut {
   sut: SignUpController
-  emailValidatorAdapterStub: IEmailValidatorAdapter
+  validationCompositeStub: IValidation
   addAccountUseCase: IAddAccountUseCase
 }
 
 const makeSut = (): ISut => {
-  const emailValidatorAdapterStub: IEmailValidatorAdapter =
-    makeEmailValidatorStub()
+  const validationCompositeStub: IValidation = makeValidationCompositeStub()
   const addAccountUseCase: IAddAccountUseCase = makeAddAccountUseCaseStub()
   const sut: SignUpController = new SignUpController(
-    emailValidatorAdapterStub,
+    validationCompositeStub,
     addAccountUseCase
   )
   return {
     sut,
-    emailValidatorAdapterStub,
+    validationCompositeStub,
     addAccountUseCase
   }
 }
 
 describe('SignUpController', () => {
-  test('should return 400 if no name is provided', async () => {
-    const { sut } = makeSut()
-    const request: IHttpRequest = {
-      body: {
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-      }
-    }
+  test('should call ValidationComposite with correct values', async () => {
+    const { sut, validationCompositeStub }: ISut = makeSut()
+    const validateSpy = jest.spyOn(validationCompositeStub, 'validate')
+    const httpRequest: IHttpRequest = makeFakeValidRequest()
 
-    const response: IHttpResponse = await sut.perform(request)
+    await sut.perform(makeFakeValidRequest())
 
-    expect(response).toEqual(badRequest(new MissingFieldError('name')))
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 
-  test('should return 400 if no email is provided', async () => {
-    const { sut } = makeSut()
-    const request: IHttpRequest = {
-      body: {
-        name: 'any_name',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-      }
-    }
-
-    const response: IHttpResponse = await sut.perform(request)
-
-    expect(response).toEqual(badRequest(new MissingFieldError('email')))
-  })
-
-  test('should return 400 if no password is provided', async () => {
-    const { sut } = makeSut()
-    const request: IHttpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        passwordConfirmation: 'any_password'
-      }
-    }
-
-    const response: IHttpResponse = await sut.perform(request)
-
-    expect(response).toEqual(badRequest(new MissingFieldError('password')))
-  })
-
-  test('should return 400 if no passwordConfirmation is provided', async () => {
-    const { sut } = makeSut()
-    const request: IHttpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password'
-      }
-    }
-
-    const response: IHttpResponse = await sut.perform(request)
-
-    expect(response).toEqual(
-      badRequest(new MissingFieldError('passwordConfirmation'))
-    )
-  })
-
-  test('should return 400 if passwords do not match', async () => {
-    const { sut } = makeSut()
-    const request: IHttpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'invalid_password'
-      }
-    }
-
-    const response: IHttpResponse = await sut.perform(request)
-
-    expect(response).toEqual(
-      badRequest(new InvalidFieldError('passwordConfirmation'))
-    )
-  })
-
-  test('should call EmailValidatorAdapter with an email', async () => {
-    const { sut, emailValidatorAdapterStub }: ISut = makeSut()
-    const validateSpy = jest.spyOn(emailValidatorAdapterStub, 'validate')
-    await sut.perform(makeValidRequest())
-
-    expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
-  })
-
-  test('should return 500 if EmailValidatorAdapter throws', async () => {
-    const { sut, emailValidatorAdapterStub }: ISut = makeSut()
+  test('should return 400 if ValidationComposite fails', async () => {
+    const { sut, validationCompositeStub }: ISut = makeSut()
     jest
-      .spyOn(emailValidatorAdapterStub, 'validate')
-      .mockImplementationOnce(() => {
-        throw new Error()
-      })
+      .spyOn(validationCompositeStub, 'validate')
+      .mockReturnValue(Promise.resolve(new Error()))
 
-    const httpResponse: IHttpResponse = await sut.perform(makeValidRequest())
+    const httpResponse: IHttpResponse = await sut.perform(
+      makeFakeValidRequest()
+    )
 
-    expect(httpResponse).toEqual(serverError(new Error()))
-  })
-
-  test('should return 400 if an invalid email is provided', async () => {
-    const { sut, emailValidatorAdapterStub }: ISut = makeSut()
-    jest.spyOn(emailValidatorAdapterStub, 'validate').mockReturnValueOnce(false)
-
-    const httpResponse: IHttpResponse = await sut.perform(makeValidRequest())
-
-    expect(httpResponse).toEqual(badRequest(new InvalidFieldError('email')))
+    expect(httpResponse).toEqual(badRequest(new Error()))
   })
 
   test('should call AddAccountUseCase with correct values', async () => {
     const { sut, addAccountUseCase }: ISut = makeSut()
     const addSpy = jest.spyOn(addAccountUseCase, 'add')
 
-    await sut.perform(makeValidRequest())
+    await sut.perform(makeFakeValidRequest())
 
     expect(addSpy).toHaveBeenCalledWith({
       name: 'any_name',
@@ -196,7 +104,7 @@ describe('SignUpController', () => {
       .spyOn(addAccountUseCase, 'add')
       .mockImplementationOnce(async () => Promise.reject(new Error()))
 
-    const response: IHttpResponse = await sut.perform(makeValidRequest())
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
 
     expect(response).toEqual(serverError(new Error()))
   })
@@ -207,7 +115,7 @@ describe('SignUpController', () => {
       .spyOn(addAccountUseCase, 'add')
       .mockReturnValueOnce(Promise.resolve(null))
 
-    const response: IHttpResponse = await sut.perform(makeValidRequest())
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
 
     expect(response).toEqual(forbidden(new FieldAlreadyUse('email')))
   })
@@ -215,7 +123,7 @@ describe('SignUpController', () => {
   test('should return access token if AddAccountUseCase succeeds', async () => {
     const { sut }: ISut = makeSut()
 
-    const response: IHttpResponse = await sut.perform(makeValidRequest())
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
 
     expect(response).toEqual(ok({ accessToken: 'any_token' }))
   })
