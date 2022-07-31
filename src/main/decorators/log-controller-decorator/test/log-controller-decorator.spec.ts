@@ -1,4 +1,7 @@
-import { noContent } from '../../../../presentation/helpers/http-response-helper'
+import {
+  badRequest,
+  noContent
+} from '../../../../presentation/helpers/http-response-helper'
 import {
   IController,
   IHttpRequest,
@@ -46,5 +49,16 @@ describe('LogControllerDecorator', () => {
     await sut.perform(makeFakeValidRequest())
 
     expect(performSpy).toHaveBeenCalledWith(makeFakeValidRequest())
+  })
+
+  test('should returns the same controller response', async () => {
+    const { sut, controllerStub } = makeSut()
+    jest
+      .spyOn(controllerStub, 'perform')
+      .mockReturnValue(Promise.resolve(badRequest(new Error())))
+
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
+
+    expect(response).toEqual(badRequest(new Error()))
   })
 })
