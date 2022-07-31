@@ -1,6 +1,7 @@
 import { LoginController } from '../login-controller'
 import { UnauthenticatedLoginError } from '../../../../../errors/unauthenticated-error'
 import {
+  badRequest,
   ok,
   serverError,
   unauthorized
@@ -70,6 +71,19 @@ describe('LoginController', () => {
     await sut.perform(makeFakeValidRequest())
 
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  test('should return 400 if ValidationComposite fails', async () => {
+    const { sut, validationCompositeStub }: ISut = makeSut()
+    jest
+      .spyOn(validationCompositeStub, 'validate')
+      .mockReturnValue(Promise.resolve(new Error()))
+
+    const httpResponse: IHttpResponse = await sut.perform(
+      makeFakeValidRequest()
+    )
+
+    expect(httpResponse).toEqual(badRequest(new Error()))
   })
 
   test('should call AuthenticationUseCase with correct values', async () => {
