@@ -13,11 +13,11 @@ export const makeSignUpValidationFactory = () => {
   for (const field of ['name', 'email', 'password', 'passwordConfirmation']) {
     validations.push(new RequiredFieldValidation(field))
   }
-  validations.push(
-    new CompareFieldsValidation('password', 'passwordConfirmation')
-  )
   validations.push(new EmailValidation('email', new EmailValidatorAdapter()))
   validations.push(new LengthFieldValidation('name', 3, 32))
   validations.push(new LengthFieldValidation('password', 8))
+  validations.push(
+    new CompareFieldsValidation('password', 'passwordConfirmation')
+  )
   return new ValidationComposite(validations)
 }
