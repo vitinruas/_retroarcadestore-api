@@ -42,8 +42,7 @@ describe('EmailValidation', () => {
     expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
-  // return throw if EmailValidator throws
-  it('should return throw if EmailValidator throws', () => {
+  test('should return throw if EmailValidator throws', () => {
     const { sut, emailValidator }: ISut = makeSut()
     jest.spyOn(emailValidator, 'validate').mockImplementationOnce(() => {
       throw new Error()
@@ -52,8 +51,7 @@ describe('EmailValidation', () => {
     expect(sut.validate).toThrow()
   })
 
-  // return false if invalid email is provided
-  it('should return a 422 error code if invalid email is provided', () => {
+  test('should return a 422 error code if invalid email is provided', () => {
     const { sut, emailValidator }: ISut = makeSut()
 
     jest.spyOn(emailValidator, 'validate').mockReturnValueOnce(false)

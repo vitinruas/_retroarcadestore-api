@@ -6,8 +6,7 @@ const makeSut = (): RequiredFieldValidation => {
 }
 
 describe('RequiredFieldValidation', () => {
-  // return an error if required field wasn't provided
-  it("should return an error if required field wasn't provided ", () => {
+  test("should return an error if required field wasn't provided ", () => {
     const sut = makeSut()
 
     const error = sut.validate({ otherfield: 'any_value' })
@@ -15,8 +14,7 @@ describe('RequiredFieldValidation', () => {
     expect(error).toEqual(new MissingFieldError('field'))
   })
 
-  // not return anything if required field was provided
-  it('should not return anything if required field was provided', () => {
+  test('should not return anything if required field was provided', () => {
     const sut = makeSut()
 
     const error = sut.validate({ field: 'any_value' })
