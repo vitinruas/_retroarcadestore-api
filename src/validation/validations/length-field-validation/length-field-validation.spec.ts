@@ -11,15 +11,19 @@ describe('LengthFieldValidation', () => {
 
     const error = sut.validate({ field: 'small' })
 
-    expect(error).toEqual(new LengthFieldError('field', 8))
+    expect(error).toEqual(
+      new LengthFieldError('field must have at least 8 characters')
+    )
   })
 
   test('should return an error if the field value pass maximum number of characters', () => {
     const sut = makeSut()
 
-    const error = sut.validate({ field: 'small' })
+    const error = sut.validate({ field: 'thisisverybiggervalue' })
 
-    expect(error).toEqual(new LengthFieldError('field', 8, 12))
+    expect(error).toEqual(
+      new LengthFieldError('field must have maximum of 12 characters')
+    )
   })
 
   test('should not return anything if field length is valid', () => {
