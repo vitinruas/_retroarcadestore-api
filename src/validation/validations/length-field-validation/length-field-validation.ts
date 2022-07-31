@@ -1,4 +1,4 @@
-import { InvalidFieldError } from '../validations-errors'
+import { LengthFieldError } from '../validations-errors'
 import { IValidation } from '../validations-protocols'
 
 export class LengthFieldValidation implements IValidation {
@@ -14,7 +14,11 @@ export class LengthFieldValidation implements IValidation {
     const max: boolean =
       this.maxLength !== 0 && fields[this.fieldName].length > this.maxLength
     if (min || max) {
-      return new InvalidFieldError(this.fieldName)
+      return new LengthFieldError(
+        this.fieldName,
+        this.minLength,
+        this.maxLength
+      )
     }
   }
 }
