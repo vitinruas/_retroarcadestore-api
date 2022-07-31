@@ -4,6 +4,7 @@ import { ValidationComposite } from '../../../../../validation/validation-compos
 import {
   CompareFieldsValidation,
   EmailValidation,
+  LengthFieldValidation,
   RequiredFieldValidation
 } from '../../../../../validation/validations'
 import { makeSignUpValidationFactory } from '../signup-validation-factory'
@@ -20,6 +21,8 @@ describe('LoginValidationFactory', () => {
       new CompareFieldsValidation('password', 'passwordConfirmation')
     )
     validations.push(new EmailValidation('email', new EmailValidatorAdapter()))
+    validations.push(new LengthFieldValidation('name', 3, 32))
+    validations.push(new LengthFieldValidation('password', 8))
     expect(ValidationComposite).toHaveBeenCalledWith(validations)
   })
 })
