@@ -5,17 +5,13 @@ import {
   serverError
 } from '../../../../helpers/http-response-helper'
 import {
-  IEmailValidatorAdapter,
   IHttpRequest,
   IUpdateClientUseCase,
   IUpdateClientUseCaseModel,
   IHttpResponse
 } from '../update-client-controller-protocols'
-import {
-  NoFieldProvidedError,
-  InvalidFieldError,
-  MissingFieldError
-} from '../../../../errors'
+import { NoFieldProvidedError, InvalidFieldError } from '../../../../errors'
+import { IValidation } from '../../../../protocols'
 
 const makeFakeValidRequest = (
   fieldToDelete?: string | null,
@@ -55,13 +51,13 @@ const makeFakeValidRequest = (
   return request
 }
 
-const makeEmailValidatorAdapterStub = (): IEmailValidatorAdapter => {
-  class EmailValidatorAdapterStub implements IEmailValidatorAdapter {
-    validate(email: string): boolean {
-      return true
+const makeValidationCompositeStub = (): IValidation => {
+  class ValidationCompositeStub implements IValidation {
+    async validate(fields: any): Promise<void | Error> {
+      return Promise.resolve()
     }
   }
-  return new EmailValidatorAdapterStub()
+  return new ValidationCompositeStub()
 }
 
 const makeUpdateClientUseCaseStub = (): IUpdateClientUseCase => {
@@ -75,27 +71,51 @@ const makeUpdateClientUseCaseStub = (): IUpdateClientUseCase => {
 
 interface ISut {
   sut: UpdateClientController
-  emailValidatorAdapterStub: IEmailValidatorAdapter
+  validationCompositeStub: IValidation
   updateClientUseCaseStub: IUpdateClientUseCase
 }
 
 const makeSut = (): ISut => {
-  const emailValidatorAdapterStub: IEmailValidatorAdapter =
-    makeEmailValidatorAdapterStub()
+  const validationCompositeStub: IValidation = makeValidationCompositeStub()
   const updateClientUseCaseStub: IUpdateClientUseCase =
     makeUpdateClientUseCaseStub()
   const sut: UpdateClientController = new UpdateClientController(
-    emailValidatorAdapterStub,
+    validationCompositeStub,
     updateClientUseCaseStub
   )
   return {
     sut,
-    emailValidatorAdapterStub,
+    validationCompositeStub,
     updateClientUseCaseStub
   }
 }
 
 describe('UpdateClientController', () => {
+  test('should call ValidationComposite with correct values', async () => {
+    const { sut, validationCompositeStub }: ISut = makeSut()
+    const validateSpy = jest.spyOn(validationCompositeStub, 'validate')
+    const httpRequest: IHttpRequest = makeFakeValidRequest()
+
+    await sut.perform(makeFakeValidRequest())
+
+    expect(validateSpy).toHaveBeenCalledWith(
+      Object.assign(httpRequest.body, { photo: httpRequest.file.filename })
+    )
+  })
+
+  test('should return 400 if ValidationComposite fails', async () => {
+    const { sut, validationCompositeStub }: ISut = makeSut()
+    jest
+      .spyOn(validationCompositeStub, 'validate')
+      .mockReturnValue(Promise.resolve(new Error()))
+
+    const httpResponse: IHttpResponse = await sut.perform(
+      makeFakeValidRequest()
+    )
+
+    expect(httpResponse).toEqual(badRequest(new Error()))
+  })
+
   test('should return 400 if no field is provided', async () => {
     const { sut } = makeSut()
     const httpRequest: IHttpRequest = {
@@ -107,166 +127,6 @@ describe('UpdateClientController', () => {
     const response: IHttpResponse = await sut.perform(httpRequest)
 
     expect(response).toEqual(badRequest(new NoFieldProvidedError()))
-  })
-
-  test('should return 400 if required field name is empty', async () => {
-    const { sut } = makeSut()
-
-    const response: IHttpResponse = await sut.perform(
-      makeFakeValidRequest(null, 'name')
-    )
-
-    expect(response).toEqual(badRequest(new MissingFieldError('name')))
-  })
-
-  test('should return 400 if required field email is empty', async () => {
-    const { sut } = makeSut()
-
-    const response: IHttpResponse = await sut.perform(
-      makeFakeValidRequest(null, 'email')
-    )
-
-    expect(response).toEqual(badRequest(new MissingFieldError('email')))
-  })
-
-  test('should return 400 if newPassword or newPasswordConfirmation is provided, but no password', async () => {
-    const { sut } = makeSut()
-
-    const request: IHttpRequest = {
-      body: {
-        newPassword: 'any_password',
-        newPasswordConfirmation: 'any_password'
-      }
-    }
-
-    const response: IHttpResponse = await sut.perform(request)
-
-    expect(response).toEqual(badRequest(new MissingFieldError('password')))
-  })
-
-  test('should return 400 if passwords do not match', async () => {
-    const { sut } = makeSut()
-
-    const request: IHttpRequest = {
-      body: {
-        password: 'any_password',
-        newPassword: 'any_password',
-        newPasswordConfirmation: 'wrong_password'
-      }
-    }
-
-    const response: IHttpResponse = await sut.perform(request)
-
-    expect(response).toEqual(
-      badRequest(new InvalidFieldError('newPasswordConfirmation'))
-    )
-  })
-
-  test('should call EmailValidatorAdapter with an email', async () => {
-    const { sut, emailValidatorAdapterStub } = makeSut()
-    const validateSpy = jest.spyOn(emailValidatorAdapterStub, 'validate')
-
-    await sut.perform(makeFakeValidRequest())
-
-    expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
-  })
-
-  test('should return 500 if EmailValidatorAdapter throws', async () => {
-    const { sut, emailValidatorAdapterStub } = makeSut()
-    jest
-      .spyOn(emailValidatorAdapterStub, 'validate')
-      .mockImplementationOnce(() => {
-        throw new Error()
-      })
-
-    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
-
-    expect(response).toEqual(serverError(new Error()))
-  })
-
-  test('should return 400 if EmailValidatorAdapter fails', async () => {
-    const { sut, emailValidatorAdapterStub } = makeSut()
-    jest.spyOn(emailValidatorAdapterStub, 'validate').mockReturnValueOnce(false)
-
-    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
-
-    expect(response).toEqual(badRequest(new InvalidFieldError('email')))
-  })
-
-  test('should skip email validation if its no provided', async () => {
-    const { sut } = makeSut()
-
-    const response: IHttpResponse = await sut.perform(
-      makeFakeValidRequest('email')
-    )
-
-    expect(response).toEqual(noContent())
-  })
-
-  test('should return 400 if an invalid postal code is provided', async () => {
-    const { sut } = makeSut()
-    const request: IHttpRequest = {
-      body: {
-        uid: 'any_id',
-        postalCode: 'a123bsds'
-      }
-    }
-    const response: IHttpResponse = await sut.perform(request)
-
-    expect(response).toEqual(badRequest(new InvalidFieldError('postalCode')))
-  })
-
-  test('should return 400 if an invalid postal code length is provided', async () => {
-    const { sut } = makeSut()
-    const request: IHttpRequest = {
-      body: {
-        uid: 'any_id',
-        postalCode: '123'
-      }
-    }
-    const response: IHttpResponse = await sut.perform(request)
-
-    expect(response).toEqual(badRequest(new InvalidFieldError('postalCode')))
-  })
-
-  test('should skip postalCode validation if its is empty', async () => {
-    const { sut } = makeSut()
-
-    const response: IHttpResponse = await sut.perform(
-      makeFakeValidRequest(null, 'postalCode')
-    )
-
-    expect(response).toEqual(noContent())
-  })
-
-  test('should skip postalCode validation if its no provided', async () => {
-    const { sut } = makeSut()
-
-    const response: IHttpResponse = await sut.perform(
-      makeFakeValidRequest('postalCode')
-    )
-
-    expect(response).toEqual(noContent())
-  })
-
-  test('should skip file validation if its no provided', async () => {
-    const { sut } = makeSut()
-
-    const response: IHttpResponse = await sut.perform(
-      makeFakeValidRequest('file')
-    )
-
-    expect(response).toEqual(noContent())
-  })
-
-  test('should skip file validation if its is empty', async () => {
-    const { sut } = makeSut()
-
-    const response: IHttpResponse = await sut.perform(
-      makeFakeValidRequest(null, 'file')
-    )
-
-    expect(response).toEqual(noContent())
   })
 
   test('should call UpdateClientUseCase with correct values', async () => {
