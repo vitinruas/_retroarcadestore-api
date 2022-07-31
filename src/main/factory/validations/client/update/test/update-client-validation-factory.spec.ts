@@ -8,12 +8,14 @@ import {
 } from '../../../../../../validation/validations'
 import { makeUpdateClientValidationFactory } from '../update-client-validation-factory'
 import { RequiredFieldIfThereisAnother } from '../../../../../../validation/validations/required-field-if-there-is-another/required-field-if-there-is-another-validation'
+import { TypeCheckValidation } from '../../../../../../validation/validations/type-check/type-check-validation'
 
 jest.mock('../../../../../../validation/validation-composite')
 describe('UpdateClientValidationFactory', () => {
   test('should call ValidationComposite with UpdateClient validations', () => {
     makeUpdateClientValidationFactory()
     const validations: IValidation[] = []
+
     validations.push(new LengthFieldValidation('name', 3, 32))
     validations.push(new RequiredFieldIfThereisAnother('email', 'password'))
     validations.push(new EmailValidation('email', new EmailValidatorAdapter()))
@@ -31,6 +33,7 @@ describe('UpdateClientValidationFactory', () => {
       new CompareFieldsValidation('newPassword', 'newPasswordConfirmation')
     )
     validations.push(new LengthFieldValidation('postalCode', 5, 10))
+    validations.push(new TypeCheckValidation('postalCode', 'number'))
 
     expect(ValidationComposite).toHaveBeenCalledWith(validations)
   })

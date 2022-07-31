@@ -7,9 +7,9 @@ export class RequiredFieldIfThereisAnother implements IValidation {
     private readonly fieldNameThatMustBeProvided: string
   ) {}
 
-  validate(input: any): any {
-    if (input[this.fieldName]) {
-      if (!input[this.fieldNameThatMustBeProvided]) {
+  validate(fields: any): any {
+    if (fields[this.fieldName]) {
+      if (!fields[this.fieldNameThatMustBeProvided]) {
         return new MissingFieldError(this.fieldNameThatMustBeProvided)
       }
     }

@@ -11,6 +11,7 @@ import { TypeCheckValidation } from '../../../../../validation/validations/type-
 
 export const makeUpdateClientValidationFactory = () => {
   const validations: IValidation[] = []
+
   validations.push(new LengthFieldValidation('name', 3, 32))
   validations.push(new RequiredFieldIfThereisAnother('email', 'password'))
   validations.push(new EmailValidation('email', new EmailValidatorAdapter()))
@@ -24,5 +25,6 @@ export const makeUpdateClientValidationFactory = () => {
   )
   validations.push(new LengthFieldValidation('postalCode', 5, 10))
   validations.push(new TypeCheckValidation('postalCode', 'number'))
+
   return new ValidationComposite(validations)
 }

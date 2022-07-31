@@ -10,8 +10,8 @@ import {
 import { makeSignUpValidationFactory } from '../signup-validation-factory'
 
 jest.mock('../../../../../../../validation/validation-composite')
-describe('LoginValidationFactory', () => {
-  test('should call ValidationComposite with Login validations', () => {
+describe('SignUpValidationFactory', () => {
+  test('should call ValidationComposite with SignUp validations', () => {
     makeSignUpValidationFactory()
     const validations: IValidation[] = []
     for (const field of ['name', 'email', 'password', 'passwordConfirmation']) {
