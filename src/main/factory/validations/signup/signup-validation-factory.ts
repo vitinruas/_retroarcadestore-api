@@ -4,6 +4,7 @@ import { ValidationComposite } from '../../../../validation/validation-composite
 import {
   CompareFieldsValidation,
   EmailValidation,
+  LengthFieldValidation,
   RequiredFieldValidation
 } from '../../../../validation/validations'
 
@@ -16,5 +17,7 @@ export const makeSignUpValidationFactory = () => {
     new CompareFieldsValidation('password', 'passwordConfirmation')
   )
   validations.push(new EmailValidation('email', new EmailValidatorAdapter()))
+  validations.push(new LengthFieldValidation('name', 3, 32))
+  validations.push(new LengthFieldValidation('password', 8))
   return new ValidationComposite(validations)
 }
