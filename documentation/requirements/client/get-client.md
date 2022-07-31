@@ -8,4 +8,5 @@
 > ## Exceptions
 
 1. ✅ Retorna erro **404** se a API não existir
+1. ✅ Retorna erro **403** se o usuário com o token fornecido não for válido
 1. ✅ Retorna erro **500** houver falha ao recuperar a conta do cliente
