@@ -3,6 +3,8 @@ export interface IHttpRequest {
   body?: any
   file?: any
   files?: any
+  ip?: any
+  route?: any
 }
 
 export interface IHttpResponse {
