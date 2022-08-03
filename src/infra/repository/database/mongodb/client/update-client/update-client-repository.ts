@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import accountHelper from '../../helpers/entitie-helper'
 import mongoHelper from '../../helpers/mongo-helper'
 import {
   IUpdateClientRepository,
@@ -13,7 +14,8 @@ export class UpdateClientRepository implements IUpdateClientRepository {
       { _id: new mongoose.Types.ObjectId(uid) },
       {
         $set: {
-          ...dataWithoutID
+          ...dataWithoutID,
+          updatedAt: accountHelper.getCurrentTime()
         }
       }
     )
