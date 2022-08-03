@@ -20,14 +20,15 @@ export class UpdateClientUseCase implements IUpdateClientUseCase {
 
   async update(fields: IUpdateClientUseCaseModel): Promise<boolean> {
     const { newPassword, password, ...fieldsWithOutNewPassword } = fields
-    const userFields = ['uid', 'name', 'photo', 'email', 'password']
+    const userFields = ['uid', 'name', 'photo', 'birthDay', 'email', 'password']
 
     const addressFields = [
       'uid',
       'street',
-      'postalCode',
+      'zipCode',
       'district',
       'city',
+      'state',
       'country'
     ]
 

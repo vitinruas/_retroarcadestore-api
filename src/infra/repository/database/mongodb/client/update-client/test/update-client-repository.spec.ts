@@ -24,6 +24,7 @@ beforeEach(async () => {
 
 interface FakeValidAccount {
   name: string
+  birthDay: string
   email: string
   password: string
   accessToken: string
@@ -31,6 +32,7 @@ interface FakeValidAccount {
 
 const makeFakeValidAccount = (): FakeValidAccount => ({
   name: 'any_name',
+  birthDay: 'any_date',
   email: 'any_email@mail.com',
   password: 'hashed_password',
   accessToken: 'any_token'
@@ -57,6 +59,7 @@ describe('UpdateClientRepository', () => {
     await sut.update({
       uid: createdAccountID,
       photo: 'new_photo',
+      birthDay: 'new_date',
       name: 'new_name',
       email: 'new_email@mail.com',
       password: 'new_hashed_password'
@@ -69,6 +72,7 @@ describe('UpdateClientRepository', () => {
     expect(account!._id).toBeTruthy()
     expect(account!.photo).toBe('new_photo')
     expect(account!.name).toBe('new_name')
+    expect(account!.birthDay).toBe('new_date')
     expect(account!.email).toBe('new_email@mail.com')
     expect(account!.password).toBe('new_hashed_password')
   })

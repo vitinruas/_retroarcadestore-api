@@ -23,8 +23,8 @@ export const makeUpdateClientValidationFactory = () => {
   validations.push(
     new CompareFieldsValidation('newPassword', 'newPasswordConfirmation')
   )
-  validations.push(new LengthFieldValidation('postalCode', 5, 10))
-  validations.push(new TypeCheckValidation('postalCode', 'number'))
+  validations.push(new LengthFieldValidation('zipCode', 5, 10))
+  validations.push(new TypeCheckValidation('zipCode', 'number'))
 
   return new ValidationComposite(validations)
 }

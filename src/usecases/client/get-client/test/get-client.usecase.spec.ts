@@ -4,9 +4,11 @@ import {
   IGetClientByUIDRepository
 } from '../get-client-usecase-protocols'
 
-const makeFakeValidAccount = (): IGetClientModel => ({
+const makeFakeValidClient = (): IGetClientModel => ({
   uid: 'any_uid',
+  photo: 'any_photo',
   name: 'any_name',
+  birthDay: 'any_date',
   email: 'any_email@mail.com',
   createdAt: 'any_date',
   authenticatedAt: 'any_date'
@@ -15,7 +17,7 @@ const makeFakeValidAccount = (): IGetClientModel => ({
 const makeGetClientByUIDRepositoryStub = (): IGetClientByUIDRepository => {
   class GetClientByUIDRepositoryStub implements IGetClientByUIDRepository {
     async get(uid: string): Promise<IGetClientModel> {
-      return Promise.resolve(makeFakeValidAccount())
+      return Promise.resolve(makeFakeValidClient())
     }
   }
 
@@ -65,6 +67,6 @@ describe('GetClientUseCase', () => {
 
     const account = await sut.get('any_uid')
 
-    expect(account).toEqual(makeFakeValidAccount())
+    expect(account).toEqual(makeFakeValidClient())
   })
 })

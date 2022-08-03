@@ -1,7 +1,7 @@
 export interface IUpdateClientAddressRepositoryModel {
   uid: string
   street?: string
-  postalCode?: number
+  zipCode?: string
   district?: string
   city?: string
   country?: string

@@ -18,15 +18,16 @@ const makeFakeValidAccount = (): IAccountEntitie => ({
   accessToken: 'any_token'
 })
 
-const makeFakeValidUpdateData = () => ({
+const makeFakeValidUpdateData = (): IUpdateClientUseCaseModel => ({
   uid: 'any_id',
   name: 'any_name',
+  birthDay: 'any_date',
   photo: 'any_photo',
   email: 'any_email',
   password: 'any_password',
   newPassword: 'new_password',
   street: 'any_street',
-  postalCode: 1111111111,
+  zipCode: '111111-1111',
   district: 'any_district',
   city: 'any_city',
   country: 'any_country'
@@ -195,7 +196,7 @@ describe('UpdateClientUseCase', () => {
     expect(updateSpy).toHaveBeenCalledWith({
       uid: 'any_id',
       street: 'any_street',
-      postalCode: 1111111111,
+      zipCode: '111111-1111',
       district: 'any_district',
       city: 'any_city',
       country: 'any_country'
@@ -211,6 +212,7 @@ describe('UpdateClientUseCase', () => {
     expect(updateSpy).toHaveBeenCalledWith(
       Object.assign({
         uid: 'any_id',
+        birthDay: 'any_date',
         name: 'any_name',
         photo: 'any_photo',
         email: 'any_email',

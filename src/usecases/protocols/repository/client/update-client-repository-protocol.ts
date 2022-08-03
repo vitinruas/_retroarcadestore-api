@@ -1,6 +1,7 @@
 export interface IUpdateClientRepositoryModel {
   uid: string
   name?: string
+  birthDay?: string
   photo?: string
   email?: string
   password?: string

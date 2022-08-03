@@ -25,7 +25,7 @@ beforeEach(async () => {
 interface IFakeValidAddress {
   uid: string
   street: string
-  postalCode: number
+  zipCode: string
   district: string
   city: string
   country: string
@@ -34,7 +34,7 @@ interface IFakeValidAddress {
 const makeFakeValidAddress = (): IFakeValidAddress => ({
   uid: 'any_id',
   street: 'any_street',
-  postalCode: 1111111111,
+  zipCode: '11111-1111',
   district: 'any_district',
   city: 'any_city',
   country: 'any_country'
@@ -61,7 +61,7 @@ describe('UpdateClientAddressRepository', () => {
     await sut.update({
       uid: createdAddressID,
       street: 'new_street',
-      postalCode: 222222222,
+      zipCode: '22222-2222',
       district: 'new_district',
       city: 'new_city',
       country: 'new_country'
@@ -72,7 +72,7 @@ describe('UpdateClientAddressRepository', () => {
     })
     expect(address!._id).toBeTruthy()
     expect(address!.street).toBe('new_street')
-    expect(address!.postalCode).toBe(222222222)
+    expect(address!.zipCode).toBe('22222-2222')
     expect(address!.district).toBe('new_district')
     expect(address!.city).toBe('new_city')
     expect(address!.country).toBe('new_country')

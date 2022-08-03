@@ -24,12 +24,13 @@ const makeFakeValidRequest = (
     body: {
       uid: 'any_uid',
       name: 'any_name',
+      birthDay: 'any_date',
       email: 'any_email@mail.com',
       password: 'any_password',
       newPassword: 'any_password',
       newPasswordConfirmation: 'any_password',
       street: 'any_street',
-      postalCode: '1123456789',
+      zipCode: '1123456789',
       district: 'any_district',
       city: 'any_city',
       country: 'any_contry'

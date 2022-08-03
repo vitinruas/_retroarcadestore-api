@@ -2,11 +2,12 @@ export interface IUpdateClientUseCaseModel {
   uid: string
   name?: string
   photo?: string
+  birthDay: string
   email?: string
   password?: string
   newPassword?: string
   street?: string
-  postalCode?: number
+  zipCode?: string
   district?: string
   city?: string
   country?: string

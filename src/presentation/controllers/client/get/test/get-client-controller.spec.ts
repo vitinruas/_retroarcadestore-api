@@ -13,9 +13,11 @@ const makeFakeValidRequest = (): IHttpRequest => ({
   }
 })
 
-const makeFakeValidAccount = (): IGetClientModel => ({
+const makeFakeValidClient = (): IGetClientModel => ({
   uid: 'any_uid',
+  photo: 'any_photo',
   name: 'any_name',
+  birthDay: 'any_name',
   email: 'any_email@mail.com',
   createdAt: 'any_date',
   authenticatedAt: 'any_date'
@@ -24,7 +26,7 @@ const makeFakeValidAccount = (): IGetClientModel => ({
 const makeGetClientUseCaseStub = (): IGetClientUseCase => {
   class GetClientUseCaseStub implements IGetClientUseCase {
     get(uid: string): Promise<IGetClientModel> {
-      return Promise.resolve(makeFakeValidAccount())
+      return Promise.resolve(makeFakeValidClient())
     }
   }
   return new GetClientUseCaseStub()
@@ -74,6 +76,6 @@ describe('GetClientUseCase', () => {
       makeFakeValidRequest()
     )
 
-    expect(httpResponse).toEqual(ok(makeFakeValidAccount()))
+    expect(httpResponse).toEqual(ok(makeFakeValidClient()))
   })
 })

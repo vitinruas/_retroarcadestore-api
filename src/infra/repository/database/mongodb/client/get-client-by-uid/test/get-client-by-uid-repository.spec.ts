@@ -24,6 +24,7 @@ beforeEach(async () => {
 
 interface IFakeValidAccount {
   name: string
+  birthDay: string
   email: string
   password: string
   createdAt: string
@@ -32,6 +33,7 @@ interface IFakeValidAccount {
 
 const makeFakeValidAccount = (): IFakeValidAccount => ({
   name: 'any_name',
+  birthDay: 'any_date',
   email: 'any_email@mail.com',
   password: 'hashed_password',
   createdAt: 'any_date',
@@ -49,7 +51,7 @@ const addAccountToDB = async (
 interface IFakeValidAddress {
   uid: any
   street: string
-  postalCode: number
+  zipCode: number
   district: string
   city: string
   country: string
@@ -58,7 +60,7 @@ interface IFakeValidAddress {
 const makeFakeValidAddress = (uid: string): IFakeValidAddress => ({
   uid: new mongoose.Types.ObjectId(uid),
   street: 'any_street',
-  postalCode: 1111111111,
+  zipCode: 1111111111,
   district: 'any_district',
   city: 'any_city',
   country: 'any_country',
@@ -91,11 +93,12 @@ describe('GetClientByUIDRepository', () => {
 
     expect(account!.uid).toBeTruthy()
     expect(account!.name).toBe('any_name')
+    expect(account!.birthDay).toBe('any_date')
     expect(account!.email).toBe('any_email@mail.com')
     expect(account!.address?.aid).toBeTruthy()
     expect(account!.address?.uid).toBeTruthy()
     expect(account!.address?.street).toBe('any_street')
-    expect(account!.address?.postalCode).toBe(1111111111)
+    expect(account!.address?.zipCode).toBe(1111111111)
     expect(account!.address?.district).toBe('any_district')
     expect(account!.address?.city).toBe('any_city')
     expect(account!.address?.country).toBe('any_country')
