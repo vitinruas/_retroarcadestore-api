@@ -22,12 +22,21 @@ export class LogControllerUseCase implements ILogControllerUseCase {
       geoInformations: geoData
     })
 
-    // remove all sensive related data
-    delete logData.request.body.password
-    delete logData.request.body.passwordConfirmation
-    delete logData.request.body.newPassword
-    delete logData.request.body.newPasswordConfirmation
-    delete logData.response.body.accessToken
+    // remove all sensive data
+    const sensiveField = [
+      'password',
+      'passwordConfirmation',
+      'newPassword',
+      'newPasswordConfirmation',
+      'accessToken'
+    ]
+
+    for (const field of sensiveField) {
+      logData.response.body[field] && delete logData.response.body[field]
+      logData.request.body[field] && delete logData.request.body[field]
+      logData.request.file && delete logData.request.file
+      logData.request.files && delete logData.request.files
+    }
 
     if (response.statusCode === 401) {
       await this.logRepository.log(logData, 'unauthenticated')
