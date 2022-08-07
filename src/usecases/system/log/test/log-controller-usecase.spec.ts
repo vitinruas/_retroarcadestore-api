@@ -65,13 +65,27 @@ const makeSut = (): ISut => {
 }
 
 describe('LogControllerUseCase', () => {
-  test('should call GeoAdapter with an ip', () => {
+  test('should call GeoAdapter with an ip', async () => {
     const { sut, geoAdapterStub } = makeSut()
     const lookupSpy = jest.spyOn(geoAdapterStub, 'lookup')
 
     sut.log(makeFakeValidRequest(), makeFake401Response())
 
     expect(lookupSpy).toHaveBeenCalledWith('111.111.111.111')
+  })
+
+  test('should return throw if GeoAdapter throws', async () => {
+    const { sut, geoAdapterStub } = makeSut()
+    jest.spyOn(geoAdapterStub, 'lookup').mockImplementationOnce(async () => {
+      return Promise.reject(new Error())
+    })
+
+    const promise: Promise<void> = sut.log(
+      makeFakeValidRequest(),
+      makeFake401Response()
+    )
+
+    await expect(promise).rejects.toThrow()
   })
   /*  test('should call LogRepository to log a 401 access error', () => {
     const { sut, logRepositoryStub } = makeSut()
