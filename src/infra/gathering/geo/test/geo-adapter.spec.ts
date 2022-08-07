@@ -1,6 +1,6 @@
-import { GeoIPAdapter } from '../geo-adapter'
 import geoip from 'geoip-lite'
-import { IGeoEntitie } from '../../../../usecases/system/log/log-controller-usecase-protocols'
+import { GeoIPAdapter } from '../geo-adapter'
+import { IGeoEntitie } from '../geo-adapter-protocols'
 
 jest.mock('geoip-lite', () => ({
   lookup() {
@@ -18,9 +18,20 @@ jest.mock('geoip-lite', () => ({
   }
 }))
 
+const makeFakeGeoAdapterResponse = (): IGeoEntitie => ({
+  city: 'any_city',
+  state: 'any_state',
+  country: 'any_country',
+  coords: { latitude: 10.0, longitude: 10.0 },
+  areaRadius: 1000,
+  zipCode: null
+})
+
+const makeSut = () => new GeoIPAdapter()
+
 describe('GeoIPAdapter', () => {
   test('should call GeoIPLite with an ip', async () => {
-    const sut = new GeoIPAdapter()
+    const sut = makeSut()
     const lookupSpy = jest.spyOn(geoip, 'lookup')
 
     await sut.lookup('111.111.111.111')
@@ -29,17 +40,10 @@ describe('GeoIPAdapter', () => {
   })
 
   test('should return the Geographic informations', async () => {
-    const sut = new GeoIPAdapter()
+    const sut = makeSut()
 
     const geo: IGeoEntitie | null = await sut.lookup('111.111.111.111')
 
-    expect(geo).toEqual({
-      city: 'any_city',
-      state: 'any_state',
-      country: 'any_country',
-      coords: { latitude: 10.0, longitude: 10.0 },
-      areaRadius: 1000,
-      zipCode: null
-    })
+    expect(geo).toEqual(makeFakeGeoAdapterResponse())
   })
 })

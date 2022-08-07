@@ -1,8 +1,5 @@
-import {
-  IGeoAdapter,
-  IGeoEntitie
-} from '../../../usecases/system/log/log-controller-usecase-protocols'
 import geoip from 'geoip-lite'
+import { IGeoAdapter, IGeoEntitie } from './geo-adapter-protocols'
 
 export class GeoIPAdapter implements IGeoAdapter {
   async lookup(ip: string): Promise<IGeoEntitie | null> {
