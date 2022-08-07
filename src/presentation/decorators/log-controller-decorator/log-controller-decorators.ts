@@ -13,7 +13,7 @@ export class LogControllerDecorator implements IController {
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     const response: IHttpResponse = await this.controller.perform(httpRequest)
-    await this.logControllerUseCase.log(httpRequest, response)
+    this.logControllerUseCase.log(httpRequest, response)
     return response
   }
 }

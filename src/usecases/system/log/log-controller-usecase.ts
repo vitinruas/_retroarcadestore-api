@@ -39,18 +39,18 @@ export class LogControllerUseCase implements ILogControllerUseCase {
     }
 
     if (response.statusCode === 401) {
-      await this.logRepository.log(logData, 'unauthenticated')
+      await this.logRepository.log(logData, 'unauthenticatedLogs')
     }
 
     if (response.statusCode === 403) {
-      await this.logRepository.log(logData, 'forbidden')
+      await this.logRepository.log(logData, 'forbiddenLogs')
     }
 
     if (
       (response.statusCode === 200 && request.route === '/login') ||
-      request.route === '/signup'
+      (response.statusCode === 200 && request.route === '/signup')
     ) {
-      await this.logRepository.log(logData, 'access')
+      await this.logRepository.log(logData, 'accessLogs')
     }
   }
 }

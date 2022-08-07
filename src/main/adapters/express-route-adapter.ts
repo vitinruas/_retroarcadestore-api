@@ -10,6 +10,9 @@ export const expressRouteAdapter = (controller: IController) => {
     const httpRequest: IHttpRequest = {
       headers: request.headers,
       body: request.body,
+      ip: request.ip,
+      userAgent: request.get('user-agent'),
+      route: request.route.path,
       file: request.file,
       files: request.files
     }

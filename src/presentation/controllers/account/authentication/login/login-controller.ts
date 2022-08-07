@@ -35,6 +35,7 @@ export class LoginController implements IController {
       if (!accessToken) {
         return unauthorized(new UnauthenticatedError())
       }
+
       return ok({ accessToken })
     } catch (error: any) {
       return serverError(error)
