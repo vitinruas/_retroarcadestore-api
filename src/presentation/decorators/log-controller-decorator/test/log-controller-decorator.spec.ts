@@ -11,9 +11,10 @@ import { ILogControllerUseCase } from '../../../../domain/usecases/system/log/lo
 import { LogControllerDecorator } from '../log-controller-decorators'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
-  headers: undefined,
-  file: undefined,
-  files: undefined,
+  headers: 'any_headers',
+  ip: 'any_ip',
+  route: 'any_route',
+  userAgent: 'any_userAget',
   body: {
     value: 'any_value'
   }

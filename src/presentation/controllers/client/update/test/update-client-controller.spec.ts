@@ -120,6 +120,10 @@ describe('UpdateClientController', () => {
   test('should return 400 if no field is provided', async () => {
     const { sut } = makeSut()
     const httpRequest: IHttpRequest = {
+      headers: 'any_headers',
+      ip: 'any_ip',
+      route: 'any_route',
+      userAgent: 'any_userAget',
       body: {
         uid: 'any_id'
       }

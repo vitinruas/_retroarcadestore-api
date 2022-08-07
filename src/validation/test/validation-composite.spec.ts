@@ -4,6 +4,10 @@ import { IValidation } from '../../presentation/protocols/validation-protocol'
 import { ValidationComposite } from '../validation-composite'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
+  headers: 'any_headers',
+  ip: 'any_ip',
+  route: 'any_route',
+  userAgent: 'any_userAget',
   body: {
     name: 'any_name'
   }

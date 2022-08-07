@@ -9,6 +9,9 @@ import {
 } from '../auth-middleware-protocols'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
+  ip: 'any_ip',
+  route: 'any_route',
+  userAgent: 'any_userAget',
   headers: {
     'x-access-token': 'any_token'
   }
@@ -48,7 +51,12 @@ describe('AuthMiddleware', () => {
   test('should return 403 if no access token is provided', async () => {
     const { sut }: ISut = makeSut()
 
-    const httpResponse: IHttpResponse = await sut.handle({})
+    const httpResponse: IHttpResponse = await sut.handle({
+      headers: {},
+      ip: 'any_ip',
+      route: 'any_route',
+      userAgent: 'any_userAget'
+    })
 
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
   })

@@ -1,10 +1,11 @@
 export interface IHttpRequest {
-  headers?: any
+  ip: string
+  route: string
+  headers: any
+  userAgent: any
   body?: any
   file?: any
   files?: any
-  ip?: any
-  route?: any
 }
 
 export interface IHttpResponse {

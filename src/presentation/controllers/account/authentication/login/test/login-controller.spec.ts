@@ -15,6 +15,10 @@ import {
 } from '../login-controller-protocols'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
+  headers: 'any_headers',
+  ip: 'any_ip',
+  route: 'any_route',
+  userAgent: 'any_userAget',
   body: {
     email: 'any_email@mail.com',
     password: 'any_password'

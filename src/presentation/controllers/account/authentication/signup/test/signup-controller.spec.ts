@@ -15,6 +15,10 @@ import {
 } from '../signup-controller-protocols'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
+  headers: 'any_headers',
+  ip: 'any_ip',
+  route: 'any_route',
+  userAgent: 'any_userAget',
   body: {
     name: 'any_name',
     email: 'any_email@mail.com',
