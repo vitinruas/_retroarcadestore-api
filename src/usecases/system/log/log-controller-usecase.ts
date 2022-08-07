@@ -15,7 +15,7 @@ export class LogControllerUseCase implements ILogControllerUseCase {
   ) {}
 
   async log(request: IHttpRequest, response: IHttpResponse): Promise<void> {
-    const geoData: IGeoEntitie = await this.geoAdapter.lookup(request.ip)
+    const geoData: IGeoEntitie | null = await this.geoAdapter.lookup(request.ip)
     const logData: ILogModel = Object.assign({
       request,
       response,

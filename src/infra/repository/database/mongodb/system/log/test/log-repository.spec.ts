@@ -40,9 +40,10 @@ const makeFakeLog = (): ILogModel => ({
   },
   geoInformations: {
     city: 'any_city',
+    state: 'any_state',
     country: 'any_country',
     coords: { latitude: 10.0, longitude: 10.0 },
-    area: 1000,
+    areaRadius: 1000,
     zipCode: '00000-000'
   }
 })

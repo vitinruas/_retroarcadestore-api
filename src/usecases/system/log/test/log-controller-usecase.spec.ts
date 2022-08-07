@@ -26,9 +26,10 @@ const makeFakeResponse = (code: number, error: any): IHttpResponse => ({
 
 const makeFakeGeo = (): IGeoEntitie => ({
   city: 'any_city',
+  state: 'any_state',
   country: 'any_country',
   coords: { latitude: 10.0, longitude: 10.0 },
-  area: 1000,
+  areaRadius: 1000,
   zipCode: '00000-000'
 })
 
@@ -43,7 +44,7 @@ const makeLogRepositoryStub = () => {
 
 const makeGeoAdapterStub = () => {
   class GeoAdapterStub implements IGeoAdapter {
-    async lookup(ip: string): Promise<IGeoEntitie> {
+    async lookup(ip: string): Promise<IGeoEntitie | null> {
       return Promise.resolve(makeFakeGeo())
     }
   }

@@ -1,14 +1,15 @@
 export interface IGeoEntitie {
-  country: string
-  city: string
-  coords: {
+  city?: string | null
+  state?: string | null
+  country?: string | null
+  coords?: {
     latitude: number
     longitude: number
-  }
-  area?: number
-  zipCode?: string
+  } | null
+  areaRadius?: number | null
+  zipCode?: string | null
 }
 
 export interface IGeoAdapter {
-  lookup(ip: string): Promise<IGeoEntitie>
+  lookup(ip: string): Promise<IGeoEntitie | null>
 }
