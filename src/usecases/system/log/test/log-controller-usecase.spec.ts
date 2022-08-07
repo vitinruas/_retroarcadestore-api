@@ -10,6 +10,8 @@ import { LogControllerUseCase } from '../log-controller-usecase'
 const makeFakeValidRequest = (): IHttpRequest => ({
   ip: '111.111.111.111',
   route: '/route',
+  headers: 'any_headers',
+  userAgent: 'any_userAgent',
   body: {
     email: 'any_email@mail.com',
     password: 'any_password'
@@ -23,8 +25,8 @@ const makeFake401Response = (): IHttpResponse => ({
 
 const makeFakeGeo = (): IGeoEntitie => ({
   city: 'any_city',
-  coords: { latitude: 10.0, longitude: 10.0 },
   country: 'any_country',
+  coords: { latitude: 10.0, longitude: 10.0 },
   area: 1000,
   zipCode: '00000-000'
 })
@@ -56,7 +58,10 @@ interface ISut {
 const makeSut = (): ISut => {
   const logRepositoryStub: ILogRepository = makeLogRepositoryStub()
   const geoAdapterStub: IGeoAdapter = makeGeoAdapterStub()
-  const sut: LogControllerUseCase = new LogControllerUseCase(geoAdapterStub)
+  const sut: LogControllerUseCase = new LogControllerUseCase(
+    logRepositoryStub,
+    geoAdapterStub
+  )
   return {
     sut,
     logRepositoryStub,
@@ -87,14 +92,18 @@ describe('LogControllerUseCase', () => {
 
     await expect(promise).rejects.toThrow()
   })
-  /*  test('should call LogRepository to log a 401 access error', () => {
+
+  test('should call LogRepository with correct values', async () => {
     const { sut, logRepositoryStub } = makeSut()
     const logSpy = jest.spyOn(logRepositoryStub, 'log')
-    sut.log(makeFakeValidRequest(), makeFake401Response())
-    expect(logSpy).toHaveBeenCalledWith({
-      ip: '111.111.111.111',
-      route: '/route',
-      ...makeFakeGeo()
-    })
-  }) */
+
+    await sut.log(makeFakeValidRequest(), makeFake401Response())
+    const logParams = {
+      request: makeFakeValidRequest(),
+      response: makeFake401Response(),
+      geoInformations: makeFakeGeo()
+    }
+    delete logParams.request.body.password
+    expect(logSpy).toHaveBeenCalledWith(logParams)
+  })
 })
