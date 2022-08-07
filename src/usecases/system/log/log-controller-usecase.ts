@@ -29,6 +29,8 @@ export class LogControllerUseCase implements ILogControllerUseCase {
     delete logData.request.body.newPassword
     delete logData.request.body.newPasswordConfirmation
 
-    await this.logRepository.log(logData, 'unauthenticated')
+    if (response.statusCode === 401) {
+      await this.logRepository.log(logData, 'unauthenticated')
+    }
   }
 }
