@@ -8,5 +8,5 @@ export interface ILogModel {
 }
 
 export interface ILogRepository {
-  log(logData: ILogModel): Promise<void>
+  log(logData: ILogModel, logName: string): Promise<void>
 }
