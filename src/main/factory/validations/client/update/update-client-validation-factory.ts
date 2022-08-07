@@ -7,7 +7,6 @@ import {
   LengthFieldValidation
 } from '../../../../../validation/validations'
 import { RequiredFieldIfThereisAnother } from '../../../../../validation/validations/required-field-if-there-is-another/required-field-if-there-is-another-validation'
-import { TypeCheckValidation } from '../../../../../validation/validations/type-check/type-check-validation'
 
 export const makeUpdateClientValidationFactory = () => {
   const validations: IValidation[] = []
@@ -24,7 +23,6 @@ export const makeUpdateClientValidationFactory = () => {
     new CompareFieldsValidation('newPassword', 'newPasswordConfirmation')
   )
   validations.push(new LengthFieldValidation('zipCode', 5, 10))
-  validations.push(new TypeCheckValidation('zipCode', 'number'))
 
   return new ValidationComposite(validations)
 }
