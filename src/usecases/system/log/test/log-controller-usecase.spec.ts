@@ -93,7 +93,7 @@ describe('LogControllerUseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('should call LogRepository with correct values', async () => {
+  test('should call LogRepository if response returns 401', async () => {
     const { sut, logRepositoryStub } = makeSut()
     const logSpy = jest.spyOn(logRepositoryStub, 'log')
 
