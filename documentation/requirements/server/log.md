@@ -1,9 +1,9 @@
 # Log
 
-## Os logs por padrão terão que conter user-agent, ip, country, region, city, coords, metro, zip, route do usuário que efetuou/causou tal ação no sistema.
+## logs by default should have request and response data and geo informations like ip, city, country, coords, area(optional), zipCode(optional)
 
-> Access log:
+> Log:
 
-1. ❌ Criar log de ok **200, 201, 204**
-2. ❌ Criar log de unauthenticated **401**
-3. ❌ Criar log de forbidden **403**
+1. ✅ Criar log de ok **200** quando houver uma autenticação
+2. ✅ Criar log de unauthenticated **401**
+3. ✅ Criar log de forbidden **403**
