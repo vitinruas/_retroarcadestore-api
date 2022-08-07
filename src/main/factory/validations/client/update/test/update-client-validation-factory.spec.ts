@@ -8,7 +8,6 @@ import {
 } from '../../../../../../validation/validations'
 import { makeUpdateClientValidationFactory } from '../update-client-validation-factory'
 import { RequiredFieldIfThereisAnother } from '../../../../../../validation/validations/required-field-if-there-is-another/required-field-if-there-is-another-validation'
-import { TypeCheckValidation } from '../../../../../../validation/validations/type-check/type-check-validation'
 
 jest.mock('../../../../../../validation/validation-composite')
 describe('UpdateClientValidationFactory', () => {
@@ -33,7 +32,6 @@ describe('UpdateClientValidationFactory', () => {
       new CompareFieldsValidation('newPassword', 'newPasswordConfirmation')
     )
     validations.push(new LengthFieldValidation('zipCode', 5, 10))
-    validations.push(new TypeCheckValidation('zipCode', 'number'))
 
     expect(ValidationComposite).toHaveBeenCalledWith(validations)
   })
