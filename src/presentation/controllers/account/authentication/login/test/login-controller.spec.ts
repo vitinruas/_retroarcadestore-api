@@ -1,5 +1,5 @@
 import { LoginController } from '../login-controller'
-import { UnauthenticatedLoginError } from '../../../../../errors/unauthenticated-error'
+import { UnauthenticatedError } from '../../../../../errors/unauthenticated-error'
 import {
   badRequest,
   ok,
@@ -130,7 +130,7 @@ describe('LoginController', () => {
       makeFakeValidRequest()
     )
 
-    expect(httpResponse).toEqual(unauthorized(new UnauthenticatedLoginError()))
+    expect(httpResponse).toEqual(unauthorized(new UnauthenticatedError()))
   })
 
   test('should return an access token if AuthenticationUseCase succeeds', async () => {

@@ -1,4 +1,4 @@
-import { UnauthenticatedLoginError } from '../../../../errors/unauthenticated-error'
+import { UnauthenticatedError } from '../../../../errors/unauthenticated-error'
 import {
   badRequest,
   ok,
@@ -33,7 +33,7 @@ export class LoginController implements IController {
         password
       })
       if (!accessToken) {
-        return unauthorized(new UnauthenticatedLoginError())
+        return unauthorized(new UnauthenticatedError())
       }
       return ok({ accessToken })
     } catch (error: any) {

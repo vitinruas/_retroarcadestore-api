@@ -1,6 +1,6 @@
-export class UnauthenticatedLoginError extends Error {
+export class UnauthenticatedError extends Error {
   constructor() {
     super(`Invalid Email or Password`)
-    this.name = 'UnauthenticatedLoginError'
+    this.name = 'UnauthenticatedError'
   }
 }
