@@ -1,5 +1,5 @@
 import { IHttpRequest, IHttpResponse } from '../../../../presentation/protocols'
-import { IGeoEntitie } from './geo-adapter-protocol'
+import { IGeoEntitie } from '../../gathering/geo-adapter-protocol'
 
 export interface ILogModel {
   response: IHttpResponse
