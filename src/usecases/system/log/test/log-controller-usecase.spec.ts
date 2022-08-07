@@ -1,11 +1,12 @@
-import { UnauthenticatedLoginError } from '../../../../presentation/errors'
-import { IHttpRequest, IHttpResponse } from '../../../../presentation/protocols'
 import {
+  ILogRepository,
   IGeoAdapter,
+  IHttpRequest,
+  IHttpResponse,
   IGeoEntitie
-} from '../../../protocols/repository/system/geo-adapter-protocol'
-import { ILogRepository } from '../../../protocols/repository/system/log-repository-protocol'
+} from '../log-controller-usecase-protocols'
 import { LogControllerUseCase } from '../log-controller-usecase'
+import { UnauthenticatedError } from '../../../../presentation/errors'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
   ip: '111.111.111.111',
@@ -99,11 +100,11 @@ describe('LogControllerUseCase', () => {
 
     await sut.log(
       makeFakeValidRequest(),
-      makeFakeResponse(401, new UnauthenticatedLoginError())
+      makeFakeResponse(401, new UnauthenticatedError())
     )
     const logParams = {
       request: makeFakeValidRequest(),
-      response: makeFakeResponse(401, new UnauthenticatedLoginError()),
+      response: makeFakeResponse(401, new UnauthenticatedError()),
       geoInformations: makeFakeGeo()
     }
     delete logParams.request.body.password
@@ -116,11 +117,11 @@ describe('LogControllerUseCase', () => {
 
     await sut.log(
       makeFakeValidRequest(),
-      makeFakeResponse(403, new UnauthenticatedLoginError())
+      makeFakeResponse(403, new UnauthenticatedError())
     )
     const logParams = {
       request: makeFakeValidRequest(),
-      response: makeFakeResponse(403, new UnauthenticatedLoginError()),
+      response: makeFakeResponse(403, new UnauthenticatedError()),
       geoInformations: makeFakeGeo()
     }
     delete logParams.request.body.password

@@ -1,13 +1,12 @@
-import { ILogControllerUseCase } from '../../../domain/usecases/system/log/log-controller-usecase'
-import { IHttpRequest, IHttpResponse } from '../../../presentation/protocols'
 import {
+  ILogControllerUseCase,
+  ILogRepository,
   IGeoAdapter,
-  IGeoEntitie
-} from '../../protocols/repository/system/geo-adapter-protocol'
-import {
-  ILogModel,
-  ILogRepository
-} from '../../protocols/repository/system/log-repository-protocol'
+  IHttpRequest,
+  IHttpResponse,
+  IGeoEntitie,
+  ILogModel
+} from './log-controller-usecase-protocols'
 
 export class LogControllerUseCase implements ILogControllerUseCase {
   constructor(
@@ -23,7 +22,7 @@ export class LogControllerUseCase implements ILogControllerUseCase {
       geoInformations: geoData
     })
 
-    // remove all password related data
+    // remove all sensive related data
     delete logData.request.body.password
     delete logData.request.body.passwordConfirmation
     delete logData.request.body.newPassword
