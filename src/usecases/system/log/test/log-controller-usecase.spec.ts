@@ -18,7 +18,7 @@ const makeFakeValidRequest = (): IHttpRequest => ({
   }
 })
 
-const makeFakeResponse = (code: number, error: Error): IHttpResponse => ({
+const makeFakeResponse = (code: number, error: any): IHttpResponse => ({
   statusCode: code,
   body: error
 })
@@ -125,6 +125,25 @@ describe('LogControllerUseCase', () => {
     }
     delete logParams.request.body.password
     expect(logSpy).toHaveBeenCalledWith(logParams, 'forbidden')
+  })
+
+  test('should call LogRepository if response returns 200 on /login or /signup', async () => {
+    const { sut, logRepositoryStub } = makeSut()
+    const logSpy = jest.spyOn(logRepositoryStub, 'log')
+
+    await sut.log(
+      Object.assign(makeFakeValidRequest(), { route: '/login' }),
+      makeFakeResponse(200, { accessToken: 'any_token' })
+    )
+    const logParams = {
+      request: Object.assign({}, makeFakeValidRequest(), { route: '/login' }),
+      response: makeFakeResponse(200, { accessToken: 'any_token' }),
+      geoInformations: makeFakeGeo()
+    }
+    delete logParams.request.body.password
+    delete logParams.response.body.accessToken
+
+    expect(logSpy).toHaveBeenCalledWith(logParams, 'access')
   })
 
   test('should return throw if LogRepository throws', async () => {
