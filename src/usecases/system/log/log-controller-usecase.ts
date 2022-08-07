@@ -28,6 +28,7 @@ export class LogControllerUseCase implements ILogControllerUseCase {
     delete logData.request.body.passwordConfirmation
     delete logData.request.body.newPassword
     delete logData.request.body.newPasswordConfirmation
+    delete logData.response.body.accessToken
 
     if (response.statusCode === 401) {
       await this.logRepository.log(logData, 'unauthenticated')
@@ -35,6 +36,13 @@ export class LogControllerUseCase implements ILogControllerUseCase {
 
     if (response.statusCode === 403) {
       await this.logRepository.log(logData, 'forbidden')
+    }
+
+    if (
+      (response.statusCode === 200 && request.route === '/login') ||
+      request.route === '/signup'
+    ) {
+      await this.logRepository.log(logData, 'access')
     }
   }
 }
