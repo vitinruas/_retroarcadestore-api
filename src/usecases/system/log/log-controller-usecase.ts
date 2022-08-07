@@ -32,5 +32,9 @@ export class LogControllerUseCase implements ILogControllerUseCase {
     if (response.statusCode === 401) {
       await this.logRepository.log(logData, 'unauthenticated')
     }
+
+    if (response.statusCode === 403) {
+      await this.logRepository.log(logData, 'forbidden')
+    }
   }
 }
