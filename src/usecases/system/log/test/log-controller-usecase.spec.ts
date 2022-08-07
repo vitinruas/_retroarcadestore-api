@@ -18,9 +18,9 @@ const makeFakeValidRequest = (): IHttpRequest => ({
   }
 })
 
-const makeFake401Response = (): IHttpResponse => ({
-  statusCode: 401,
-  body: new UnauthenticatedLoginError()
+const makeFakeResponse = (code: number, error: Error): IHttpResponse => ({
+  statusCode: code,
+  body: error
 })
 
 const makeFakeGeo = (): IGeoEntitie => ({
@@ -74,7 +74,7 @@ describe('LogControllerUseCase', () => {
     const { sut, geoAdapterStub } = makeSut()
     const lookupSpy = jest.spyOn(geoAdapterStub, 'lookup')
 
-    sut.log(makeFakeValidRequest(), makeFake401Response())
+    sut.log(makeFakeValidRequest(), makeFakeResponse(400, new Error()))
 
     expect(lookupSpy).toHaveBeenCalledWith('111.111.111.111')
   })
@@ -87,7 +87,7 @@ describe('LogControllerUseCase', () => {
 
     const promise: Promise<void> = sut.log(
       makeFakeValidRequest(),
-      makeFake401Response()
+      makeFakeResponse(400, new Error())
     )
 
     await expect(promise).rejects.toThrow()
@@ -97,14 +97,34 @@ describe('LogControllerUseCase', () => {
     const { sut, logRepositoryStub } = makeSut()
     const logSpy = jest.spyOn(logRepositoryStub, 'log')
 
-    await sut.log(makeFakeValidRequest(), makeFake401Response())
+    await sut.log(
+      makeFakeValidRequest(),
+      makeFakeResponse(401, new UnauthenticatedLoginError())
+    )
     const logParams = {
       request: makeFakeValidRequest(),
-      response: makeFake401Response(),
+      response: makeFakeResponse(401, new UnauthenticatedLoginError()),
       geoInformations: makeFakeGeo()
     }
     delete logParams.request.body.password
     expect(logSpy).toHaveBeenCalledWith(logParams, 'unauthenticated')
+  })
+
+  test('should call LogRepository if response returns 403', async () => {
+    const { sut, logRepositoryStub } = makeSut()
+    const logSpy = jest.spyOn(logRepositoryStub, 'log')
+
+    await sut.log(
+      makeFakeValidRequest(),
+      makeFakeResponse(403, new UnauthenticatedLoginError())
+    )
+    const logParams = {
+      request: makeFakeValidRequest(),
+      response: makeFakeResponse(403, new UnauthenticatedLoginError()),
+      geoInformations: makeFakeGeo()
+    }
+    delete logParams.request.body.password
+    expect(logSpy).toHaveBeenCalledWith(logParams, 'forbidden')
   })
 
   test('should return throw if LogRepository throws', async () => {
@@ -115,7 +135,7 @@ describe('LogControllerUseCase', () => {
 
     const promise: Promise<void> = sut.log(
       makeFakeValidRequest(),
-      makeFake401Response()
+      makeFakeResponse(401, new Error())
     )
 
     await expect(promise).rejects.toThrow()
