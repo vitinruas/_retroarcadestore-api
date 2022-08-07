@@ -104,6 +104,20 @@ describe('LogControllerUseCase', () => {
       geoInformations: makeFakeGeo()
     }
     delete logParams.request.body.password
-    expect(logSpy).toHaveBeenCalledWith(logParams)
+    expect(logSpy).toHaveBeenCalledWith(logParams, 'unauthenticated')
+  })
+
+  test('should return throw if LogRepository throws', async () => {
+    const { sut, logRepositoryStub } = makeSut()
+    jest.spyOn(logRepositoryStub, 'log').mockImplementationOnce(async () => {
+      return Promise.reject(new Error())
+    })
+
+    const promise: Promise<void> = sut.log(
+      makeFakeValidRequest(),
+      makeFake401Response()
+    )
+
+    await expect(promise).rejects.toThrow()
   })
 })
