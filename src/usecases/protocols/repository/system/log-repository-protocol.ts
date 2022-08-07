@@ -4,7 +4,7 @@ import { IGeoEntitie } from '../../gathering/geo-adapter-protocol'
 export interface ILogModel {
   response: IHttpResponse
   request: IHttpRequest
-  geoInformations: IGeoEntitie
+  geoInformations: IGeoEntitie | null
 }
 
 export interface ILogRepository {
