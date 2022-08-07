@@ -1,4 +1,4 @@
-class AccountHelper {
+class DocumentHelper {
   public getCurrentTime() {
     return new Date().toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -11,5 +11,5 @@ class AccountHelper {
   }
 }
 
-const accountHelper = new AccountHelper()
-export default accountHelper
+const documentHelper = new DocumentHelper()
+export default documentHelper

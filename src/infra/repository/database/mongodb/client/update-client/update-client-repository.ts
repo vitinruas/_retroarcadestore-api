@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import accountHelper from '../../helpers/entitie-helper'
+import documentHelper from '../../helpers/document-helper'
 import mongoHelper from '../../helpers/mongo-helper'
 import {
   IUpdateClientRepository,
@@ -15,7 +15,7 @@ export class UpdateClientRepository implements IUpdateClientRepository {
       {
         $set: {
           ...dataWithoutID,
-          updatedAt: accountHelper.getCurrentTime()
+          updatedAt: documentHelper.getCurrentTime()
         }
       }
     )

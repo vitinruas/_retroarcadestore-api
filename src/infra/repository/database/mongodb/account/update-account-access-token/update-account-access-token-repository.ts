@@ -1,6 +1,6 @@
 import { IUpdateAccountAccessTokenRepository } from './update-account-access-token-repository-protocols'
 import mongoose from 'mongoose'
-import entitieHelper from '../../helpers/entitie-helper'
+import documentHelper from '../../helpers/document-helper'
 import mongoHelper from '../../helpers/mongo-helper'
 
 export class UpdateAccountAccessTokenMongoRepository
@@ -13,7 +13,7 @@ export class UpdateAccountAccessTokenMongoRepository
       {
         $set: {
           accessToken,
-          authenticatedAt: entitieHelper.getCurrentTime()
+          authenticatedAt: documentHelper.getCurrentTime()
         }
       }
     )
