@@ -1,5 +1,6 @@
 import { IProductEntitie } from '../../../../../domain/entities/product/product-entitie'
 import { IGetProductsUseCase } from '../../../../../domain/usecases/product/get-products-usecase'
+import { noContent } from '../../../../helpers/http-response-helper'
 import { IHttpRequest, IHttpResponse } from '../../../../protocols'
 import { GetAllProductsController } from '../get-all-products-controller'
 
@@ -25,7 +26,7 @@ const makeFakeValidRequest = (): IHttpRequest => ({
 
 const makeGetProductsUseCaseStub = (): IGetProductsUseCase => {
   class GetProductsUseCase implements IGetProductsUseCase {
-    get(id: string): Promise<IProductEntitie | IProductEntitie[]> {
+    get(id: string): Promise<IProductEntitie | IProductEntitie[] | null> {
       return Promise.resolve([
         makeFakeProduct(),
         makeFakeProduct(),
@@ -74,5 +75,15 @@ describe('GetAllProductsController', () => {
     const promise: Promise<IHttpResponse> = sut.perform(makeFakeValidRequest())
 
     await expect(promise).rejects.toThrow()
+  })
+  test('should return 204 if there is no product', async () => {
+    const { sut, getProductsUseCaseStub } = makeSut()
+    jest
+      .spyOn(getProductsUseCaseStub, 'get')
+      .mockReturnValue(Promise.resolve(null))
+
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
+
+    expect(response).toEqual(noContent())
   })
 })
