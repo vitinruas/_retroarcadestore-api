@@ -20,10 +20,15 @@ export class UpdateClientController implements IController {
 
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
-      if (Object.keys(httpRequest.body).length > 1 || httpRequest.file) {
+      const bodyKeys = Object.keys(httpRequest.body)
+      if (bodyKeys.length === 2 && httpRequest.body.password) {
+        return badRequest(new NoFieldProvidedError())
+      } else if (bodyKeys.length > 1 || httpRequest.file) {
         // add photo param if exists file
         if (httpRequest.file) {
-          Object.assign(httpRequest.body, { photo: httpRequest.file.filename })
+          Object.assign(httpRequest.body, {
+            photo: httpRequest.file.filename
+          })
         }
 
         // body validation
