@@ -11,6 +11,10 @@ export class GetAllProductsController implements IController {
     if (!product) {
       return noContent()
     }
-    return Promise.resolve(ok())
+    return Promise.resolve(
+      ok({
+        products: product
+      })
+    )
   }
 }
