@@ -7,3 +7,4 @@
 1. ✅ Criar log de ok **200** quando houver uma autenticação
 2. ✅ Criar log de unauthenticated **401**
 3. ✅ Criar log de forbidden **403**
+4. ❌ Criar log de server error **500**
