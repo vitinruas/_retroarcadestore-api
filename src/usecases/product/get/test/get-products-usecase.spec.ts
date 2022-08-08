@@ -53,4 +53,16 @@ describe('GetProductsUseCase', () => {
 
     expect(getSpy).toHaveBeenCalledWith()
   })
+
+  test('should return throw if GetProductsRepository throws', async () => {
+    const { sut, getProductsRepositoryStub } = makeSut()
+    jest
+      .spyOn(getProductsRepositoryStub, 'get')
+      .mockImplementationOnce(async () => Promise.reject(new Error()))
+
+    const promise: Promise<IProductEntitie | IProductEntitie[] | null> =
+      sut.get()
+
+    await expect(promise).rejects.toThrow()
+  })
 })
