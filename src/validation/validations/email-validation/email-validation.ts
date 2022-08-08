@@ -4,12 +4,12 @@ import { IEmailValidatorAdapter, IValidation } from '../validations-protocols'
 export class EmailValidation implements IValidation {
   constructor(
     private readonly fieldName: string,
-    private readonly emailValidator: IEmailValidatorAdapter
+    private readonly emailValidatorAdapter: IEmailValidatorAdapter
   ) {}
 
   validate(fields: any): any {
     if (fields[this.fieldName]) {
-      const isValid: boolean = this.emailValidator.validate(
+      const isValid: boolean = this.emailValidatorAdapter.validateEmail(
         fields[this.fieldName]
       )
       if (!isValid) {

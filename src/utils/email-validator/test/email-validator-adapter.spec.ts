@@ -10,7 +10,7 @@ jest.mock('validator', () => ({
 describe('EmailValidator', () => {
   test('shoud returns true if provided email is valid', () => {
     const sut: EmailValidatorAdapter = new EmailValidatorAdapter()
-    const isValid = sut.validate('any_email@mail.com')
+    const isValid = sut.validateEmail('any_email@mail.com')
     expect(isValid).toBe(true)
   })
 })

@@ -2,7 +2,7 @@ import { IEmailValidatorAdapter } from '../../validation/protocols/email-validat
 import validator from 'validator'
 
 export class EmailValidatorAdapter implements IEmailValidatorAdapter {
-  validate(email: string): boolean {
+  validateEmail(email: string): boolean {
     const isValid: boolean = validator.isEmail(email)
     return isValid
   }
