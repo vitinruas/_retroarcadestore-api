@@ -1,50 +1,50 @@
 import { InvalidFieldError } from '../validations-errors'
-import { IEmailValidatorAdapter, IValidation } from '../validations-protocols'
+import { IValidatorAdapter, IValidation } from '../validations-protocols'
 import { EmailValidation } from './email-validation'
 
 const makeFakeValidInput = () => ({
   email: 'any_email@mail.com'
 })
 
-// EmailValidatorAdapter, user's email will be validated
+// ValidatorAdapter, user's email will be validated
 // and it'll returned a boolean response
-const makeEmailValidatorStub = (): IEmailValidatorAdapter => {
-  class EmailValidatorStub implements IEmailValidatorAdapter {
+const makeValidatorAdapterStub = (): IValidatorAdapter => {
+  class ValidatorAdapterStub implements IValidatorAdapter {
     validateEmail(email: string): boolean {
       return true
     }
   }
-  return new EmailValidatorStub()
+  return new ValidatorAdapterStub()
 }
 
 interface ISut {
   sut: IValidation
-  emailValidator: IEmailValidatorAdapter
+  ValidatorAdapter: IValidatorAdapter
 }
 
 const makeSut = (): ISut => {
-  const emailValidator: IEmailValidatorAdapter = makeEmailValidatorStub()
-  const sut: IValidation = new EmailValidation('email', emailValidator)
+  const ValidatorAdapter: IValidatorAdapter = makeValidatorAdapterStub()
+  const sut: IValidation = new EmailValidation('email', ValidatorAdapter)
   return {
     sut,
-    emailValidator
+    ValidatorAdapter
   }
 }
 
 describe('EmailValidation', () => {
-  // calls EmailValidator.validate with correct values
+  // calls ValidatorAdapter.validate with correct values
   test('should calls Email Validator with correct values', () => {
-    const { sut, emailValidator }: ISut = makeSut()
-    const validateSpy = jest.spyOn(emailValidator, 'validateEmail')
+    const { sut, ValidatorAdapter }: ISut = makeSut()
+    const validateSpy = jest.spyOn(ValidatorAdapter, 'validateEmail')
 
     sut.validate(makeFakeValidInput())
 
     expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
-  test('should return throw if EmailValidator throws', () => {
-    const { sut, emailValidator }: ISut = makeSut()
-    jest.spyOn(emailValidator, 'validateEmail').mockImplementationOnce(() => {
+  test('should return throw if ValidatorAdapter throws', () => {
+    const { sut, ValidatorAdapter }: ISut = makeSut()
+    jest.spyOn(ValidatorAdapter, 'validateEmail').mockImplementationOnce(() => {
       throw new Error()
     })
 
@@ -52,9 +52,9 @@ describe('EmailValidation', () => {
   })
 
   test('should return a 422 error code if invalid email is provided', () => {
-    const { sut, emailValidator }: ISut = makeSut()
+    const { sut, ValidatorAdapter }: ISut = makeSut()
 
-    jest.spyOn(emailValidator, 'validateEmail').mockReturnValueOnce(false)
+    jest.spyOn(ValidatorAdapter, 'validateEmail').mockReturnValueOnce(false)
 
     const error: Promise<Error | void> = sut.validate(makeFakeValidInput())
 

@@ -1,5 +1,5 @@
 import { IValidation } from '../update-client-validation-factory-protocols'
-import { EmailValidatorAdapter } from '../../../../../../utils/validator/validator-adapter'
+import { ValidatorAdapter } from '../../../../../../utils/validator/validator-adapter'
 import { ValidationComposite } from '../../../../../../validation/validation-composite'
 import {
   CompareFieldsValidation,
@@ -17,7 +17,7 @@ describe('UpdateClientValidationFactory', () => {
 
     validations.push(new LengthFieldValidation('name', 3, 32))
     validations.push(new RequiredFieldIfThereisAnother('email', 'password'))
-    validations.push(new EmailValidation('email', new EmailValidatorAdapter()))
+    validations.push(new EmailValidation('email', new ValidatorAdapter()))
     validations.push(
       new RequiredFieldIfThereisAnother(
         'newPasswordConfirmation',

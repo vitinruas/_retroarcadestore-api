@@ -1,5 +1,5 @@
 import { IValidation } from './login-validation-factory-protocols'
-import { EmailValidatorAdapter } from '../../../../../../utils/validator/validator-adapter'
+import { ValidatorAdapter } from '../../../../../../utils/validator/validator-adapter'
 import { ValidationComposite } from '../../../../../../validation/validation-composite'
 import {
   EmailValidation,
@@ -11,6 +11,6 @@ export const makeLoginValidationFactory = () => {
   for (const field of ['email', 'password']) {
     validations.push(new RequiredFieldValidation(field))
   }
-  validations.push(new EmailValidation('email', new EmailValidatorAdapter()))
+  validations.push(new EmailValidation('email', new ValidatorAdapter()))
   return new ValidationComposite(validations)
 }
