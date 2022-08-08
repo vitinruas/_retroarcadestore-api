@@ -1,5 +1,5 @@
 import { IValidation } from '../update-client-validation-factory-protocols'
-import { ValidatorAdapter } from '../../../../../../utils/validator/validator-adapter'
+import { ValidatorAdapter } from '../../../../../../infra/validator/validator-adapter'
 import { ValidationComposite } from '../../../../../../validation/validation-composite'
 import {
   CompareFieldsValidation,
