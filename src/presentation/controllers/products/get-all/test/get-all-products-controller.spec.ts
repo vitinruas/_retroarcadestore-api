@@ -1,6 +1,6 @@
 import { IProductEntitie } from '../../../../../domain/entities/product/product-entitie'
 import { IGetProductsUseCase } from '../../../../../domain/usecases/product/get-products-usecase'
-import { IHttpRequest } from '../../../../protocols'
+import { IHttpRequest, IHttpResponse } from '../../../../protocols'
 import { GetAllProductsController } from '../get-all-products-controller'
 
 const makeFakeProduct = (): IProductEntitie => ({
@@ -62,5 +62,17 @@ describe('GetAllProductsController', () => {
     sut.perform(makeFakeValidRequest())
 
     expect(getSpy).toHaveBeenCalledWith()
+  })
+  test('should return 500 if GetProductsUseCase throws', async () => {
+    const { sut, getProductsUseCaseStub } = makeSut()
+    jest
+      .spyOn(getProductsUseCaseStub, 'get')
+      .mockImplementationOnce(async () => {
+        return Promise.reject(new Error())
+      })
+
+    const promise: Promise<IHttpResponse> = sut.perform(makeFakeValidRequest())
+
+    await expect(promise).rejects.toThrow()
   })
 })
