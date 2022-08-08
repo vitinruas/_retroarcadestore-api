@@ -65,4 +65,13 @@ describe('GetProductsUseCase', () => {
 
     await expect(promise).rejects.toThrow()
   })
+
+  test('should call GetProductsRepository with PID', async () => {
+    const { sut, getProductsRepositoryStub } = makeSut()
+    const getSpy = jest.spyOn(getProductsRepositoryStub, 'get')
+
+    await sut.get('any_pid')
+
+    expect(getSpy).toHaveBeenCalledWith('any_pid')
+  })
 })
