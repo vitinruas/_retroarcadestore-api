@@ -1,6 +1,6 @@
 import { IProductEntitie } from '../../../../../domain/entities/product/product-entitie'
 import { IGetProductsUseCase } from '../../../../../domain/usecases/product/get-products-usecase'
-import { noContent } from '../../../../helpers/http-response-helper'
+import { noContent, ok } from '../../../../helpers/http-response-helper'
 import { IHttpRequest, IHttpResponse } from '../../../../protocols'
 import { GetAllProductsController } from '../get-all-products-controller'
 
@@ -85,5 +85,17 @@ describe('GetAllProductsController', () => {
     const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
 
     expect(response).toEqual(noContent())
+  })
+
+  test('should return 200 with products', async () => {
+    const { sut } = makeSut()
+
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
+
+    expect(response).toEqual(
+      ok({
+        products: [makeFakeProduct(), makeFakeProduct(), makeFakeProduct()]
+      })
+    )
   })
 })
