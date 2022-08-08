@@ -1,9 +1,9 @@
-import { IAlphaValidatorValidator } from '../../protocols/alpha-validator-protocol'
+import { IAlphaValidatorAdapter } from '../../protocols/alpha-validator-protocol'
 import { InvalidFieldError } from '../validations-errors'
 import { CheckIfValueIsAlpha } from './check-if-value-is-alpha'
 
-const makeAlphaValidationStub = (): IAlphaValidatorValidator => {
-  class AlphaValidationStub implements IAlphaValidatorValidator {
+const makeAlphaValidationStub = (): IAlphaValidatorAdapter => {
+  class AlphaValidationStub implements IAlphaValidatorAdapter {
     validateAlpha(value: string): boolean {
       return true
     }
@@ -13,7 +13,7 @@ const makeAlphaValidationStub = (): IAlphaValidatorValidator => {
 
 interface ISut {
   sut: CheckIfValueIsAlpha
-  alphaValidationStub: IAlphaValidatorValidator
+  alphaValidationStub: IAlphaValidatorAdapter
 }
 
 const makeSut = (): ISut => {

@@ -1,9 +1,9 @@
-import { IAlphaValidatorValidator } from '../../protocols/alpha-validator-protocol'
+import { IAlphaValidatorAdapter } from '../../protocols/alpha-validator-protocol'
 import { IValidation } from '../validations-protocols'
 import { InvalidFieldError } from '../validations-errors'
 export class CheckIfValueIsAlpha implements IValidation {
   constructor(
-    private readonly alphaValidator: IAlphaValidatorValidator,
+    private readonly alphaValidator: IAlphaValidatorAdapter,
     private readonly fieldName: string
   ) {}
 

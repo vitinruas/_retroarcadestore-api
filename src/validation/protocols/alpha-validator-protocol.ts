@@ -1,3 +1,3 @@
-export interface IAlphaValidatorValidator {
+export interface IAlphaValidatorAdapter {
   validateAlpha(value: string): boolean
 }
