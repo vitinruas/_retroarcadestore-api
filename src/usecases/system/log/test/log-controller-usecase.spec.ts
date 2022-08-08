@@ -6,7 +6,10 @@ import {
   IGeoEntitie
 } from '../log-controller-usecase-protocols'
 import { LogControllerUseCase } from '../log-controller-usecase'
-import { UnauthenticatedError } from '../../../../presentation/errors'
+import {
+  ServerError,
+  UnauthenticatedError
+} from '../../../../presentation/errors'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
   ip: '111.111.111.111',
@@ -95,6 +98,23 @@ describe('LogControllerUseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 
+  test('should call LogRepository if response returns 500', async () => {
+    const { sut, logRepositoryStub } = makeSut()
+    const logSpy = jest.spyOn(logRepositoryStub, 'log')
+
+    await sut.log(
+      makeFakeValidRequest(),
+      makeFakeResponse(500, new ServerError())
+    )
+    const logParams = {
+      request: makeFakeValidRequest(),
+      response: makeFakeResponse(500, new ServerError()),
+      geoInformations: makeFakeGeo()
+    }
+    delete logParams.request.body.password
+    expect(logSpy).toHaveBeenCalledWith(logParams, 'serverLogErrors')
+  })
+
   test('should call LogRepository if response returns 401', async () => {
     const { sut, logRepositoryStub } = makeSut()
     const logSpy = jest.spyOn(logRepositoryStub, 'log')
@@ -109,7 +129,7 @@ describe('LogControllerUseCase', () => {
       geoInformations: makeFakeGeo()
     }
     delete logParams.request.body.password
-    expect(logSpy).toHaveBeenCalledWith(logParams, 'unauthenticated')
+    expect(logSpy).toHaveBeenCalledWith(logParams, 'unauthenticatedLogErrors')
   })
 
   test('should call LogRepository if response returns 403', async () => {
@@ -126,7 +146,7 @@ describe('LogControllerUseCase', () => {
       geoInformations: makeFakeGeo()
     }
     delete logParams.request.body.password
-    expect(logSpy).toHaveBeenCalledWith(logParams, 'forbidden')
+    expect(logSpy).toHaveBeenCalledWith(logParams, 'forbiddenLogErrors')
   })
 
   test('should call LogRepository if response returns 200 on /login or /signup', async () => {
@@ -145,7 +165,7 @@ describe('LogControllerUseCase', () => {
     delete logParams.request.body.password
     delete logParams.response.body.accessToken
 
-    expect(logSpy).toHaveBeenCalledWith(logParams, 'access')
+    expect(logSpy).toHaveBeenCalledWith(logParams, 'accessLogs')
   })
 
   test('should return throw if LogRepository throws', async () => {
