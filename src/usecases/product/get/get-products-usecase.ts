@@ -7,9 +7,9 @@ export class GetProductsUseCase implements IGetProductsUseCase {
   async get(
     id?: string | undefined
   ): Promise<IProductEntitie | IProductEntitie[] | null> {
-    if (!id) {
-      return await this.getProductsRepository.get()
+    if (id) {
+      return await this.getProductsRepository.get(id)
     }
-    return Promise.resolve(null)
+    return await this.getProductsRepository.get()
   }
 }
