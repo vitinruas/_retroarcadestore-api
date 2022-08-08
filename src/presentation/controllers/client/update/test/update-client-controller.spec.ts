@@ -133,6 +133,23 @@ describe('UpdateClientController', () => {
     expect(response).toEqual(badRequest(new NoFieldProvidedError()))
   })
 
+  test('should return 400 if only password field is provided', async () => {
+    const { sut } = makeSut()
+    const httpRequest: IHttpRequest = {
+      headers: 'any_headers',
+      ip: 'any_ip',
+      route: 'any_route',
+      body: {
+        uid: 'any_id',
+        password: 'any_password'
+      }
+    }
+
+    const response: IHttpResponse = await sut.perform(httpRequest)
+
+    expect(response).toEqual(badRequest(new NoFieldProvidedError()))
+  })
+
   test('should call UpdateClientUseCase with correct values', async () => {
     const { sut, updateClientUseCaseStub } = makeSut()
     const validateSpy = jest.spyOn(updateClientUseCaseStub, 'update')
