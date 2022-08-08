@@ -65,7 +65,14 @@ const makeSut = (): ISut => {
   const geoAdapterStub: IGeoAdapter = makeGeoAdapterStub()
   const sut: LogControllerUseCase = new LogControllerUseCase(
     logRepositoryStub,
-    geoAdapterStub
+    geoAdapterStub,
+    [
+      'password',
+      'passwordConfirmation',
+      'newPassword',
+      'newPasswordConfirmation',
+      'accessToken'
+    ]
   )
   return {
     sut,

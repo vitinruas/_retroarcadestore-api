@@ -11,7 +11,8 @@ import {
 export class LogControllerUseCase implements ILogControllerUseCase {
   constructor(
     private readonly logRepository: ILogRepository,
-    private readonly geoAdapter: IGeoAdapter
+    private readonly geoAdapter: IGeoAdapter,
+    private readonly fieldsToRemove: string[]
   ) {}
 
   async log(request: IHttpRequest, response: IHttpResponse): Promise<void> {
@@ -23,16 +24,7 @@ export class LogControllerUseCase implements ILogControllerUseCase {
     })
 
     if (request.body && response.body) {
-      // remove all sensive data
-      const sensiveField = [
-        'password',
-        'passwordConfirmation',
-        'newPassword',
-        'newPasswordConfirmation',
-        'accessToken'
-      ]
-
-      for (const field of sensiveField) {
+      for (const field of this.fieldsToRemove) {
         logData.response.body[field] && delete logData.response.body[field]
         logData.request.body[field] && delete logData.request.body[field]
         logData.request.file && delete logData.request.file
@@ -51,10 +43,7 @@ export class LogControllerUseCase implements ILogControllerUseCase {
         await this.logRepository.log(logData, 'unauthenticatedLogErrors')
         break
       case 200:
-        if (
-          (response.statusCode === 200 && request.route === '/login') ||
-          (response.statusCode === 200 && request.route === '/signup')
-        ) {
+        if (['/login', '/signup'].includes(request.route)) {
           await this.logRepository.log(logData, 'accessLogs')
         }
         break

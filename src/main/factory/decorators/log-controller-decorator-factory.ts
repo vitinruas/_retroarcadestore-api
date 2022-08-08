@@ -11,7 +11,14 @@ export const makeLogControllerDecoratorFactory = (
   const logRepository = new LogRepository()
   const logControllerUseCase = new LogControllerUseCase(
     logRepository,
-    geoAdapter
+    geoAdapter,
+    [
+      'password',
+      'passwordConfirmation',
+      'newPassword',
+      'newPasswordConfirmation',
+      'accessToken'
+    ]
   )
   const logControllerDecorator = new LogControllerDecorator(
     logControllerUseCase,
