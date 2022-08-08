@@ -8,6 +8,7 @@ import {
   RequiredFieldValidation
 } from '../../../../../../../validation/validations'
 import { makeSignUpValidationFactory } from '../signup-validation-factory'
+import { CheckIfValueIsAlpha } from '../../../../../../../validation/validations/check-if-value-is-alpha/check-if-value-is-alpha'
 
 jest.mock('../../../../../../../validation/validation-composite')
 describe('SignUpValidationFactory', () => {
@@ -19,6 +20,7 @@ describe('SignUpValidationFactory', () => {
     }
     validations.push(new EmailValidation('email', new ValidatorAdapter()))
     validations.push(new LengthFieldValidation('name', 3, 32))
+    validations.push(new CheckIfValueIsAlpha(new ValidatorAdapter(), 'name'))
     validations.push(new LengthFieldValidation('password', 8))
     validations.push(
       new CompareFieldsValidation('password', 'passwordConfirmation')
