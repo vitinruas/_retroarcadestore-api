@@ -81,6 +81,5 @@ describe('UpdateClientAddressRepository', () => {
     expect(updatedAddress!.district).toBe('new_district')
     expect(updatedAddress!.city).toBe('new_city')
     expect(updatedAddress!.country).toBe('new_country')
-    expect(updatedAddress!.updatedAt).toBeTruthy()
   })
 })
