@@ -6,7 +6,7 @@ export class ValidatorAdapter
   implements IValidatorAdapter, IAlphaValidatorAdapter
 {
   validateAlpha(value: string): boolean {
-    const isValid: boolean = validator.isAlpha(value)
+    const isValid: boolean = validator.isAlpha(value, 'en-US', { ignore: ' ' })
     return isValid
   }
 
