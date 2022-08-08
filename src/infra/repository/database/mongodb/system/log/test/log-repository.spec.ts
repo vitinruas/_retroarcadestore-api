@@ -28,7 +28,6 @@ const makeFakeLog = (): ILogModel => ({
     ip: '111.111.111.111',
     route: '/route',
     headers: 'any_headers',
-    userAgent: 'any_userAgent',
     body: {
       email: 'any_email@mail.com',
       password: 'any_password'

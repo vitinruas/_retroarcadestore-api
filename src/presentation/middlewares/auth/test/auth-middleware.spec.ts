@@ -11,7 +11,6 @@ import {
 const makeFakeValidRequest = (): IHttpRequest => ({
   ip: 'any_ip',
   route: 'any_route',
-  userAgent: 'any_userAget',
   headers: {
     'x-access-token': 'any_token'
   }
@@ -54,8 +53,7 @@ describe('AuthMiddleware', () => {
     const httpResponse: IHttpResponse = await sut.handle({
       headers: {},
       ip: 'any_ip',
-      route: 'any_route',
-      userAgent: 'any_userAget'
+      route: 'any_route'
     })
 
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))

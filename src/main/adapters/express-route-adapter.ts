@@ -11,13 +11,11 @@ export const expressRouteAdapter = (controller: IController) => {
       headers: request.headers,
       body: request.body,
       ip: request.ip,
-      userAgent: request.get('user-agent'),
       route: request.route.path,
       file: request.file,
       files: request.files
     }
     const httpResponse: IHttpResponse = await controller.perform(httpRequest)
-    console.log(httpResponse)
     if (httpResponse.statusCode >= 400) {
       return response
         .status(httpResponse.statusCode)
