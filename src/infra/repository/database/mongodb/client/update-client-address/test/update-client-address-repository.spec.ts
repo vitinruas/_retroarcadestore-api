@@ -23,7 +23,7 @@ beforeEach(async () => {
 })
 
 interface IFakeValidAddress {
-  uid: string
+  uid: any
   street: string
   zipCode: string
   district: string
@@ -32,7 +32,7 @@ interface IFakeValidAddress {
   updatedAt?: string
 }
 const makeFakeValidAddress = (): IFakeValidAddress => ({
-  uid: 'any_id',
+  uid: new mongoose.Types.ObjectId('82f10266747f219e874fe9ff'),
   street: 'any_street',
   zipCode: '11111-1111',
   district: 'any_district',
@@ -43,9 +43,13 @@ const makeFakeValidAddress = (): IFakeValidAddress => ({
 const addAddressToDB = async (
   fakeValidAddress: IFakeValidAddress
 ): Promise<any> => {
-  const createdAddressID = (await collectionRef.insertOne(fakeValidAddress))
-    .insertedId
-  return createdAddressID
+  const createdAddressID = (
+    await collectionRef.insertOne(fakeValidAddress)
+  ).insertedId.toString()
+  const createdAddress = await collectionRef.findOne({
+    _id: new mongoose.Types.ObjectId(createdAddressID)
+  })
+  return createdAddress!.uid
 }
 
 const makeSut = (): UpdateClientAddressRepository => {
@@ -54,12 +58,12 @@ const makeSut = (): UpdateClientAddressRepository => {
 
 describe('UpdateClientAddressRepository', () => {
   test('should update client address', async () => {
-    const createdAddressID = await addAddressToDB(makeFakeValidAddress())
+    const createdAddressUID = await addAddressToDB(makeFakeValidAddress())
 
     const sut = makeSut()
 
     await sut.update({
-      uid: createdAddressID,
+      uid: createdAddressUID,
       street: 'new_street',
       zipCode: '22222-2222',
       district: 'new_district',
@@ -67,15 +71,16 @@ describe('UpdateClientAddressRepository', () => {
       country: 'new_country'
     })
 
-    const address = await collectionRef.findOne({
-      _id: new mongoose.Types.ObjectId(createdAddressID.toString())
+    const updatedAddress = await collectionRef.findOne({
+      uid: new mongoose.Types.ObjectId(createdAddressUID.toString())
     })
-    expect(address!._id).toBeTruthy()
-    expect(address!.street).toBe('new_street')
-    expect(address!.zipCode).toBe('22222-2222')
-    expect(address!.district).toBe('new_district')
-    expect(address!.city).toBe('new_city')
-    expect(address!.country).toBe('new_country')
-    expect(address!.updatedAt).toBeTruthy()
+
+    expect(updatedAddress!._id).toBeTruthy()
+    expect(updatedAddress!.street).toBe('new_street')
+    expect(updatedAddress!.zipCode).toBe('22222-2222')
+    expect(updatedAddress!.district).toBe('new_district')
+    expect(updatedAddress!.city).toBe('new_city')
+    expect(updatedAddress!.country).toBe('new_country')
+    expect(updatedAddress!.updatedAt).toBeTruthy()
   })
 })
