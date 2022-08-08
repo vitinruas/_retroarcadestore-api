@@ -1,9 +1,9 @@
 {
   "name": "retroarcadestore-api",
   "description": "This is an REST API for Retro Arcade Studios e-commerce development with Clean Architecture",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "main": "index.js",
-  "repository": "https://github.com/vitinruas/retroarcadestore",
+  "repository": "https://github.com/vitinruas/_retroarcadestore-api",
   "author": "João Vitor S. Rabelo <joao_vitor.personal@outlook.com>",
   "license": "MIT",
   "scripts": {
