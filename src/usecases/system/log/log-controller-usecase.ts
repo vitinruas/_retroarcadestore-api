@@ -22,31 +22,31 @@ export class LogControllerUseCase implements ILogControllerUseCase {
       geoInformations: geoData
     })
 
-    // remove all sensive data
-    const sensiveField = [
-      'password',
-      'passwordConfirmation',
-      'newPassword',
-      'newPasswordConfirmation',
-      'accessToken'
-    ]
+    if (request.body && response.body) {
+      // remove all sensive data
+      const sensiveField = [
+        'password',
+        'passwordConfirmation',
+        'newPassword',
+        'newPasswordConfirmation',
+        'accessToken'
+      ]
 
-    for (const field of sensiveField) {
-      logData.response.body[field] && delete logData.response.body[field]
-      logData.request.body[field] && delete logData.request.body[field]
-      logData.request.file && delete logData.request.file
-      logData.request.files && delete logData.request.files
+      for (const field of sensiveField) {
+        logData.response.body[field] && delete logData.response.body[field]
+        logData.request.body[field] && delete logData.request.body[field]
+        logData.request.file && delete logData.request.file
+        logData.request.files && delete logData.request.files
+      }
     }
 
-    if (response.statusCode === 401) {
-      await this.logRepository.log(logData, 'unauthenticatedLogs')
-    }
-
-    if (response.statusCode === 403) {
-      await this.logRepository.log(logData, 'forbiddenLogs')
-    }
-
-    if (
+    if (response.statusCode === 500) {
+      await this.logRepository.log(logData, 'serverLogErrors')
+    } else if (response.statusCode === 401) {
+      await this.logRepository.log(logData, 'unauthenticatedLogErrors')
+    } else if (response.statusCode === 403) {
+      await this.logRepository.log(logData, 'forbiddenLogErrors')
+    } else if (
       (response.statusCode === 200 && request.route === '/login') ||
       (response.statusCode === 200 && request.route === '/signup')
     ) {
