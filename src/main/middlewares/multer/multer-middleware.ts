@@ -10,8 +10,8 @@ const storage = multer.diskStorage({
   destination: function (request, file, callback) {
     if (file.fieldname === 'photo') {
       callback(null, 'public/uploads/client')
-    } else {
-      callback(null, 'public/uploads/client')
+    } else if (file.fieldname === 'image') {
+      callback(null, 'public/uploads/product')
     }
   },
   filename: function (request, file, callback) {
@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   fileFilter(req, file, callback) {
-    const acceptedExtensions = ['jpg', 'png']
+    const acceptedExtensions = ['jpeg', 'jpg', 'png', 'gif']
 
     if (acceptedExtensions.includes(getFileExtension(file.originalname))) {
       return callback(null, true)
