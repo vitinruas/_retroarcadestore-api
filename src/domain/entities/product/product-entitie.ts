@@ -6,7 +6,8 @@ export interface IProductEntitie {
   pid: string
   category: CategoryType
   name: string
-  mainImage: string
+  bannerImage: string
+  cardImage: string
   previewImages: string[]
   description: string
   avaliations?: IAvaliationEntitie[]

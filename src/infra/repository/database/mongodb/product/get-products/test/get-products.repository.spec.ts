@@ -27,7 +27,8 @@ beforeEach(async () => {
 interface IFakeProduct {
   category: 'games' | 'clothes' | 'accessories'
   name: string
-  mainImage: string
+  bannerImage: string
+  cardImage: string
   previewImages: string[]
   description: string
   avaliations?: IAvaliationEntitie[]
@@ -42,7 +43,8 @@ interface IFakeProduct {
 const makeFakeProduct = (): IFakeProduct => ({
   name: 'any_name',
   category: 'games',
-  mainImage: 'any_image',
+  bannerImage: 'any_image',
+  cardImage: 'any_image',
   previewImages: ['any_image', 'any_image', 'any_image'],
   description: 'any_description',
   avaliations: [
@@ -81,7 +83,8 @@ describe('GetProductsRepository', () => {
     expect(products![1].pid).toBeTruthy()
     expect(products![1].name).toBe('any_name')
     expect(products![1].category).toBe('games')
-    expect(products![1].mainImage).toBe('any_image')
+    expect(products![1].bannerImage).toBe('any_image')
+    expect(products![1].cardImage).toBe('any_image')
     expect(products![1].previewImages).toEqual([
       'any_image',
       'any_image',
