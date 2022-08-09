@@ -3,7 +3,7 @@ import { IGetProductsUseCase } from '../../../../domain/usecases/product/get-pro
 import { noContent, ok } from '../../../helpers/http-response-helper'
 import { IController, IHttpRequest, IHttpResponse } from '../../../protocols'
 
-export class GetAllProductsController implements IController {
+export class GetProductsController implements IController {
   constructor(private readonly getProducsUseCase: IGetProductsUseCase) {}
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     const products: IProductEntitie | IProductEntitie[] | null =

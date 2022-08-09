@@ -2,7 +2,7 @@ import { IProductEntitie } from '../../../../../domain/entities/product/product-
 import { IGetProductsUseCase } from '../../../../../domain/usecases/product/get-products-usecase'
 import { noContent, ok } from '../../../../helpers/http-response-helper'
 import { IHttpRequest, IHttpResponse } from '../../../../protocols'
-import { GetAllProductsController } from '../get-all-products-controller'
+import { GetProductsController } from '../get-products-controller'
 
 const makeFakeProduct = (): IProductEntitie => ({
   pid: 'any_id',
@@ -39,14 +39,14 @@ const makeGetProductsUseCaseStub = (): IGetProductsUseCase => {
 }
 
 interface ISut {
-  sut: GetAllProductsController
+  sut: GetProductsController
   getProductsUseCaseStub: IGetProductsUseCase
 }
 
 const makeSut = (): ISut => {
   const getProductsUseCaseStub: IGetProductsUseCase =
     makeGetProductsUseCaseStub()
-  const sut: GetAllProductsController = new GetAllProductsController(
+  const sut: GetProductsController = new GetProductsController(
     getProductsUseCaseStub
   )
   return {
@@ -55,7 +55,7 @@ const makeSut = (): ISut => {
   }
 }
 
-describe('GetAllProductsController', () => {
+describe('GetProductsController', () => {
   test('should call GetProductsUseCase without PID', () => {
     const { sut, getProductsUseCaseStub } = makeSut()
     const getSpy = jest.spyOn(getProductsUseCaseStub, 'get')
