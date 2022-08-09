@@ -6,14 +6,14 @@ import { IController, IHttpRequest, IHttpResponse } from '../../../protocols'
 export class GetAllProductsController implements IController {
   constructor(private readonly getProducsUseCase: IGetProductsUseCase) {}
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
-    const product: IProductEntitie | IProductEntitie[] | null =
+    const products: IProductEntitie | IProductEntitie[] | null =
       await this.getProducsUseCase.get()
-    if (!product) {
+    if (!products) {
       return noContent()
     }
     return Promise.resolve(
       ok({
-        products: product
+        products
       })
     )
   }
