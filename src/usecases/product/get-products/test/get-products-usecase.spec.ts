@@ -17,9 +17,7 @@ const makeFakeProduct = (): IProductEntitie => ({
 
 const makeGetProductsRepositoryStub = (): IGetProductsRepository => {
   class GetProductsRepository implements IGetProductsRepository {
-    async get(
-      id?: string
-    ): Promise<IProductEntitie | IProductEntitie[] | null> {
+    async get(): Promise<IProductEntitie[] | null> {
       return Promise.resolve([
         makeFakeProduct(),
         makeFakeProduct(),
@@ -66,15 +64,6 @@ describe('GetProductsUseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('should call GetProductsRepository with PID', async () => {
-    const { sut, getProductsRepositoryStub } = makeSut()
-    const getSpy = jest.spyOn(getProductsRepositoryStub, 'get')
-
-    await sut.get('any_pid')
-
-    expect(getSpy).toHaveBeenCalledWith('any_pid')
-  })
-
   test('should return products if GetProductsRepository succeeds', async () => {
     const { sut, getProductsRepositoryStub } = makeSut()
     jest.spyOn(getProductsRepositoryStub, 'get')
@@ -86,15 +75,5 @@ describe('GetProductsUseCase', () => {
       makeFakeProduct(),
       makeFakeProduct()
     ])
-  })
-  test('should return product if GetProductsRepository succeeds', async () => {
-    const { sut, getProductsRepositoryStub } = makeSut()
-    jest
-      .spyOn(getProductsRepositoryStub, 'get')
-      .mockImplementationOnce(async () => Promise.resolve(makeFakeProduct()))
-
-    const product = await sut.get()
-
-    expect(product).toEqual(makeFakeProduct())
   })
 })

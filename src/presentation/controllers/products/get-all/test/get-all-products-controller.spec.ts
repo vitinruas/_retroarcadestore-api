@@ -26,7 +26,7 @@ const makeFakeValidRequest = (): IHttpRequest => ({
 
 const makeGetProductsUseCaseStub = (): IGetProductsUseCase => {
   class GetProductsUseCase implements IGetProductsUseCase {
-    get(id: string): Promise<IProductEntitie | IProductEntitie[] | null> {
+    get(): Promise<IProductEntitie[] | null> {
       return Promise.resolve([
         makeFakeProduct(),
         makeFakeProduct(),

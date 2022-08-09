@@ -4,12 +4,7 @@ import { IGetProductsRepository } from '../../protocols/repository/product/get-p
 
 export class GetProductsUseCase implements IGetProductsUseCase {
   constructor(private readonly getProductsRepository: IGetProductsRepository) {}
-  async get(
-    pid?: string | undefined
-  ): Promise<IProductEntitie | IProductEntitie[] | null> {
-    if (pid) {
-      return await this.getProductsRepository.get(pid)
-    }
+  async get(): Promise<IProductEntitie[] | null> {
     return await this.getProductsRepository.get()
   }
 }

@@ -70,58 +70,25 @@ const addProductToDB = async (fakeProduct: IFakeProduct): Promise<any> => {
 const makeSut = () => new GetProductsRepository()
 
 describe('GetProductsRepository', () => {
-  test('should return only product if PID is provided', async () => {
-    const sut = makeSut()
-    const createdProductID = await addProductToDB(makeFakeProduct())
-
-    const product: IProductEntitie | IProductEntitie[] | null = (await sut.get(
-      createdProductID
-    )) as IProductEntitie
-
-    expect(product.pid).toBeTruthy()
-    expect(product.name).toBe('any_name')
-    expect(product.category).toBe('games')
-    expect(product.mainImage).toBe('any_image')
-    expect(product.previewImages).toEqual([
-      'any_image',
-      'any_image',
-      'any_image'
-    ])
-    expect(product.description).toBe('any_description')
-    expect(product.avaliations).toEqual([
-      {
-        aid: 'any_aid',
-        uid: 'any_uid',
-        photo: 'any_photo',
-        comment: 'any_comment',
-        stars: 4
-      }
-    ] as IAvaliationEntitie[])
-    expect(product.quantity).toBe('isGame')
-    expect(product.price).toBe(10.0)
-    expect(product.discount).toBe(0)
-    expect(product.createdAt).toBe('any_date')
-  })
   test('should return all created products', async () => {
     const sut = makeSut()
     await addProductToDB(makeFakeProduct())
     await addProductToDB(makeFakeProduct())
     await addProductToDB(makeFakeProduct())
 
-    const products: IProductEntitie | IProductEntitie[] | null =
-      (await sut.get()) as IProductEntitie[]
+    const products: IProductEntitie[] | null = await sut.get()
 
-    expect(products[1].pid).toBeTruthy()
-    expect(products[1].name).toBe('any_name')
-    expect(products[1].category).toBe('games')
-    expect(products[1].mainImage).toBe('any_image')
-    expect(products[1].previewImages).toEqual([
+    expect(products![1].pid).toBeTruthy()
+    expect(products![1].name).toBe('any_name')
+    expect(products![1].category).toBe('games')
+    expect(products![1].mainImage).toBe('any_image')
+    expect(products![1].previewImages).toEqual([
       'any_image',
       'any_image',
       'any_image'
     ])
-    expect(products[1].description).toBe('any_description')
-    expect(products[1].avaliations).toEqual([
+    expect(products![1].description).toBe('any_description')
+    expect(products![1].avaliations).toEqual([
       {
         aid: 'any_aid',
         uid: 'any_uid',
@@ -130,9 +97,9 @@ describe('GetProductsRepository', () => {
         stars: 4
       }
     ] as IAvaliationEntitie[])
-    expect(products[1].quantity).toBe('isGame')
-    expect(products[1].price).toBe(10.0)
-    expect(products[1].discount).toBe(0)
-    expect(products[1].createdAt).toBe('any_date')
+    expect(products![1].quantity).toBe('isGame')
+    expect(products![1].price).toBe(10.0)
+    expect(products![1].discount).toBe(0)
+    expect(products![1].createdAt).toBe('any_date')
   })
 })
