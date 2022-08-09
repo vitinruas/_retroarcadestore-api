@@ -1,6 +1,6 @@
 import { ILogModel } from '../log-repository-protocols'
 import { UnauthenticatedError } from '../../../../../../../presentation/errors'
-import mongoose, { Collection } from 'mongoose'
+import { Collection } from 'mongoose'
 import mongoHelper from '../../../helpers/mongo-helper'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { LogRepository } from '../log-repository'
@@ -50,11 +50,11 @@ const makeFakeLog = (): ILogModel => ({
 describe('LogRepository', () => {
   test('should add log in the collection matching its name', async () => {
     const sut = new LogRepository()
-    mongoose.connection.useDb('logs')
 
     await sut.log(makeFakeLog(), 'unauthenticated')
 
     const collectionRef = mongoHelper.getCollection('unauthenticated')
+    collectionRef.conn.useDb('Logs')
     const quantityDocs = await collectionRef.countDocuments()
 
     expect(quantityDocs).toBe(1)
