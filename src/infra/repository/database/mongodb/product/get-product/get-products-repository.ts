@@ -16,7 +16,7 @@ export class GetProductsRepository implements IGetProductsRepository {
       return mongoHelper.replaceMongoID(document, 'pid') || null
     }
     // all products
-    const documents = await collectionRef.find({})
+    const documents = await collectionRef.find({}).toArray()
     if (documents) {
       const products: unknown = documents.map((document) => {
         return mongoHelper.replaceMongoID(document, 'pid')
