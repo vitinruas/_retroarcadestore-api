@@ -87,4 +87,14 @@ describe('GetProductsUseCase', () => {
       makeFakeProduct()
     ])
   })
+  test('should return product if GetProductsRepository succeeds', async () => {
+    const { sut, getProductsRepositoryStub } = makeSut()
+    jest
+      .spyOn(getProductsRepositoryStub, 'get')
+      .mockImplementationOnce(async () => Promise.resolve(makeFakeProduct()))
+
+    const product = await sut.get()
+
+    expect(product).toEqual(makeFakeProduct())
+  })
 })
