@@ -5,10 +5,10 @@ import { IGetProductsRepository } from '../../protocols/repository/product/get-p
 export class GetProductsUseCase implements IGetProductsUseCase {
   constructor(private readonly getProductsRepository: IGetProductsRepository) {}
   async get(
-    id?: string | undefined
+    pid?: string | undefined
   ): Promise<IProductEntitie | IProductEntitie[] | null> {
-    if (id) {
-      return await this.getProductsRepository.get(id)
+    if (pid) {
+      return await this.getProductsRepository.get(pid)
     }
     return await this.getProductsRepository.get()
   }
