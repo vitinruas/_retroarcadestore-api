@@ -74,4 +74,17 @@ describe('GetProductsUseCase', () => {
 
     expect(getSpy).toHaveBeenCalledWith('any_pid')
   })
+
+  test('should return products if GetProductsRepository succeeds', async () => {
+    const { sut, getProductsRepositoryStub } = makeSut()
+    jest.spyOn(getProductsRepositoryStub, 'get')
+
+    const products = await sut.get()
+
+    expect(products).toEqual([
+      makeFakeProduct(),
+      makeFakeProduct(),
+      makeFakeProduct()
+    ])
+  })
 })
