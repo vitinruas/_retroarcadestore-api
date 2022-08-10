@@ -61,4 +61,14 @@ describe('AddCartProductController', () => {
 
     expect(response).toEqual(serverError(new Error()))
   })
+
+  test('should return 400 if AddCartProductUseCase fails', async () => {
+    const { sut, addCartProductUseCaseStub } = makeSut()
+    jest
+      .spyOn(addCartProductUseCaseStub, 'add')
+      .mockReturnValue(Promise.resolve(false))
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
+
+    expect(response).toEqual(badRequest(new InvalidFieldError('product')))
+  })
 })
