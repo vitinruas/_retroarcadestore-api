@@ -1,3 +1,3 @@
 export interface IAddCartProductUseCase {
-  add(pid: string): Promise<boolean>
+  add(uid: string, pid: string): Promise<boolean>
 }
