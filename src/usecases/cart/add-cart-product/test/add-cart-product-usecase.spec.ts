@@ -1,5 +1,6 @@
 import { IProductEntitie } from '../../../../domain/entities/product/product-entitie'
 import { IGetProductRepository } from '../../../product/get-product/get-product-usecase-protocols'
+import { IAddCartProductRepository } from '../../../protocols/repository/cart/add-cart-product-repository'
 import { AddCartProductUseCase } from '../add-cart-product-usecase'
 
 const makeFakeProduct = (): IProductEntitie => ({
@@ -25,17 +26,34 @@ const makeGetProductRepositoryStub = (): IGetProductRepository => {
   return new GetProductRepository()
 }
 
+const makeAddCartProductRepositoryStub = (): IAddCartProductRepository => {
+  class AddCartProductRepositoryStub implements IAddCartProductRepository {
+    async add(uid: string, pid: string): Promise<void> {
+      return Promise.resolve()
+    }
+  }
+  return new AddCartProductRepositoryStub()
+}
+
 interface ISut {
   sut: AddCartProductUseCase
   getProductRepositoryStub: IGetProductRepository
+  addCartProductRepositoryStub: IAddCartProductRepository
 }
 
 const makeSut = (): ISut => {
-  const getProductRepositoryStub = makeGetProductRepositoryStub()
-  const sut = new AddCartProductUseCase(getProductRepositoryStub)
+  const getProductRepositoryStub: IGetProductRepository =
+    makeGetProductRepositoryStub()
+  const addCartProductRepositoryStub: IAddCartProductRepository =
+    makeAddCartProductRepositoryStub()
+  const sut = new AddCartProductUseCase(
+    getProductRepositoryStub,
+    addCartProductRepositoryStub
+  )
   return {
     sut,
-    getProductRepositoryStub
+    getProductRepositoryStub,
+    addCartProductRepositoryStub
   }
 }
 
@@ -60,5 +78,25 @@ describe('AddCartProductUseCase', () => {
     const promise: Promise<boolean> = sut.add('any_uid', 'any_pid')
 
     await expect(promise).rejects.toThrow()
+  })
+
+  test('should call AddProductCartRepository with correct values', async () => {
+    const { sut, addCartProductRepositoryStub } = makeSut()
+    const addSpy = jest.spyOn(addCartProductRepositoryStub, 'add')
+
+    await sut.add('any_uid', 'any_pid')
+
+    expect(addSpy).toHaveBeenCalledWith('any_uid', 'any_pid')
+  })
+
+  test('should return false if GetProductRepository fails', async () => {
+    const { sut, getProductRepositoryStub } = makeSut()
+    jest
+      .spyOn(getProductRepositoryStub, 'get')
+      .mockReturnValueOnce(Promise.resolve(null))
+
+    const productHasBeenAdded: boolean = await sut.add('any_uid', 'any_pid')
+
+    expect(productHasBeenAdded).toBe(false)
   })
 })
