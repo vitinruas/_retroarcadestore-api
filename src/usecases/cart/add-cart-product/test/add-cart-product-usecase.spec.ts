@@ -99,4 +99,11 @@ describe('AddCartProductUseCase', () => {
 
     expect(productHasBeenAdded).toBe(false)
   })
+  test('should return true if GetProductRepository succeeds', async () => {
+    const { sut } = makeSut()
+
+    const productHasBeenAdded: boolean = await sut.add('any_uid', 'any_pid')
+
+    expect(productHasBeenAdded).toBe(true)
+  })
 })
