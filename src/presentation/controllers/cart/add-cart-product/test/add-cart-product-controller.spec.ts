@@ -1,12 +1,15 @@
-import { IAddCartProductUseCase } from '../../../../../domain/usecases/cart/add-cart-product-usecase'
 import { InvalidFieldError } from '../../../../errors'
 import {
   badRequest,
   noContent,
   serverError
 } from '../../../../helpers/http-response-helper'
-import { IHttpRequest, IHttpResponse } from '../../../../protocols'
 import { AddCartProductController } from '../add-cart-product-controller'
+import {
+  IAddCartProductUseCase,
+  IHttpRequest,
+  IHttpResponse
+} from '../add-cart-product-controller-protocols'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
   headers: 'any_headers',

@@ -1,11 +1,15 @@
-import { IAddCartProductUseCase } from '../../../../domain/usecases/cart/add-cart-product-usecase'
 import { InvalidFieldError } from '../../../errors'
 import {
   badRequest,
   noContent,
   serverError
 } from '../../../helpers/http-response-helper'
-import { IController, IHttpRequest, IHttpResponse } from '../../../protocols'
+import {
+  IController,
+  IAddCartProductUseCase,
+  IHttpRequest,
+  IHttpResponse
+} from './add-cart-product-controller-protocols'
 
 export class AddCartProductController implements IController {
   constructor(private readonly addCartProductUseCase: IAddCartProductUseCase) {}
