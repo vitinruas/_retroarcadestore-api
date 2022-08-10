@@ -1,7 +1,10 @@
-import { IProductEntitie } from '../../../../../domain/entities/product/product-entitie'
-import { IGetProductsUseCase } from '../../../../../domain/usecases/product/get-products-usecase'
+import {
+  IProductEntitie,
+  IHttpRequest,
+  IHttpResponse,
+  IGetProductsUseCase
+} from '../get-products-controller-protocol'
 import { noContent, ok } from '../../../../helpers/http-response-helper'
-import { IHttpRequest, IHttpResponse } from '../../../../protocols'
 import { GetProductsController } from '../get-products-controller'
 
 const makeFakeProduct = (): IProductEntitie => ({
