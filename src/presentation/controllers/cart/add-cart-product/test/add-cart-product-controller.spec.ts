@@ -1,5 +1,10 @@
 import { IAddCartProductUseCase } from '../../../../../domain/usecases/cart/add-cart-product-usecase'
-import { IHttpRequest } from '../../../../protocols'
+import { InvalidFieldError } from '../../../../errors'
+import {
+  badRequest,
+  serverError
+} from '../../../../helpers/http-response-helper'
+import { IHttpRequest, IHttpResponse } from '../../../../protocols'
 import { AddCartProductController } from '../add-cart-product-controller'
 
 const makeFakeValidRequest = (): IHttpRequest => ({
@@ -18,8 +23,8 @@ interface ISut {
 
 const makeAddCartProductUseCaseStub = (): IAddCartProductUseCase => {
   class AddCartProductUseCaseStub implements IAddCartProductUseCase {
-    async add(pid: string): Promise<void> {
-      return Promise.resolve()
+    async add(pid: string): Promise<boolean> {
+      return Promise.resolve(true)
     }
   }
   return new AddCartProductUseCaseStub()
@@ -44,5 +49,16 @@ describe('AddCartProductController', () => {
     await sut.perform(makeFakeValidRequest())
 
     expect(addSpy).toHaveBeenCalledWith('any_pid')
+  })
+  test('should return 500 if AddCartProductUseCase throws', async () => {
+    const { sut, addCartProductUseCaseStub } = makeSut()
+    jest
+      .spyOn(addCartProductUseCaseStub, 'add')
+      .mockImplementationOnce(async () => {
+        return Promise.reject(new Error())
+      })
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
+
+    expect(response).toEqual(serverError(new Error()))
   })
 })
