@@ -2,6 +2,7 @@ import { IAddCartProductUseCase } from '../../../../../domain/usecases/cart/add-
 import { InvalidFieldError } from '../../../../errors'
 import {
   badRequest,
+  noContent,
   serverError
 } from '../../../../helpers/http-response-helper'
 import { IHttpRequest, IHttpResponse } from '../../../../protocols'
@@ -70,5 +71,13 @@ describe('AddCartProductController', () => {
     const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
 
     expect(response).toEqual(badRequest(new InvalidFieldError('product')))
+  })
+
+  test('should return 204 if AddCartProductUseCase succeeds', async () => {
+    const { sut } = makeSut()
+
+    const response: IHttpResponse = await sut.perform(makeFakeValidRequest())
+
+    expect(response).toEqual(noContent())
   })
 })
