@@ -19,6 +19,6 @@ export class AddCartProductUseCase implements IAddCartProductUseCase {
       return false
     }
     await this.addCartProductRepository.add(uid, pid)
-    return Promise.resolve(true)
+    return true
   }
 }
