@@ -1,7 +1,11 @@
-import { IProductEntitie } from '../../../../domain/entities/product/product-entitie'
-import { IGetProductUseCase } from '../../../../domain/usecases/product/get-product-usecase'
 import { noContent, ok } from '../../../helpers/http-response-helper'
-import { IController, IHttpRequest, IHttpResponse } from '../../../protocols'
+import {
+  IController,
+  IGetProductUseCase,
+  IHttpRequest,
+  IHttpResponse,
+  IProductEntitie
+} from './get-product-controller-protocols'
 
 export class GetProductController implements IController {
   constructor(private readonly getProductUseCase: IGetProductUseCase) {}
