@@ -99,6 +99,20 @@ describe('AddCartProductUseCase', () => {
 
     expect(productHasBeenAdded).toBe(false)
   })
+
+  test('should return throw if AddProductCartRepository throws', async () => {
+    const { sut, addCartProductRepositoryStub } = makeSut()
+    jest
+      .spyOn(addCartProductRepositoryStub, 'add')
+      .mockImplementation(async () => {
+        return Promise.reject(new Error())
+      })
+
+    const promise: Promise<boolean> = sut.add('any_uid', 'any_pid')
+
+    await expect(promise).rejects.toThrow()
+  })
+
   test('should return true if GetProductRepository succeeds', async () => {
     const { sut } = makeSut()
 
