@@ -1,6 +1,8 @@
-import { IProductEntitie } from '../../../domain/entities/product/product-entitie'
-import { IGetProductUseCase } from '../../../domain/usecases/product/get-product-usecase'
-import { IGetProductRepository } from '../../protocols/repository/product/get-product-repository-protocol'
+import {
+  IProductEntitie,
+  IGetProductUseCase,
+  IGetProductRepository
+} from './get-product-usecase-protocols'
 
 export class GetProductUseCase implements IGetProductUseCase {
   constructor(private readonly getProductsRepository: IGetProductRepository) {}
