@@ -16,6 +16,7 @@ export class AddCartProductController implements IController {
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
       const productHasBeenAdded: boolean = await this.addCartProductUseCase.add(
+        httpRequest.body.uid,
         httpRequest.body.pid
       )
       if (!productHasBeenAdded) {
