@@ -16,6 +16,7 @@ const makeFakeValidRequest = (): IHttpRequest => ({
   ip: 'any_ip',
   route: 'any_route',
   body: {
+    uid: 'any_uid',
     pid: 'any_pid'
   }
 })
@@ -27,7 +28,7 @@ interface ISut {
 
 const makeAddCartProductUseCaseStub = (): IAddCartProductUseCase => {
   class AddCartProductUseCaseStub implements IAddCartProductUseCase {
-    async add(pid: string): Promise<boolean> {
+    async add(uid: string, pid: string): Promise<boolean> {
       return Promise.resolve(true)
     }
   }
@@ -52,7 +53,7 @@ describe('AddCartProductController', () => {
     const addSpy = jest.spyOn(addCartProductUseCaseStub, 'add')
     await sut.perform(makeFakeValidRequest())
 
-    expect(addSpy).toHaveBeenCalledWith('any_pid')
+    expect(addSpy).toHaveBeenCalledWith('any_uid', 'any_pid')
   })
   test('should return 500 if AddCartProductUseCase throws', async () => {
     const { sut, addCartProductUseCaseStub } = makeSut()
