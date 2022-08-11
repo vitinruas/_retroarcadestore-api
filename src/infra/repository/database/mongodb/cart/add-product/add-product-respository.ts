@@ -6,23 +6,13 @@ export class AddCartProductRepository implements IAddCartProductRepository {
   async add(uid: string, pid: string): Promise<void> {
     const collectionRef = mongoHelper.getCollection('carts')
 
-    const clientCart = await collectionRef.findOne({
+    const clientCartDocument = await collectionRef.findOne({
       uid: new mongoose.Types.ObjectId(uid)
     })
 
-    let products: { pid: any; quantity: number }[] = []
-
-    if (clientCart) {
-      products = clientCart!.products
-      products.push({
-        pid: new mongoose.Types.ObjectId(pid),
-        quantity: 0
-      })
-    } else {
-      products.push({
-        pid: new mongoose.Types.ObjectId(pid),
-        quantity: 0
-      })
+    const newCartProduct = {
+      pid: new mongoose.Types.ObjectId(pid),
+      quantity: 0
     }
 
     await collectionRef.updateOne(
@@ -30,11 +20,12 @@ export class AddCartProductRepository implements IAddCartProductRepository {
       {
         $set: {
           uid: new mongoose.Types.ObjectId(uid),
-          products
+          products: clientCartDocument
+            ? [...clientCartDocument!.products, newCartProduct]
+            : [newCartProduct]
         }
       },
       { upsert: true }
     )
-    return Promise.resolve()
   }
 }
