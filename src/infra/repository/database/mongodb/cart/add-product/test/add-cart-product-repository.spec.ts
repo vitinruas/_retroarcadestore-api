@@ -103,7 +103,7 @@ describe('AddCartProductRepository', () => {
 
     collectionRef = mongoHelper.getCollection('carts')
     const createdCart = await collectionRef.find({}).toArray()
-    console.log(createdCart[0])
+
     expect(createdCart[0]._id).toBeTruthy()
     expect(createdCart[0].uid).toEqual(
       mongoHelper.createMongoID(createdAccountID)
