@@ -1,9 +1,8 @@
-import mongoHelper from '../../helpers/mongo-helper'
 import {
   IUpdateClientAddressRepository,
   IUpdateClientAddressRepositoryModel
 } from './update-client-client-repository-protocols'
-import mongoose from 'mongoose'
+import mongoHelper from '../../helpers/mongo-helper'
 
 export class UpdateClientAddressRepository
   implements IUpdateClientAddressRepository
@@ -14,10 +13,10 @@ export class UpdateClientAddressRepository
     const { uid, ...dataWithoutID } = dataToUpdate
     const collectionRef = mongoHelper.getCollection('addresses')
     await collectionRef.updateOne(
-      { uid: new mongoose.Types.ObjectId(uid) },
+      { uid: mongoHelper.createMongoID(uid) },
       {
         $set: {
-          uid: new mongoose.Types.ObjectId(uid),
+          uid: mongoHelper.createMongoID(uid),
           ...dataWithoutID
         }
       },

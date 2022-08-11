@@ -1,6 +1,6 @@
 import { UpdateClientAddressRepository } from '../update-client-address-repository'
 import { MongoMemoryServer } from 'mongodb-memory-server'
-import mongoose, { Collection } from 'mongoose'
+import { Collection } from 'mongoose'
 import mongoHelper from '../../../helpers/mongo-helper'
 
 let mongod: MongoMemoryServer
@@ -22,7 +22,7 @@ beforeEach(async () => {
   await collectionRef.deleteMany({})
 })
 
-interface IFakeValidAddress {
+interface IFakeAddress {
   uid: any
   street: string
   zipCode: string
@@ -31,8 +31,8 @@ interface IFakeValidAddress {
   country: string
   updatedAt?: string
 }
-const makeFakeValidAddress = (): IFakeValidAddress => ({
-  uid: new mongoose.Types.ObjectId('82f10266747f219e874fe9ff'),
+const makeFakeAddress = (): IFakeAddress => ({
+  uid: mongoHelper.createMongoID('82f10266747f219e874fe9ff'),
   street: 'any_street',
   zipCode: '11111-1111',
   district: 'any_district',
@@ -40,14 +40,12 @@ const makeFakeValidAddress = (): IFakeValidAddress => ({
   country: 'any_country'
 })
 
-const addAddressToDB = async (
-  fakeValidAddress: IFakeValidAddress
-): Promise<any> => {
+const addAddressToDB = async (fakeAddress: IFakeAddress): Promise<any> => {
   const createdAddressID = (
-    await collectionRef.insertOne(fakeValidAddress)
+    await collectionRef.insertOne(fakeAddress)
   ).insertedId.toString()
   const createdAddress = await collectionRef.findOne({
-    _id: new mongoose.Types.ObjectId(createdAddressID)
+    _id: mongoHelper.createMongoID(createdAddressID)
   })
   return createdAddress!.uid
 }
@@ -58,7 +56,7 @@ const makeSut = (): UpdateClientAddressRepository => {
 
 describe('UpdateClientAddressRepository', () => {
   test('should update client address', async () => {
-    const createdAddressUID = await addAddressToDB(makeFakeValidAddress())
+    const createdAddressUID = await addAddressToDB(makeFakeAddress())
 
     const sut = makeSut()
 
@@ -72,7 +70,7 @@ describe('UpdateClientAddressRepository', () => {
     })
 
     const updatedAddress = await collectionRef.findOne({
-      uid: new mongoose.Types.ObjectId(createdAddressUID.toString())
+      uid: mongoHelper.createMongoID(createdAddressUID.toString())
     })
 
     expect(updatedAddress!._id).toBeTruthy()

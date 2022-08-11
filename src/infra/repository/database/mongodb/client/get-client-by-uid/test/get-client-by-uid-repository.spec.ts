@@ -1,6 +1,6 @@
 import { GetClientByUIDRepository } from '../get-client-by-uid-repository'
 import { MongoMemoryServer } from 'mongodb-memory-server'
-import mongoose, { Collection } from 'mongoose'
+import { Collection } from 'mongoose'
 import mongoHelper from '../../../helpers/mongo-helper'
 
 let mongod: MongoMemoryServer
@@ -22,7 +22,7 @@ beforeEach(async () => {
   await collectionRef.deleteMany({})
 })
 
-interface IFakeValidAccount {
+interface IFakeAccount {
   name: string
   birthDay: string
   email: string
@@ -31,7 +31,7 @@ interface IFakeValidAccount {
   authenticatedAt: string
 }
 
-const makeFakeValidAccount = (): IFakeValidAccount => ({
+const makeFakeAccount = (): IFakeAccount => ({
   name: 'any_name',
   birthDay: 'any_date',
   email: 'any_email@mail.com',
@@ -40,15 +40,14 @@ const makeFakeValidAccount = (): IFakeValidAccount => ({
   authenticatedAt: 'any_date'
 })
 
-const addAccountToDB = async (
-  fakeValidAccount: IFakeValidAccount
-): Promise<any> => {
-  const createdAccountID = (await collectionRef.insertOne(fakeValidAccount))
-    .insertedId
+const addAccountToDB = async (fakeAccount: IFakeAccount): Promise<string> => {
+  const createdAccountID = (
+    await collectionRef.insertOne(fakeAccount)
+  ).insertedId.toString()
   return createdAccountID
 }
 
-interface IFakeValidAddress {
+interface IFakeAddress {
   uid: any
   street: string
   zipCode: number
@@ -57,8 +56,8 @@ interface IFakeValidAddress {
   country: string
   updatedAt: string
 }
-const makeFakeValidAddress = (uid: string): IFakeValidAddress => ({
-  uid: new mongoose.Types.ObjectId(uid),
+const makeFakeAddress = (uid: string): IFakeAddress => ({
+  uid: mongoHelper.createMongoID(uid),
   street: 'any_street',
   zipCode: 1111111111,
   district: 'any_district',
@@ -67,13 +66,11 @@ const makeFakeValidAddress = (uid: string): IFakeValidAddress => ({
   updatedAt: 'any_data'
 })
 
-const addAddressToDB = async (
-  fakeValidAddress: IFakeValidAddress
-): Promise<any> => {
+const addAddressToDB = async (fakeAddress: IFakeAddress): Promise<any> => {
   const collectionRef = mongoHelper.getCollection('addresses')
   const createdAddressID = (
     await collectionRef.insertOne({
-      ...fakeValidAddress
+      ...fakeAddress
     })
   ).insertedId
   return createdAddressID
@@ -86,8 +83,8 @@ const makeSut = (): GetClientByUIDRepository => {
 describe('GetClientByUIDRepository', () => {
   test('should return an account and its address with provided uid', async () => {
     const sut = makeSut()
-    const createdAccountID = await addAccountToDB(makeFakeValidAccount())
-    await addAddressToDB(makeFakeValidAddress(createdAccountID))
+    const createdAccountID = await addAccountToDB(makeFakeAccount())
+    await addAddressToDB(makeFakeAddress(createdAccountID))
 
     const account = await sut.get(createdAccountID)
 

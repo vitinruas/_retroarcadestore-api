@@ -1,8 +1,8 @@
 import { IAvaliationEntitie } from '../../../../../../../domain/entities/product/avaliation-entitie'
 import { MongoMemoryServer } from 'mongodb-memory-server'
-import mongoose, { Collection } from 'mongoose'
+import { Collection } from 'mongoose'
 import mongoHelper from '../../../helpers/mongo-helper'
-import { AddCartProductRepository } from '../add-product-respository'
+import { AddCartProductRepository } from '../add-cart-product-respository'
 import { IAddAccountModel } from '../../../account/add-account/add-account-repository.protocols'
 
 let mongod: MongoMemoryServer
@@ -106,11 +106,11 @@ describe('AddCartProductRepository', () => {
     console.log(createdCart[0])
     expect(createdCart[0]._id).toBeTruthy()
     expect(createdCart[0].uid).toEqual(
-      new mongoose.Types.ObjectId(createdAccountID)
+      mongoHelper.createMongoID(createdAccountID)
     )
 
     expect(createdCart[0].products[0]).toEqual({
-      pid: new mongoose.Types.ObjectId(createdProductID),
+      pid: mongoHelper.createMongoID(createdProductID),
       quantity: 0
     })
   })

@@ -2,24 +2,23 @@ import {
   IGetClientModel,
   IGetClientByUIDRepository
 } from './get-client-by-uid-repository-protocols'
-import mongoose from 'mongoose'
 import mongoHelper from '../../helpers/mongo-helper'
 import { IAddress } from '../../../../../../domain/entities/account/client-entitie'
 
 export class GetClientByUIDRepository implements IGetClientByUIDRepository {
   async get(uid: string): Promise<IGetClientModel> {
     // client
-    const clientsCollectionRef = mongoose.connection.collection('accounts')
+    const clientsCollectionRef = mongoHelper.getCollection('accounts')
     const client = await clientsCollectionRef.findOne({
-      _id: new mongoose.Types.ObjectId(uid)
+      _id: mongoHelper.createMongoID(uid)
     })
     delete client!.password
     delete client!.accessToken
 
     // address
-    const addressesCollectionRef = mongoose.connection.collection('addresses')
+    const addressesCollectionRef = mongoHelper.getCollection('addresses')
     const address = await addressesCollectionRef.findOne({
-      uid: new mongoose.Types.ObjectId(uid)
+      uid: mongoHelper.createMongoID(uid)
     })
 
     const clientEntitie: IGetClientModel = mongoHelper.replaceMongoID(

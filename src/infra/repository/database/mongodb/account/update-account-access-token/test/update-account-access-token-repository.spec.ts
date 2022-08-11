@@ -1,6 +1,6 @@
 import { UpdateAccountAccessTokenMongoRepository } from '../update-account-access-token-repository'
 import { MongoMemoryServer } from 'mongodb-memory-server'
-import mongoose, { Collection } from 'mongoose'
+import { Collection } from 'mongoose'
 import mongoHelper from '../../../helpers/mongo-helper'
 
 let mongod: MongoMemoryServer
@@ -22,31 +22,30 @@ beforeEach(async () => {
   await collectionRef.deleteMany({})
 })
 
-interface FakeValidAccount {
+interface IFakeAccount {
   name: string
   email: string
   password: string
   accessToken: string
 }
 
-const makeFakeValidAccount = (): FakeValidAccount => ({
+const makeFakeAccount = (): IFakeAccount => ({
   name: 'any_name',
   email: 'any_email@mail.com',
   password: 'hashed_password',
   accessToken: 'any_token'
 })
 
-const addAccountToDB = async (
-  fakeValidAccount: FakeValidAccount
-): Promise<any> => {
-  const createdAccountID = (await collectionRef.insertOne(fakeValidAccount))
-    .insertedId
+const addAccountToDB = async (fakeAccount: IFakeAccount): Promise<string> => {
+  const createdAccountID = (
+    await collectionRef.insertOne(fakeAccount)
+  ).insertedId.toString()
   return createdAccountID
 }
 
 const getAccount = async (id: string) => {
   const createdAccount = await collectionRef.findOne({
-    _id: new mongoose.Types.ObjectId(id)
+    _id: mongoHelper.createMongoID(id)
   })
   return createdAccount
 }
@@ -58,12 +57,12 @@ const makeSut = (): UpdateAccountAccessTokenMongoRepository => {
 describe('UpdateAccountAccessTokenMongoRepository', () => {
   test('should update a token to a new generated token', async () => {
     const sut = makeSut()
-    const createdAccountID = await addAccountToDB(makeFakeValidAccount())
-    const createdAccount = await getAccount(createdAccountID._id.toString())
+    const createdAccountID = await addAccountToDB(makeFakeAccount())
+    const createdAccount = await getAccount(createdAccountID)
 
     expect(createdAccount!.accessToken).toBe('any_token')
 
-    await sut.update(createdAccountID._id.toString(), 'new_token')
+    await sut.update(createdAccountID, 'new_token')
     const updatedAccount = await getAccount(createdAccountID.toString())
 
     expect(updatedAccount!.accessToken).toBe('new_token')

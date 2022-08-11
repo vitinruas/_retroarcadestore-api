@@ -13,6 +13,10 @@ class MongoHelper {
     return mongoose.connection.collection(collectionName)
   }
 
+  createMongoID(id: string) {
+    return new mongoose.Types.ObjectId(id)
+  }
+
   replaceMongoID(document: any, idName: string): any {
     try {
       const { _id, ...data }: any = document
