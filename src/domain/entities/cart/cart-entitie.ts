@@ -1,6 +1,7 @@
 interface ICartProduct {
   pid: string
-  quantity: string
+  quantity: number
+  price?: number
 }
 export interface ICartEntitie {
   cid: string
