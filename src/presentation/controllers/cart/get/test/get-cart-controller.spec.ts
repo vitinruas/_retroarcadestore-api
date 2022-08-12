@@ -29,11 +29,6 @@ const makeFakeCart = (): ICartEntitie => ({
   ]
 })
 
-interface ISut {
-  sut: GetCartController
-  getCartUseCaseStub: IGetCartUseCase
-}
-
 const makeGetCartUseCaseStub = (): IGetCartUseCase => {
   class GetCartUseCaseStub implements IGetCartUseCase {
     async get(uid: string): Promise<ICartEntitie | null> {
@@ -41,6 +36,11 @@ const makeGetCartUseCaseStub = (): IGetCartUseCase => {
     }
   }
   return new GetCartUseCaseStub()
+}
+
+interface ISut {
+  sut: GetCartController
+  getCartUseCaseStub: IGetCartUseCase
 }
 
 const makeSut = (): ISut => {

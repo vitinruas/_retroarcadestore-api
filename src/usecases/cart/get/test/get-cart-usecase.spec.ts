@@ -7,8 +7,7 @@ const makeFakeCart = (): ICartEntitie => ({
   products: [
     {
       pid: 'any_pid',
-      quantity: 0,
-      price: 10.0
+      quantity: 0
     }
   ]
 })
@@ -59,12 +58,11 @@ describe('GetCartUseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('should call GetCartRepository with correct values', async () => {
-    const { sut, getCartRepositoryStub } = makeSut()
-    const addSpy = jest.spyOn(getCartRepositoryStub, 'get')
+  test('should return Cart if GetCartRepository succeeds', async () => {
+    const { sut } = makeSut()
 
-    await sut.get('any_uid')
+    const cart: ICartEntitie | null = await sut.get('any_uid')
 
-    expect(addSpy).toHaveBeenCalledWith('any_uid')
+    expect(cart).toEqual(makeFakeCart())
   })
 })
