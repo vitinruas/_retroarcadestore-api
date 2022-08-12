@@ -14,6 +14,8 @@ const makeFakeValidRequest = (): IHttpRequest => ({
   ip: 'any_ip',
   route: 'any_route',
   body: {
+    uid: 'any_uid',
+    pid: 'any_pid',
     increment: true,
     decrement: false,
     promoCode: ''
@@ -23,6 +25,8 @@ const makeFakeValidRequest = (): IHttpRequest => ({
 const makeUpdateCartUseCaseStub = (): IUpdateCartUseCase => {
   class UpdateCartUseCaseStub implements IUpdateCartUseCase {
     async update(
+      uid: string,
+      pid: string,
       increment: boolean,
       decrement: boolean,
       promoCode: string
@@ -56,7 +60,7 @@ describe('UpdateCartController', () => {
     const addSpy = jest.spyOn(updateCartUseCaseStub, 'update')
     await sut.perform(makeFakeValidRequest())
 
-    expect(addSpy).toHaveBeenCalledWith(true, false, '')
+    expect(addSpy).toHaveBeenCalledWith('any_uid', 'any_pid', true, false, '')
   })
   test('should return 500 if UpdateCartUseCase throws', async () => {
     const { sut, updateCartUseCaseStub } = makeSut()

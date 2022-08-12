@@ -11,6 +11,8 @@ export class UpdateCartController implements IController {
   async perform(httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
       await this.updateCartUseCase.update(
+        httpRequest.body.uid,
+        httpRequest.body.pid,
         httpRequest.body.increment,
         httpRequest.body.decrement,
         httpRequest.body.promoCode
