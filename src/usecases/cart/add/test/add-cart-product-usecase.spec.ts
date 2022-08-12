@@ -1,6 +1,8 @@
-import { IProductEntitie } from '../../../../domain/entities/product/product-entitie'
-import { IGetProductRepository } from '../../../product/get-product/get-product-usecase-protocols'
-import { IAddCartProductRepository } from '../../../protocols/repository/cart/add-cart-product-repository'
+import {
+  IGetProductRepository,
+  IAddCartProductRepository,
+  IProductEntitie
+} from '../add-cart-product-usecase-protocols'
 import { AddCartProductUseCase } from '../add-cart-product-usecase'
 
 const makeFakeProduct = (): IProductEntitie => ({

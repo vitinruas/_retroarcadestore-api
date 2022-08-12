@@ -1,8 +1,8 @@
-import {
-  ICartEntitie,
-  IGetCartRepository
-} from '../../../../../../usecases/cart/get/get-cart-usecase-protocols'
 import mongoHelper from '../../helpers/mongo-helper'
+import {
+  IGetCartRepository,
+  ICartEntitie
+} from './get-cart-repository-protocols'
 
 export class GetCartRepository implements IGetCartRepository {
   async get(uid: string): Promise<ICartEntitie | null> {

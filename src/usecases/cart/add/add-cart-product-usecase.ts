@@ -1,9 +1,9 @@
-import { IAddCartProductUseCase } from '../../../domain/usecases/cart/add-cart-product-usecase'
 import {
+  IAddCartProductUseCase,
   IGetProductRepository,
+  IAddCartProductRepository,
   IProductEntitie
-} from '../../product/get-product/get-product-usecase-protocols'
-import { IAddCartProductRepository } from '../../protocols/repository/cart/add-cart-product-repository'
+} from './add-cart-product-usecase-protocols'
 
 export class AddCartProductUseCase implements IAddCartProductUseCase {
   constructor(

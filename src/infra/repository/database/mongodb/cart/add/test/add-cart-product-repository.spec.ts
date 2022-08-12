@@ -1,9 +1,9 @@
 import { IAvaliationEntitie } from '../../../../../../../domain/entities/product/avaliation-entitie'
+import { IAddAccountModel } from '../../../account/add-account/add-account-repository.protocols'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { Collection } from 'mongoose'
 import mongoHelper from '../../../helpers/mongo-helper'
-import { AddCartProductRepository } from '../add-cart-product-respository'
-import { IAddAccountModel } from '../../../account/add-account/add-account-repository.protocols'
+import { AddCartProductRepository } from '../add-cart-product-repository'
 
 let mongod: MongoMemoryServer
 let collectionRef: Collection = mongoHelper.getCollection('any_collection')

@@ -1,5 +1,5 @@
-import { IAddCartProductRepository } from '../../../../../../usecases/protocols/repository/cart/add-cart-product-repository'
 import mongoHelper from '../../helpers/mongo-helper'
+import { IAddCartProductRepository } from './add-cart-product-repository-protocols'
 
 export class AddCartProductRepository implements IAddCartProductRepository {
   async add(uid: string, pid: string): Promise<void> {
