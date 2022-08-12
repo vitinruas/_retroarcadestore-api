@@ -1,4 +1,4 @@
-interface ICartProduct {
+export interface ICartProduct {
   pid: string
   quantity: number
   price?: number
